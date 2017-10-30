@@ -1,0 +1,19 @@
+/* 공통 */
+.clearfix::after{display:block;content:"";clear:both;}
+.wrap{width:720px;margin:0 auto;}
+a {text-decoration:none;color:black;}
+
+/* layout */
+header{top:0;left:0;right:0;height:50px;padding:10px;background-color:#999;}
+header .logo {float:left;}
+header .gnb{float:right;}
+
+section{background-color:#aaa;}
+
+footer{bottom:0;left:0;right:0;height:50px;padding:10px;background-color:#888;}
+footer .f_left{float:left;}
+footer .f_right{float:right;}
+
+/**/
+header .gnb li {display:inline-block;}
+.slider {clear:both;}
