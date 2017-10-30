@@ -1,19 +1,23 @@
 /* 공통 */
 .clearfix::after{display:block;content:"";clear:both;}
-.wrap{width:720px;margin:0 auto;}
+.wrap{width:1024px;margin:0 auto;}
 a {text-decoration:none;color:black;}
+li{float:left;list-style-type:none;padding:0 10px;}
 
 /* layout */
-header{top:0;left:0;right:0;height:50px;padding:10px;background-color:#999;}
+header{top:0;left:0;right:0;height:50px;padding:0 10px;background-color:#999;}
 header .logo {float:left;}
 header .gnb{float:right;}
 
-section{background-color:#aaa;}
 
-footer{bottom:0;left:0;right:0;height:50px;padding:10px;background-color:#888;}
-footer .f_left{float:left;}
-footer .f_right{float:right;}
+section .slider{height:300px;background-color:#aaa;}
+section .container{}
+
+footer{bottom:0;left:0;right:0;padding:0 10px;background-color:#888;}
+footer .f_nav{float:left;width:100%;}
+footer .f_left{float:left;width:50%;}
+footer .f_right{float:right;width:50%;}
 
 /**/
-header .gnb li {display:inline-block;}
-.slider {clear:both;}
+
+
