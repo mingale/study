@@ -11,8 +11,7 @@
 		.book_list{width:994px;padding:0 0 0 30px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
 		.book_list li{width:100px;padding:5px 0;}
 		
-		.item{clear:both;}
-		.img_area{float:left;width:120px;max-height:150px;border:1px solid #c6c6c6;}
+		.item img{float:left;width:120px;max-height:150px;border:1px solid #c6c6c6;}
 		.info_area{float:left;width:600px;margin:5px 20px;word-wrap:break-word;}
 		/* word-wrap:break-word
 		가로 사이즈나 엘러먼트에 맞춰서 강제 줄 바꿈 해준다. word-break:break-all; 같은결과물
@@ -28,7 +27,7 @@
 <header>
 <div class="wrap">
 	<div class="menu_gnb clearfix">
-		<a href="" class="logo">logo</a>
+		<a href="./index.html" class="logo">logo</a>
 	
 		<nav class="gnb">
 			<ul class="clearfix">
@@ -95,10 +94,8 @@
 	
 	<div class="container">목록
 		<ul class="clearfix">
-			<li class="item">
-				<div class="img_area">
-					<img src="">
-				</div>
+			<li class="item clearfix">
+				<img src="">
 				
 				<div class="info_area">
 					<p>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
