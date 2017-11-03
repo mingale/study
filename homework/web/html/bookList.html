@@ -7,6 +7,7 @@
 	<title>동네 서점</title>
 
 	<link rel="stylesheet" href="../css/common.css">
+	<link rel="stylesheet" href="../css/paging.css">
 	<style>
 		.book_list{width:994px;padding:0 0 0 30px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
 		.book_list li{width:100px;padding:5px 0;}
@@ -18,9 +19,6 @@
 		 */
 		.btn_area{float:left;width:150px;}
 		.btn_area input{width:100%;float:left;}
-		
-		.paging{width:100%;text-align:center;margin:10px 0;font-size:12px;}
-		.paging a{min-width:26px;height:26px;border:1px solid #c6c6c6;padding:5px 10px;}
 	</style>
 </head>
 <body>
@@ -31,11 +29,11 @@
 	
 		<nav class="gnb">
 			<ul class="clearfix">
-				<li><a href="">로그인</a></li>
-				<li><a href="">마이페이지</a></li>
-				<li><a href="">장바구니</a></li>
-				<li><a href="">고객센터</a></li>
-				<li><a href=""></a></li>
+				<li><a href="./login.html">로그인</a></li>
+				<li><a href="./mypage.html">마이페이지</a></li>
+				<li><a href="./cart.html">장바구니</a></li>
+				<li><a href="./help.html">고객센터</a></li>
+				<li id="logout"><a href="">로그아웃</a></li>
 			</ul>
 		</nav>
 	</div>
@@ -44,12 +42,12 @@
 	</form>
 	<div class="sub_gnb">
 		<ul class="clearfix">
-			<li><a href="">베스트 셀러</a></li>
-			<li><a href="">신간 도서</a></li>
-			<li><a href="">추천 도서</a></li>
-			<li><a href="">국내 도서</a></li>
-			<li><a href="">외국 도서</a></li>
-			<li><a href="">중고 장터</a></li>
+			<li><a href="./bookList.html">베스트 셀러</a></li>
+			<li><a href="./bookList.html">신간 도서</a></li>
+			<li><a href="./bookList.html">추천 도서</a></li>
+			<li><a href="./bookList.html">국내 도서</a></li>
+			<li><a href="./bookList.html">외국 도서</a></li>
+			<li><a href="./bookList.html">중고 장터</a></li>
 		</ul>
 	</div>
 </div>
@@ -95,11 +93,13 @@
 	<div class="container">목록
 		<ul class="clearfix">
 			<li class="item clearfix">
-				<img src="">
-				
-				<div class="info_area">
-					<p>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
-				</div>
+				<a href="./detail.html">
+					<img src="">
+					
+					<div class="info_area">
+						<p>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
+					</div>
+				</a>
 				
 				<div class="btn_area">
 					<input type="button" id="btn_now" value="바로 구매">
