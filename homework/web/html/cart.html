@@ -1,20 +1,10 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width initial-scale=1">
-
-	<title>동네 서점</title>
-
+	<title>동네 서점 - 장바구니</title>
+	
 	<link rel="stylesheet" href="../css/common.css">
-	<style>
-		.content{width:900px;margin:0 auto;}
-		.content li{padding:0 30px;border:1px solid black;}
-		.content img{width:110px;height:170px;background-color:#f0ffff;}
-		
-		/* temp */
-		.slider{background-color:#f0ffff;}
-	</style>
 </head>
 <body>
 <header>
@@ -24,11 +14,11 @@
 	
 		<nav class="gnb">
 			<ul class="clearfix">
-				<li><a href="./login.html">로그인</a></li><!-- 로그인 완료 -> 회원명 -->
+				<li><a href="./login.html">로그인</a></li>
 				<li><a href="./mypage.html">마이페이지</a></li>
 				<li><a href="./cart.html">장바구니</a></li>
 				<li><a href="./help.html">고객센터</a></li>
-				<li id="logout"><a href="">로그아웃</a></li><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
+				<li id="logout"><a href="">로그아웃</a></li>
 			</ul>
 		</nav>
 	</div>
@@ -50,39 +40,42 @@
 
 <section>
 <div class="wrap">
-	<div class="slider">슬라이드</div>
-	<div class="container">
-		<h3>베스트 셀러</h3>
-		<div class="content">
-			<ul class="clearfix">
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-			</ul>
-		</div>
-		<h3>신간 도서</h3>
-		<div class="content">
-			<ul class="clearfix">
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-			</ul>
-		</div>
-		<h3>추천 도서</h3>
-		<div class="content">
-			<ul class="clearfix">
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-			</ul>
-		</div>
+	<div class="cart_list">
+		<ul>
+			<li>
+				<ul class="item clearfix">
+					<li class="chk">선택</li>
+					<li class="title">도서명</li>
+					<li class="price">가격</li>
+					<li class="count">수량</li>
+					<li class="item_btn_area">비고</li>
+				</ul>
+				<hr>
+			</li>
+			<li>
+				<ul class="item clearfix">
+					<li class="chk"><input type="checkbox" id="book1" class="list"></li>
+					<li class="title"><a href="">도서1</a></li>
+					<li class="price">1000</li>
+					<li class="count"><input type="number" min="0" max="100"></li>
+					<li class="item_btn_area">
+						<input type="button" id="btn_ok" value="승인">
+						<input type="button" id="btn_no" value="삭제">
+					</li>
+				</ul>
+			</li>
+		</ul>
+		
+		<hr>
 	</div>
+	
+	<div class="btn_area">
+		<input type="button" id="all_" value="전체  선택">
+		<input type="button" id="all_" value="선택 도서 찜하기">
+		<input type="button" id="all_" value="선택 도서 삭제">
+	</div>
+	
+	<input type="button" id="all_" value="구매하기">
 </div>
 </section>
 
@@ -127,7 +120,4 @@
 </div>
 </footer>
 </body>
-<!-- 
-float layout을 사용하면 부모에게 clearfix 주기.
-inline-block은 되도록 사용하지 않기!
--->
+</html>
