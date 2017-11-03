@@ -3,21 +3,25 @@
 .clearfix::after{display:block;content:"";clear:both;}
 .wrap{width:1024px;margin:0 auto;}
 a {text-decoration:none;color:black;}
+ul{margin:0;padding:0;} /* ul의 기본 공백 제거 */
+li{list-style-type:none;}
 
 /* layout */
 header{top:0;left:0;right:0;padding:0 10px;}
+header .menu_gnb{padding:5px 0;margin:auto 0;}
 header .logo {float:left;}
 header .gnb{float:right;font-size:12px;}
-header li{float:left;list-style-type:none;padding:0 10px;}
-header .search_area{width:100%;text-align:center;}
+header li{float:left;padding:0 10px;}
+header .search_area{width:100%;text-align:center;margin:20px 0;}
 header #search{width:300px;}
-header .sub_gnb{width:600px;margin:0 auto;}
+header .sub_gnb{width:600px;margin:10px auto;}
 
 section .slider{height:300px;}
 section .container{width:100%;padding:10px 10px;}
-section li{float:left;list-style-type:none;}
+section .item li{float:left;}
 
-aside{width:80px;position:fixed;top:50%;right:0;font-size:11px;}
+aside{position:fixed;top:50%;right:20px;font-size:11px;background-color:#fff;}
+aside .wrap{width:80px;}
 aside #quick_area{height:85px;background-color:gray;}
 aside input{width:80px;}
 
@@ -27,9 +31,8 @@ footer .f_nav{width:600px;margin:0 auto;}
 	block이라서 text-align 적용 안됨 -> margin으로 자동 정렬.
 	width:100% -> margin이 없으므로 사이즈를 지정하여 margin 생기게 해야 함
 	텍스트 사이즈만큼만 하고싶으면 inline-block 적용*/
-footer .f_nav li{float:left;list-style-type:none;padding:0 10px;}
+footer .f_nav li{float:left;padding:0 10px;}
 footer .f_left{float:left;width:50%;}
-footer .f_left li{list-style-type:none;}
 footer .f_right{float:right;width:50%;}
 
 /* test용 */
