@@ -4,20 +4,21 @@
 	<meta charset="UTF-8">
 	<meta name="viewpost" content="width=device-width initial-scale=1">
 
-	<title>관리자 - 재고 관리</title>
+	<title>관리자 - 주문 관리</title>
 
 	<link rel="stylesheet" href="../../css/a_common.css">
 	<link rel="stylesheet" href="../../css/a_board.css">
 	<link rel="stylesheet" href="../../css/paging.css">
 	
 	<style>
-		.title{width:50%;}
-		.price{width:10%;}
-		.count{width:10%;}
-		.item_btn_area{width:100px;;}
+		.date{width:80px;}
+		.user{width:50px;}
+		.title{width:275px;}
+		.count{width:40px;}
+		.state{width:100px;}
+		.item_btn_area{width:100px;}
 		
-		#all_del{float:left;margin-left:10px;}
-		#add{float:right;margin-right:10px;}
+		#all_ok{margin-left:10px;margin-right:3px;}
 	</style>
 </head>
 <body>
@@ -39,8 +40,11 @@
 <section>
 <div class="wrap clearfix">
 	<nav class="sub_nav">
-		<a href="">재고 목록</a>
-		<a href="">입고 현황</a>
+		<a href="">주문 목록</a><!-- 주문 요청, 주문 결제 완료 -->
+		<a href="">환불 목록</a><!-- 결제 취소 / 환불 요청 -->
+		<a href="">교환/반품</a>
+		<a href="">배송 현황</a>
+		<a href="">결산 내역</a><!-- 결제완료, 배송완료, 주문후 14일 경과 -->
 	</nav>
 
 	<div class="container clearfix">
@@ -48,29 +52,33 @@
 			<li>
 				<ul class="item zero clearfix">
 					<li class="chk">선택</li>
+					<li class="date">주문일</li>
+					<li class="user">주문자</li>
 					<li class="title">도서명</li>
-					<li class="price">가격</li>
 					<li class="count">수량</li>
+					<li class="state">상태</li>
 					<li class="item_btn_area">비고</li>
 				</ul>
 			</li>
 			<li>
 				<ul class="item clearfix">
 					<li class="chk"><input type="checkbox" id="book1" class="list"></li>
+					<li class="date">2017.11.03</li>
+					<li class="user"><a href="">홍길동</a></li>
 					<li class="title"><a href="">도서1</a></li>
-					<li class="price">1000</li>
 					<li class="count">1</li>
+					<li class="state">결제 요청 중</li>
 					<li class="item_btn_area">
-						<input type="button" id="btn_up" value="수정">
-						<input type="button" id="btn_del" value="삭제">
+						<input type="button" id="btn_ok" value="승인">
+						<input type="button" id="btn_no" value="삭제">
 					</li>
 				</ul>
 			</li>
 		</ul>
 		
 		<div class="btn_area">
+			<input type="button" id="all_ok" value="전체 승인">
 			<input type="button" id="all_del" value="전체 삭제">
-			<input type="button" id="add" value="추가">
 		</div>
 	
 		<div class="paging">

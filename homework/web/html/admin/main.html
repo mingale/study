@@ -1,45 +1,90 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewpost" content="width=device-width initial-scale=1">
 
 	<title>관리자</title>
+	
+	<style>
+		/* layout */
+		section{padding:10px;}
+		.new_order{float:left;width:48%;height:500px;}
+		.new_add{float:right;width:48%;height:500px;}
+		.notice{float:right;width:100%;}
+		
+		.item > li{width:100%;}
+		.item li{padding:5px 20px;}
+	</style>
 
-	<link rel="stylesheet" href="../css/common.css">
+	<link rel="stylesheet" href="../../css/common.css">
 </head>
 <body>
-<div class="wrap">
-	<header>
-		<div class="logo"></div>
-		<nav class="gnb">
-			<ul>
-				<li><a href="">재고 관리</a></li>
-				<li><a href="">주문 관리</a></li>
-				<li><a href="">회원 관리</a></li>
-				<li><a href="">로그아웃</a></li>
-			</ul>
-		</nav>
-	</header>
 
-	<sidebar>
+<header>
+<div class="wrap clearfix">
+	<a href="../index.html" class="logo">logo</a>
+	<nav class="gnb">
+		<ul class="clearfix">
+			<li><a href="./main.html">메인</a></li>
+			<li><a href="./hostStock.html">재고 관리</a></li>
+			<li><a href="./hostOrder.html">주문 관리</a></li>
+			<li><a href="./hostMem.html">회원 관리</a></li>
+			<li><a href="../index.html">로그아웃</a></li>
+		</ul>
+	</nav>
+</div>
+</header>
+
+<section>
+<div class="wrap clearfix">
+	<div class="new_order">
+		<h3>최근 주문</h3>
+		<hr>
+		
+		<ul class="item clearfix">
+			<li>
+				<ul class="clearfix">
+					<li>주문일</li>
+					<li>주문자</li>
+					<li>도서명</li>
+					<li>저자</li>
+					<li>가격</li>
+					<li>수량</li>
+				</ul>
+			</li>
+			<li>
+				<ul class="clearfix">
+					<li>2017.11.03</li>
+					<li>홍길동</li>
+					<li>언어</li>
+					<li>대한</li>
+					<li>10000</li>
+					<li>1</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	<div class="new_add">
+		<h3>최근 입고</h3>
+		<hr>
+		
 		<ul>
 			<li></li>
-			<li></li>
-			<li></li>
 		</ul>
-	</sidebar>
-
-	<section>
-		<div>
-		</div>
-	</section>
+	</div>
 	
-	<footer>
-		<div class="f_left">
-		</div>
-		<div class="f_right">
-		</div>
-	</footer>
+	<div class="notice">
+		<h3>공지사항</h3>
+		<hr>
+		
+		<p>배고픔</p>
+	</div>
 </div>
+</section>
+
+<footer>
+</footer>
+
 </body>
