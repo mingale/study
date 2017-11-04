@@ -9,10 +9,10 @@
 	<link rel="stylesheet" href="../css/common.css">
 	<link rel="stylesheet" href="../css/paging.css">
 	<style>
-		.book_list{width:994px;padding:0 0 0 30px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
-		.book_list li{width:100px;padding:5px 0;}
+		.book_list{padding:0 0 0 30px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
+		.book_list li{float:left;width:100px;padding:5px 0;}
 		
-		.item img{float:left;width:120px;max-height:150px;border:1px solid #c6c6c6;}
+		.item img{float:left;width:120px;max-height:150px;}
 		.info_area{float:left;width:600px;margin:5px 20px;word-wrap:break-word;}
 		/* word-wrap:break-word
 		가로 사이즈나 엘러먼트에 맞춰서 강제 줄 바꿈 해준다. word-break:break-all; 같은결과물
@@ -28,28 +28,24 @@
 		<a href="./index.html" class="logo">logo</a>
 	
 		<nav class="gnb">
-			<ul class="clearfix">
-				<li><a href="./login.html">로그인</a></li>
-				<li><a href="./mypage.html">마이페이지</a></li>
-				<li><a href="./cart.html">장바구니</a></li>
-				<li><a href="./help.html">고객센터</a></li>
-				<li id="logout"><a href="">로그아웃</a></li>
-			</ul>
+			<a href="./login.html">로그인</a><!-- 로그인 완료 -> 회원명 -->
+			<a href="./mypage.html">마이페이지</a>
+			<a href="./cart.html">장바구니</a>
+			<a href="./help.html">고객센터</a>
+			<a href="./index.html" id="logout">로그아웃</a><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
 		</nav>
 	</div>
 	<form name="index" method="post" class="search_area">
 		<input type="text" id="search"><input type="submit" value="검색">
 	</form>
-	<div class="sub_gnb">
-		<ul class="clearfix">
-			<li><a href="./bookList.html">베스트 셀러</a></li>
-			<li><a href="./bookList.html">신간 도서</a></li>
-			<li><a href="./bookList.html">추천 도서</a></li>
-			<li><a href="./bookList.html">국내 도서</a></li>
-			<li><a href="./bookList.html">외국 도서</a></li>
-			<li><a href="./bookList.html">중고 장터</a></li>
-		</ul>
-	</div>
+	<nav class="sub_gnb">
+		<a href="./bookList.html">베스트셀러</a>
+		<a href="./bookList.html">신간도서</a>
+		<a href="./bookList.html">추천도서</a>
+		<a href="./bookList.html">국내도서</a>
+		<a href="./bookList.html">외국도서</a>
+		<a href="./bookList.html">중고장터</a>
+	</nav>
 </div>
 </header>
 
@@ -94,7 +90,7 @@
 		<ul class="clearfix">
 			<li class="item clearfix">
 				<a href="./detail.html">
-					<img src="">
+					<img src="#">
 					
 					<div class="info_area">
 						<p>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</p>
@@ -138,15 +134,13 @@
 
 <footer>
 <div class="wrap clearfix">
-	<div class="f_nav">
-		<ul class="clearfix">
-			<li><a href="">회사소개</a></li>
-			<li><a href="">이용약관</a></li>
-			<li><a href="">개인정보처리방침</a></li>
-			<li><a href="">광고안내</a></li>
-			<li><a href="">서비스전체</a></li>
-		</ul>
-	</div>
+	<nav>
+		<a href="">회사소개</a>
+		<a href="">이용약관</a>
+		<a href="">개인정보처리방침</a>
+		<a href="">광고안내</a>
+		<a href="">서비스전체</a>
+	</nav>
 
 	<div class="f_left">
 		<ul>
@@ -165,6 +159,7 @@
 </div>
 </footer>
 </body>
+</html>
 <!-- 
 float layout을 사용하면 부모에게 clearfix 주기.
 inline-block은 되도록 사용하지 않기!

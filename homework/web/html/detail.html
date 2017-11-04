@@ -8,7 +8,7 @@
 	<style>
 		.content{padding: 10px 30px;}
 		
-		.location_zone li{position:relative;font-size:12px;}
+		.location_zone li{float:left;font-size:12px;}
 		.location_zone .lo{border:1px solid #c6c6c6;padding:2px 8px;margin:3px 5px;}
 		.location{position:absolute;}
 		
@@ -25,7 +25,7 @@
 		/* general */
 		section img{}
 		.general_list{width:1024px;padding:0;}
-		.general_list li{width:202.8px;height:30px;text-align:center;border:1px solid #c6c6c6;}
+		.general_list li{float:left;width:202.8px;height:30px;text-align:center;border:1px solid #c6c6c6;}
 		.general_list a{margin:auto 0;font-size:12px;}
 		.content div{padding-bottom:50px;}
 		.content p{font-size:14px;}
@@ -38,28 +38,24 @@
 		<a href="./index.html" class="logo">logo</a>
 	
 		<nav class="gnb">
-			<ul class="clearfix">
-				<li><a href="./login.html">로그인</a></li>
-				<li><a href="./mypage.html">마이페이지</a></li>
-				<li><a href="./cart.html">장바구니</a></li>
-				<li><a href="./help.html">고객센터</a></li>
-				<li id="logout"><a href="">로그아웃</a></li>
-			</ul>
+			<a href="./login.html">로그인</a><!-- 로그인 완료 -> 회원명 -->
+			<a href="./mypage.html">마이페이지</a>
+			<a href="./cart.html">장바구니</a>
+			<a href="./help.html">고객센터</a>
+			<a href="./index.html" id="logout">로그아웃</a><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
 		</nav>
 	</div>
 	<form name="index" method="post" class="search_area">
 		<input type="text" id="search"><input type="submit" value="검색">
 	</form>
-	<div class="sub_gnb">
-		<ul class="clearfix">
-			<li><a href="./bookList.html">베스트 셀러</a></li>
-			<li><a href="./bookList.html">신간 도서</a></li>
-			<li><a href="./bookList.html">추천 도서</a></li>
-			<li><a href="./bookList.html">국내 도서</a></li>
-			<li><a href="./bookList.html">외국 도서</a></li>
-			<li><a href="./bookList.html">중고 장터</a></li>
-		</ul>
-	</div>
+	<nav class="sub_gnb">
+		<a href="./bookList.html">베스트셀러</a>
+		<a href="./bookList.html">신간도서</a>
+		<a href="./bookList.html">추천도서</a>
+		<a href="./bookList.html">국내도서</a>
+		<a href="./bookList.html">외국도서</a>
+		<a href="./bookList.html">중고장터</a>
+	</nav>
 </div>
 </header>
 
@@ -67,30 +63,24 @@
 <div class="wrap">
 	<nav class="location_zone">
 		<ul class="clearfix">
-			<li><a href=""> 홈 </a> > </li>
+			<li><a href=""> 홈 </a> &gt;</li>
 			<li>
-				<a href="" onmouseover="" onmouseout="" class="lo"> 에세이 </a> > 
-				<div class="location1">
-					<ul>
-						<li></li>
-					</ul>
-				</div>
+				<select>
+					<option>에세이</option>
+					<option selected>FS</option>
+				</select> &gt;
 			</li>
 			<li>
-				<a href="" onmouseover="" onmouseout="" class="lo"> 에세이 </a> > 
-				<div class="location2">
-					<ul>
-						<li></li>
-					</ul>
-				</div>
+				<select>
+					<option>에세이</option>
+					<option></option>
+				</select> &gt;
 			</li>
 			<li>
-				<a href="" onmouseover="" onmouseout="" class="lo"> 에세이 </a>
-				<div class="location3">
-					<ul>
-						<li></li>
-					</ul>
-				</div>
+				<select>
+					<option>에세이</option>
+					<option></option>
+				</select>
 			</li>
 		</ul>
 	</nav>
@@ -180,15 +170,13 @@
 
 <footer>
 <div class="wrap clearfix">
-	<div class="f_nav">
-		<ul class="clearfix">
-			<li><a href="">회사소개</a></li>
-			<li><a href="">이용약관</a></li>
-			<li><a href="">개인정보처리방침</a></li>
-			<li><a href="">광고안내</a></li>
-			<li><a href="">서비스전체</a></li>
-		</ul>
-	</div>
+	<nav>
+		<a href="">회사소개</a>
+		<a href="">이용약관</a>
+		<a href="">개인정보처리방침</a>
+		<a href="">광고안내</a>
+		<a href="">서비스전체</a>
+	</nav>
 
 	<div class="f_left">
 		<ul>
