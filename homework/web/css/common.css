@@ -14,11 +14,12 @@ header .gnb{float:right;font-size:12px;}
 header li{float:left;padding:0 10px;}
 header .search_area{width:100%;text-align:center;margin:20px 0;}
 header #search{width:300px;}
-header .sub_gnb{width:600px;margin:10px auto;}
+header .sub_gnb{width:600px;margin:10px auto;text-align:center;}
+header nav a{padding:0 10px;}
 
 section .slider{height:300px;}
 section .container{width:100%;padding:10px 10px;}
-section .item li{float:left;}
+section .item li{float:left;} /*?*/
 
 aside{position:fixed;top:50%;right:20px;font-size:11px;background-color:#fff;}
 aside .wrap{width:80px;}
@@ -26,12 +27,13 @@ aside #quick_area{height:85px;background-color:gray;}
 aside input{width:80px;}
 
 footer{bottom:0;left:0;right:0;padding:0 10px;font-size:12px;}
-footer .f_nav{width:600px;margin:0 auto;} 
+footer nav{width:600px;margin:0 auto;} 
 /* ul 가운데 정렬 방법
 	block이라서 text-align 적용 안됨 -> margin으로 자동 정렬.
 	width:100% -> margin이 없으므로 사이즈를 지정하여 margin 생기게 해야 함
 	텍스트 사이즈만큼만 하고싶으면 inline-block 적용*/
-footer .f_nav li{float:left;padding:0 10px;}
+footer nav{float:left;width:100%;text-align:center;padding:10px 0;}
+footer nav a{padding:0 10px;}
 footer .f_left{float:left;width:50%;}
 footer .f_right{float:right;width:50%;}
 
