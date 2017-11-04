@@ -5,6 +5,24 @@
 	<title>동네 서점 - 장바구니</title>
 	
 	<link rel="stylesheet" href="../css/common.css">
+	<link rel="stylesheet" href="../css/a_board.css">
+
+	<style>
+		.item_title{font-size:12px;}
+		.title{width:400px;}
+		.title a{vertical-align:top;}
+		.title a div{float:left;word-wrap:break-word;}
+		.title img{float:left;width:90px;height:120px;margin-right:10px;}
+		.price{width:100px;}
+		.count{width:100px;}
+		.total{width:100px;}
+		.item_btn_area{width:100px;}
+
+		#all_check{margin-left:8px;}
+		#all_wish{float:right;margin-right:5px;}
+		#all_del{float:right;margin-right:8px;}
+		#all_order{width:200px;height:30px;margin:0 auto;}
+	</style>
 </head>
 <body>
 <header>
@@ -39,23 +57,30 @@
 	<div class="cart_list">
 		<ul>
 			<li>
-				<ul class="item clearfix">
+				<ul class="item_title clearfix">
 					<li class="chk">선택</li>
 					<li class="title">도서명</li>
 					<li class="price">가격</li>
 					<li class="count">수량</li>
-					<li class="item_btn_area">비고</li>
+					<li class="total">합계</li>
+					<li class="item_btn_area">선택</li>
 				</ul>
 				<hr>
 			</li>
 			<li>
 				<ul class="item clearfix">
 					<li class="chk"><input type="checkbox" id="book1" class="list"></li>
-					<li class="title"><a href="">도서1</a></li>
+					<li class="title">
+						<a href="#" class="clearfix">
+							<img src="#">
+							<div>도서1dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</div>
+						</a>
+					</li>
 					<li class="price">1000</li>
-					<li class="count"><input type="number" min="0" max="100"></li>
+					<li class="count"><input type="number" min="1" max="100"></li>
+					<li class="total">1000</li>
 					<li class="item_btn_area">
-						<input type="button" id="btn_ok" value="승인">
+						<input type="button" id="btn_up" value="수정">
 						<input type="button" id="btn_no" value="삭제">
 					</li>
 				</ul>
@@ -65,13 +90,13 @@
 		<hr>
 	</div>
 	
-	<div class="btn_area">
-		<input type="button" id="all_" value="전체  선택">
-		<input type="button" id="all_" value="선택 도서 찜하기">
-		<input type="button" id="all_" value="선택 도서 삭제">
+	<div class="btn_area clearfix">
+		<input type="button" id="all_check" value="전체  선택">
+		<input type="button" id="all_del" value="선택 도서 삭제">
+		<input type="button" id="all_wish" value="선택 도서 찜하기">
 	</div>
 	
-	<input type="button" id="all_" value="구매하기">
+	<input type="button" id="all_order" value="구매하기">
 </div>
 </section>
 
