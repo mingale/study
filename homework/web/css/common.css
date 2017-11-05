@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* 공통 */
 .clearfix::after{display:block;content:"";clear:both;}
 .wrap{width:1024px;margin:0 auto;}
@@ -19,7 +18,6 @@ header nav a{padding:0 10px;}
 
 section .slider{height:300px;}
 section .container{width:100%;padding:10px 10px;}
-section .item li{float:left;} /*?*/
 
 aside{position:fixed;top:50%;right:20px;font-size:11px;background-color:#fff;}
 aside .wrap{width:80px;}

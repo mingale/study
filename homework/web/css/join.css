@@ -1,0 +1,7 @@
+.clearfix::after{display:block;content:"";clear:both;}
+ul{padding:0;margin:0;}
+li{list-style-type:none;}
+a{display:block;height:50px;line-height:50px;text-align:center;text-decoration:none;color:black;}
+label{font-size:14px;}
+
+header{text-align:center;}

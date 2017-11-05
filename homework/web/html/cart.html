@@ -8,20 +8,23 @@
 	<link rel="stylesheet" href="../css/a_board.css">
 
 	<style>
-		.item_title{font-size:12px;}
-		.title{width:400px;}
-		.title a{vertical-align:top;}
-		.title a div{float:left;word-wrap:break-word;}
+		.item_title{width:100%;font-size:12px;}
+
+		.item{text-align:center;}
+		.title{width:550px;}
+		.title a > div{float:left;width:450px;word-wrap:break-word;text-align:left;}
 		.title img{float:left;width:90px;height:120px;margin-right:10px;}
-		.price{width:100px;}
-		.count{width:100px;}
-		.total{width:100px;}
+		.price{width:80px;}
+		.count{width:80px;}
+		.total{width:80px;}
 		.item_btn_area{width:100px;}
 
 		#all_check{margin-left:8px;}
 		#all_wish{float:right;margin-right:5px;}
 		#all_del{float:right;margin-right:8px;}
 		#all_order{width:200px;height:30px;margin:0 auto;}
+
+		.btn_area + div{text-align:center;}
 	</style>
 </head>
 <body>
@@ -32,7 +35,7 @@
 	
 		<nav class="gnb">
 			<a href="./login.html">로그인</a><!-- 로그인 완료 -> 회원명 -->
-			<a href="./mypage.html">마이페이지</a>
+			<a href="./member/mypage.html">마이페이지</a>
 			<a href="./cart.html">장바구니</a>
 			<a href="./help.html">고객센터</a>
 			<a href="./index.html" id="logout">로그아웃</a><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
@@ -57,7 +60,7 @@
 	<div class="cart_list">
 		<ul>
 			<li>
-				<ul class="item_title clearfix">
+				<ul class="item_title item clearfix">
 					<li class="chk">선택</li>
 					<li class="title">도서명</li>
 					<li class="price">가격</li>
@@ -69,7 +72,7 @@
 			</li>
 			<li>
 				<ul class="item clearfix">
-					<li class="chk"><input type="checkbox" id="book1" class="list"></li>
+					<li class="chk"><input type="checkbox" id="book1" name="cart_check" class="list"></li>
 					<li class="title">
 						<a href="#" class="clearfix">
 							<img src="#">
@@ -96,7 +99,9 @@
 		<input type="button" id="all_wish" value="선택 도서 찜하기">
 	</div>
 	
-	<input type="button" id="all_order" value="구매하기">
+	<div>
+			<input type="button" id="all_order" value="구매하기">
+	</div>
 </div>
 </section>
 

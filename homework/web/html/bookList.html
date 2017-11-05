@@ -9,10 +9,15 @@
 	<link rel="stylesheet" href="../css/common.css">
 	<link rel="stylesheet" href="../css/paging.css">
 	<style>
-		.book_list{padding:0 0 0 30px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
-		.book_list li{float:left;width:100px;padding:5px 0;}
+		.book_list{padding-left:50px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
+		.book_list li{float:left;width:100px;padding:5px 3px}
 		
-		.item img{float:left;width:120px;max-height:150px;}
+		.check_area{width:1004px;padding:0 10px;}
+		.check_area .all_check{float:left;}
+		.check_area .check_right{display:block;float:right;}
+		
+		.item > input{float:left;}
+		.item img{float:left;width:120px;height:150px;padding-left:30px;}
 		.info_area{float:left;width:600px;margin:5px 20px;word-wrap:break-word;}
 		/* word-wrap:break-word
 		가로 사이즈나 엘러먼트에 맞춰서 강제 줄 바꿈 해준다. word-break:break-all; 같은결과물
@@ -29,7 +34,7 @@
 	
 		<nav class="gnb">
 			<a href="./login.html">로그인</a><!-- 로그인 완료 -> 회원명 -->
-			<a href="./mypage.html">마이페이지</a>
+			<a href="./member/mypage.html">마이페이지</a>
 			<a href="./cart.html">장바구니</a>
 			<a href="./help.html">고객센터</a>
 			<a href="./index.html" id="logout">로그아웃</a><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
@@ -82,13 +87,22 @@
 		</ul>
 	</div>
 	
-	<div class="check_area"></div>
+	<h3>소설</h3>
+
+	<div class="check_area clearfix">
+		<input type="button" id="all_check" value="전체 선택">
+		<input type="button" id="all_wish" value="선택 찜하기" class="check_right">
+		<input type="button" id="all_order" value="선택 바로 구매하기" class="check_right">
+		<input type="button" id="all_cart" value="선택 장바구니 담기" class="check_right">
+	</div>
 	
 	<hr>
 	
-	<div class="container">목록
+	<div class="container">
 		<ul class="clearfix">
 			<li class="item clearfix">
+				<input type="checkbox" id="check" name="list_check">
+
 				<a href="./detail.html">
 					<img src="#">
 					
