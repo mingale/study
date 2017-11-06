@@ -3,11 +3,14 @@
 <head>
 	<meta charset="UTF-8">
 	<title>동네 서점 - 장바구니</title>
-	
+
+	<link rel="stylesheet" href="../css/reset.css">	
 	<link rel="stylesheet" href="../css/common.css">
 	<link rel="stylesheet" href="../css/a_board.css">
 
 	<style>
+		section{margin-top:20px;}
+
 		.item_title{width:100%;font-size:12px;}
 
 		.item{text-align:center;}
@@ -15,16 +18,14 @@
 		.title a > div{float:left;width:450px;word-wrap:break-word;text-align:left;}
 		.title img{float:left;width:90px;height:120px;margin-right:10px;}
 		.price{width:80px;}
-		.count{width:80px;}
+		.count{width:120px;}
+		.count input{width:40px;}
 		.total{width:80px;}
-		.item_btn_area{width:100px;}
+		/* .item_btn_area{width:100px;font-size:12px;} */
 
-		#all_check{margin-left:8px;}
-		#all_wish{float:right;margin-right:5px;}
-		#all_del{float:right;margin-right:8px;}
-		#all_order{width:200px;height:30px;margin:0 auto;}
+		#all_order{width:300px;height:50px;margin:0 auto;}
 
-		.btn_area + div{text-align:center;}
+		.btn_area + div{text-align:center;margin:10px 0 20px 0;}
 	</style>
 </head>
 <body>
@@ -61,7 +62,7 @@
 		<ul>
 			<li>
 				<ul class="item_title item clearfix">
-					<li class="chk">선택</li>
+					<li class="chk"><input type="checkbox" id="all_check" name="all_check"></li>
 					<li class="title">도서명</li>
 					<li class="price">가격</li>
 					<li class="count">수량</li>
@@ -80,10 +81,11 @@
 						</a>
 					</li>
 					<li class="price">1000</li>
-					<li class="count"><input type="number" min="1" max="100"></li>
+					<li class="count"><input type="number" min="1" max="100">
+						<input type="button" id="btn_up" value="변경">
+					</li>
 					<li class="total">1000</li>
 					<li class="item_btn_area">
-						<input type="button" id="btn_up" value="수정">
 						<input type="button" id="btn_no" value="삭제">
 					</li>
 				</ul>
@@ -94,13 +96,12 @@
 	</div>
 	
 	<div class="btn_area clearfix">
-		<input type="button" id="all_check" value="전체  선택">
 		<input type="button" id="all_del" value="선택 도서 삭제">
 		<input type="button" id="all_wish" value="선택 도서 찜하기">
 	</div>
 	
 	<div>
-			<input type="button" id="all_order" value="구매하기">
+		<input type="button" id="all_order" value="구매하기">
 	</div>
 </div>
 </section>

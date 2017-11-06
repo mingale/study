@@ -6,15 +6,18 @@
 
 	<title>동네 서점</title>
 
+	<link rel="stylesheet" href="../css/reset.css">
 	<link rel="stylesheet" href="../css/common.css">
 	<link rel="stylesheet" href="../css/paging.css">
 	<style>
 		.book_list{padding-left:50px;font-size:12px;border:1px solid #c6c6c6;background-color:#fff;}
 		.book_list li{float:left;width:100px;padding:5px 3px}
 		
-		.check_area{width:1004px;padding:0 10px;}
+		section .wrap > h3{padding:10px 0;}
+		
+	/* 	.check_area{width:1004px;padding:10px 10px 0 10px;}
 		.check_area .all_check{float:left;}
-		.check_area .check_right{display:block;float:right;}
+		.check_area .check_right{display:block;float:right;} */
 		
 		.item > input{float:left;}
 		.item img{float:left;width:120px;height:150px;padding-left:30px;}
@@ -89,19 +92,19 @@
 	
 	<h3>소설</h3>
 
-	<div class="check_area clearfix">
+	<!-- <div class="check_area clearfix">
 		<input type="button" id="all_check" value="전체 선택">
 		<input type="button" id="all_wish" value="선택 찜하기" class="check_right">
 		<input type="button" id="all_order" value="선택 바로 구매하기" class="check_right">
 		<input type="button" id="all_cart" value="선택 장바구니 담기" class="check_right">
-	</div>
+	</div> -->
 	
 	<hr>
 	
 	<div class="container">
 		<ul class="clearfix">
 			<li class="item clearfix">
-				<input type="checkbox" id="check" name="list_check">
+				<!-- <input type="checkbox" id="check" name="list_check"> -->
 
 				<a href="./detail.html">
 					<img src="#">
