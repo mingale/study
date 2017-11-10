@@ -18,32 +18,26 @@
 	</style>
 </head>
 <body>
-<header>
-		<h1><a href="../common/index.jsp">logo</a></h1>
-</header>
-
-<section>
-<div class="container">
-	<div>
-		<input type="text" name="id" placeholder="아이디">
-		<input type="password" name="pwd" placeholder="비밀번호">
-		<input type="password" name="pwdRe" placeholder="비밀번호 재확인">
-	</div>
-
-	<div>
-		<input type="text" name="name" placeholder="이름">
-		<input type="tel" name="phone" placeholder="휴대폰 번호">
-		<input type="email" name="email" placeholder="이메일">
-		<input type="text" name="adress" placeholder="주소">
-	</div>
-
-	<div class="btn_area">
-		<a href="../common/index.jsp" onclick="">회원가입</a>
-	</div>
-</div>
-</section>
-
-<footer>
-</footer>
+<div class="wrap">
+	<h1><a href="../common/index.jsp">logo</a></h1>
+	
+	<form method="post" class="container">
+		<div>
+			<input type="text" name="id" placeholder="아이디">
+			<input type="password" name="pwd" placeholder="비밀번호">
+			<input type="password" name="pwdRe" placeholder="비밀번호 재확인">
+		</div>
+	
+		<div>
+			<input type="text" name="name" placeholder="이름">
+			<input type="tel" name="phone" placeholder="휴대폰 번호">
+			<input type="email" name="email" placeholder="이메일">
+			<input type="text" name="adress" placeholder="주소">
+		</div>
+	
+		<div class="btn_area">
+			<a href="../common/index.jsp" onclick="">회원가입</a>
+		</div>
+	</form>
 </div>
 </body>

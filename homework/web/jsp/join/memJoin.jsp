@@ -27,12 +27,9 @@
 	</style>
 </head>
 <body>
-<header>
-	<h1><a href="../common/index.jsp">logo</a></h1>
-</header>
-
-<section>
 <div class="wrap">
+	<h1><a href="../common/index.jsp">logo</a></h1>
+
 	<div class="container">
 		<div class="top clearfix">
 				<h3>약관 동의</h3>
@@ -87,9 +84,5 @@
 		<a href="./membership.jsp" onclick="" class="btn_primary">동의</a>
 	</div>
 </div>
-</section>
-
-<footer>
-</footer>
 </body>
 </html>

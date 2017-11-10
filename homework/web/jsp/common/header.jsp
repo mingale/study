@@ -4,7 +4,7 @@
 <header>
 <div class="wrap">
 	<div class="menu_gnb clearfix">
-		<a href="../main/index.jsp" class="logo">logo</a>
+		<a href="../main/index.jsp" class="logo">BMS</a>
 	
 		<nav class="gnb">
 			<a href="../join/login.jsp"">로그인</a><!-- 로그인 완료 -> 회원명 -->

@@ -3,7 +3,7 @@
 
 <header>
 <div class="wrap clearfix">
-	<a href="../index.html" class="logo">logo</a>
+	<a href="../index.html" class="logo">BMS</a>
 	<nav class="gnb">
 		<ul class="clearfix">
 			<li><a href="./main.html">메인</a></li>

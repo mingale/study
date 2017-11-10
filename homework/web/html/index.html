@@ -6,6 +6,7 @@
 
 	<title>동네 서점</title>
 
+	<link rel="import" href="./header.html">
 	<link rel="stylesheet" href="../css/reset.css">
 	<link rel="stylesheet" href="../css/common.css">
 	<style>
@@ -17,8 +18,32 @@
 	</style>
 </head>
 <body>
-
-
+<header>
+<div class="wrap">
+	<div class="menu_gnb clearfix">
+		<a href="./index.html" class="logo">logo</a>
+	
+		<nav class="gnb">
+			<a href="./login.html">로그인</a><!-- 로그인 완료 -> 회원명 -->
+			<a href="./member/mypage.html">마이페이지</a>
+			<a href="./cart.html">장바구니</a>
+			<a href="./help.html">고객센터</a>
+			<a href="./index.html" id="logout">로그아웃</a><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
+		</nav>
+	</div>
+	<form name="index" method="post" class="search_area">
+		<input type="text" id="search"><input type="submit" value="검색">
+	</form>
+	<nav class="sub_gnb">
+		<a href="./bookList.html">베스트셀러</a>
+		<a href="./bookList.html">신간도서</a>
+		<a href="./bookList.html">추천도서</a>
+		<a href="./bookList.html">국내도서</a>
+		<a href="./bookList.html">외국도서</a>
+		<a href="./bookList.html">중고장터</a>
+	</nav>
+</div>
+</header>
 <section>
 <div class="wrap">
 	<div class="slider">슬라이드</div>
@@ -28,11 +53,11 @@
 		<h3>베스트 셀러</h3>
 		<hr>
 			<ul class="clearfix">
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
 			</ul>
 		</div>
 
@@ -40,11 +65,11 @@
 		<h3>신간 도서</h3>
 		<hr>
 			<ul class="clearfix">
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
 			</ul>
 		</div>
 
@@ -52,11 +77,11 @@
 		<h3>추천 도서</h3>
 		<hr>
 			<ul class="clearfix">
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
-				<li><a href=""><img src=""><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
+				<li><a href=""><img src="../images/book1.jpg"><br>도서1<br>가격</a></li>
 			</ul>
 		</div>
 	</div>

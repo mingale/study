@@ -2,9 +2,6 @@
 /* 공통 */
 .clearfix::after{display:block;content:"";clear:both;}
 .wrap{width:1024px;margin:0 auto;}
-a {text-decoration:none;color:black;}
-ul{margin:0;padding:0;} /* ul의 기본 공백 제거 */
-li{list-style-type:none;}
 
 /* layout */
 header{top:0;left:0;right:0;padding:0 10px;}
