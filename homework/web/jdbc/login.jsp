@@ -18,7 +18,7 @@
 	String userId = "scott";
 	String userPwd = "tiger";
 	
-	boolean check = false;
+	boolean idCheck = false;
 %>
 
 <%
@@ -38,15 +38,13 @@
 			String pwd = rs.getString("pwd");
 			 
 			if(strPwd.equals(pwd)) {
-				/* response.sendRedirect("../../main/index.jsp"); */
+				response.sendRedirect("../jsp/main/index.jsp");
 				out.println("로그인");
 			} else {
-				out.println("일치하지 않음");
+				out.println("회원 정보가 올바르지 않습니다.");
 			}
-			check = true;
+			idCheck = true;
 		}
-		
-		if(check) out.println("아이디 없음");
 		
 	} catch(SQLException e) {
 		e.printStackTrace();
@@ -59,4 +57,6 @@
 			e.printStackTrace();
 		}
 	}
+	 
+	if(!idCheck) out.println("회원 정보가 올바르지 않습니다.");
 %>
