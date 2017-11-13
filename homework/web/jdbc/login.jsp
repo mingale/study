@@ -40,10 +40,8 @@
 			if(strPwd.equals(pwd)) {
 				response.sendRedirect("../jsp/main/index.jsp");
 				out.println("로그인");
-			} else {
-				out.println("회원 정보가 올바르지 않습니다.");
+				idCheck = true;
 			}
-			idCheck = true;
 		}
 		
 	} catch(SQLException e) {
@@ -58,5 +56,10 @@
 		}
 	}
 	 
-	if(!idCheck) out.println("회원 정보가 올바르지 않습니다.");
+	if(!idCheck) {
 %>
+		<script type="text/javascript">
+			alert("회원 정보가 올바르지 않습니다.");
+			window.history.back();
+		</script>
+<%	} %>
