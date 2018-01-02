@@ -1,0 +1,179 @@
+* SQL 로그 출력 위한 3단계  
+
+0. Spring version 4.3.9.RELEASE
+ 
+1. pom.xml		
+	<!-- log 출력 시작-->
+	<dependency>
+		<groupId>org.lazyluke</groupId>
+		<artifactId>log4jdbc-remix</artifactId>
+		<version>0.2.7</version>
+	</dependency>
+	<!-- log 출력 종료 -->
+		
+		 
+2. servlet-context.xml (src/main/webapp(기본)/WEB-INF/spring/appServlet)
+	sql 로그 출력 추가		*매우 중요
+  	
+	<!-- MyBatis 설정 시작 -->
+	<!-- 컨넥션 풀 : 서버 context.xml --> 
+	<!-- 수정1.name="dataSourc"를 name="dataSourceSpied"로 수정-->
+	<beans:bean name="dataSourceSpied" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<beans:property name="jndiName" value="java:comp/env/jdbc/Oracle11g" />
+		<beans:property name="resourceRef" value="true" />
+	</beans:bean>	
+	
+	<!-- 수정2. 추가 시작-->	
+	<beans:bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <beans:constructor-arg ref="dataSourceSpied" />
+        <beans:property name="logFormatter">
+            <beans:bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <beans:property name="loggingType" value="MULTI_LINE" />
+                <beans:property name="sqlPrefix" value="SQL         :  "/>
+            </beans:bean>
+        </beans:property>
+   	</beans:bean>	
+   	<!-- 추가 종료 -->
+
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource"  ref="dataSource" />  <!-- 컨넥션풀 호출  -->
+		<beans:property name="mapperLocations" value="classpath:student_mybatis/mapper/*.xml" />	 <!-- 경로에 마이바티스.xml 구현 -->	
+	</beans:bean>	
+		
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory"/>
+	</beans:bean>	 
+	<!-- MyBatis 설정 종료 -->
+    
+2-1. 기존소스  (sql 로그 설정 전 버전)
+    <!-- MyBatis 설정 시작 -->
+	<!-- 컨넥션 풀 : 서버 > context.xml -->
+	<beans:bean name="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<beans:property name="jndiName" value="java:comp/env/jdbc/Oracle11g" />
+		<beans:property name="resourceRef" value="true" />
+	</beans:bean>
+	
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource"  ref="dataSource" />  <!-- 컨넥션풀 호출  -->
+		<!-- 주의 : classpath는 소문자 -->
+		<beans:property name="mapperLocations" value="classpath:board_mybatis/mapper/*.xml" />	 <!-- 경로에 마이바티스.xml 구현 -->	
+	</beans:bean>	
+		
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory"/>
+	</beans:bean>	
+	<!-- MyBatis 설정 종료 -->
+	
+	
+3. log4j.xml (src/main|text/resources)
+	기존 소스 모두 주석 처리하고 아래 소스 추가
+
+<!-- 추가 시작 -->
+ <!-- Appenders -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+        </layout>   
+    </appender>
+     
+    <appender name="console-infolog" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p %m%n" />
+        </layout>   
+    </appender>
+     
+    <!-- Application Loggers -->
+    <logger name="first" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="console"/>
+    </logger>
+     
+    <!-- Query Loggers -->
+    <logger name="jdbc.sqlonly" additivity="false">  
+        <level value="INFO"/>  
+        <appender-ref ref="console-infolog"/>  
+    </logger>
+     
+    <logger name="jdbc.resultsettable" additivity="false">  
+        <level value="INFO"/>  
+        <appender-ref ref="console"/>  
+    </logger>  
+ 
+    <!-- Root Logger -->
+    <root>
+        <priority value="off"/>
+        <appender-ref ref="console" />
+    </root>
+<!-- 추가 종료-->	
+
+
+
+
+* 로그 출력 
+
+0. log4j.jar (Maven Dependencies)
+
+1. web.xml
+	<listener> 아래에 추가
+	
+	<!-- log 설정 시작 : -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>	
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>/WEB-INF/log4j.properties</param-value>
+	</context-param>
+	<!-- log 설정 종료 -->
+	
+2. log4j.properties (src/main/webapp(기본)/WEB-INF) - text file
+log4j.rootLogger = DEBUG, stdout, dailyfile	
+
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout 
+log4j.appender.stdout.layout.ConversionPattern = %d [%-5p] %c- %m%n
+
+log4j.logger.com.mybatis3=DEBUG
+
+#log4j.rootLogger = DEBUG, stdout, dailyfile	
+
+#log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+#log4j.appender.stdout.Threshold = DEBUG 
+#log4j.appender.stdout.layout = org.apache.log4j.PatternLayout 
+#log4j.appender.stdout.layout.ConversionPattern = %d %-5p [%t] %-17c{2} (%13F:%L) %3x - %m%n 	
+
+#log4j.appender.dailyfile.Threshold = DEBUG
+#log4j.appender.dailyfile = org.apache.log4j.DailyRollingFileAppender 
+#log4j.appender.dailyfile.DatePattern='.'yyyy-MM-dd 
+#log4j.appender.dailyfile.layout = org.apache.log4j.PatternLayout
+#log4j.appender.dailyfile.ConversionPattern=%d %-5p [%t] %-17c{2} (%13F:%L) %3x - %m%n 
+#log4j.appender.dailyfile.File = C:/filenori/Log4j/logfile.log
+
+
+
+* 정상 적용 시 결과
+
+ 	2017-12-20 15:18:08,986 DEBUG [http-nio-8080-exec-10] jdbc.audit        (Slf4jSpyLogDelegator.java:167)     - 4. Connection.prepareStatement(SELECT * 
+			FROM (SELECT num, writer, pwd, subject, content, readCnt, ref, ref_step, ref_level, reg_date, iP, rownum rNum 
+				  FROM (SELECT * 
+				  		FROM mvc_board 
+						ORDER BY ref DESC, ref_step ASC)) 
+			WHERE rNum >= ? AND rNum <= ?) returned net.sf.log4jdbc.PreparedStatementSpy@74a027ec  org.apache.ibatis.executor.statement.PreparedStatementHandler.instantiateStatement(PreparedStatementHandler.java:87)
+ 	2017-12-20 15:18:08,986 DEBUG [http-nio-8080-exec-10] jdbc.audit        (Slf4jSpyLogDelegator.java:167)     - 4. PreparedStatement.setInt(1, 1) returned   org.apache.ibatis.type.IntegerTypeHandler.setNonNullParameter(IntegerTypeHandler.java:31)
+ 	2017-12-20 15:18:08,987 DEBUG [http-nio-8080-exec-10] jdbc.audit        (Slf4jSpyLogDelegator.java:167)     - 4. PreparedStatement.setInt(2, 5) returned   org.apache.ibatis.type.IntegerTypeHandler.setNonNullParameter(IntegerTypeHandler.java:31)
+ 	2017-12-20 15:18:08,987 INFO  [http-nio-8080-exec-10] jdbc.sqlonly      (Log4JdbcCustomFormatter.java:74)     - SQL         :  SELECT * 
+			FROM (SELECT num, writer, pwd, subject, content, readCnt, ref, ref_step, ref_level, reg_date, iP, rownum rNum 
+				  FROM (SELECT * 
+				  		FROM mvc_board 
+						ORDER BY ref DESC, ref_step ASC)) 
+			WHERE rNum >= 1 AND rNum <= 5
+			
+ 	2017-12-20 15:13:04,541 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |----|-------|----|--------|--------|--------|----|---------|----------|------------------------|----------------|-----|
+ 	2017-12-20 15:13:04,542 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |NUM |WRITER |PWD |SUBJECT |CONTENT |READCNT |REF |REF_STEP |REF_LEVEL |REG_DATE                |IP              |RNUM |
+ 	2017-12-20 15:13:04,542 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |----|-------|----|--------|--------|--------|----|---------|----------|------------------------|----------------|-----|
+ 	2017-12-20 15:13:04,543 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |108 |eee    |eee |eee     |eee     |1       |108 |0        |0         |2017-12-20 10:27:01.103 |0:0:0:0:0:0:0:1 |1    |
+ 	2017-12-20 15:13:04,543 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |109 |www    |www |www     |www     |0       |108 |1        |1         |2017-12-20 10:27:28.525 |0:0:0:0:0:0:0:1 |2    |
+ 	2017-12-20 15:13:04,544 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |107 |xxx    |xxx |xxx     |[null]  |1       |107 |0        |0         |2017-12-20 10:04:09.602 |0:0:0:0:0:0:0:1 |3    |
+ 	2017-12-20 15:13:04,544 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |104 |123    |123 |123     |[null]  |2       |104 |0        |0         |2017-12-20 10:03:48.706 |0:0:0:0:0:0:0:1 |4    |
+ 	2017-12-20 15:13:04,544 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |105 |aaa    |aaa |aaa     |aaa     |1       |104 |1        |1         |2017-12-20 10:03:58.162 |0:0:0:0:0:0:0:1 |5    |
+ 	2017-12-20 15:13:04,545 INFO  [http-nio-8080-exec-6] jdbc.resultsettable (ResultSetCollectorPrinter.java:108)     - |----|-------|----|--------|--------|--------|----|---------|----------|------------------------|----------------|-----|

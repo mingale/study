@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mvc.bookstore.persistence.MemberPers">
+
+	<resultMap id="bespeakMap" type="spring.mvc.bookstore.vo.Bespeak">
+		<result property="order_num" column="order_num"/>
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="phone" column="phone"/>
+		<result property="address" column="address"/>
+		<result property="no" column="no"/>
+		<result property="order_count" column="order_count"/>
+		<result property="order_price" column="order_price"/>
+		<result property="etc" column="etc"/>
+		<result property="bank" column="bank"/>
+		<result property="account" column="account"/>
+		<result property="order_state" column="order_state"/>
+		<collection property="book" column="no" ofType="spring.mvc.bookstore.vo.Book">
+			<id property="no" column="no" />
+			<result property="title" column="title" />
+			<result property="author" column="author"/>
+			<result property="publisher" column="publisher"/>
+			<result property="pub_date" column="pub_date"/>
+			<result property="price" column="price"/>
+			<result property="count" column="count"/>
+			<result property="image" column="image"/>
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 아이디 중복 확인 -->
+	<select id="confirmId" resultType="int">
+		SELECT COUNT(*) FROM member WHERE id = #{id}
+	</select>
+	
+	<!-- 이메일 인증key 존재 확인-1 -->
+	<select id="confirmEmailKey" resultType="int">
+		SELECT COUNT(*) FROM member WHERE e_key = #{e_key}
+	</select>
+	
+	<!-- 이메일 인증key 존재 확인-2) 해당 계정의 권한 등급 UP -->
+	<update id="emailKeyRatingUp" parameterType="String">
+		UPDATE member 
+		SET 
+			rating = 3 
+		WHERE e_key = #{e_key}
+	</update>
+	
+	<!-- 로그인 -->
+	<select id="signIn" resultType="int">
+		SELECT COUNT(*) 
+		FROM member 
+		WHERE id = #{id} AND pwd = #{pwd}
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="signUp" parameterType="spring.mvc.bookstore.vo.Member">
+		INSERT INTO member 
+			(id, pwd, name, phone, email, address, e_key) 
+		VALUES 
+			(#{id}, #{pwd}, #{name}, #{phone}, #{email}, #{address}, #{e_key})
+	</insert>
+	
+	<!-- 회원 정보 -->
+	<select id="getMemberInfo" resultType="spring.mvc.bookstore.vo.Member">
+		SELECT * 
+		FROM member 
+		WHERE id = #{id}
+	</select>
+	
+	<!-- 이메일 존재 여부 -->
+	<select id="confirmEmail" resultType="String">
+		SELECT id 
+		FROM member 
+		WHERE email = #{email}
+	</select>
+	
+	<!-- 인증키 수정 -->
+	<update id="memberEmailKeyUpdate" parameterType="java.util.Map">
+		UPDATE member 
+		SET 
+			e_key = #{key} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 인증시 아이디 가져오기 -->
+	<select id="getId" resultType="String">
+		SELECT id 
+		FROM member 
+		WHERE e_key = #{key}
+	</select>
+	
+	<!-- 인증시 비밀번호 가져오기 -->
+	<select id="getPwd" resultType="String">
+		SELECT pwd 
+		FROM member 
+		WHERE e_key = #{key}
+	</select>
+	
+	<!-- 회원 수정 -->
+	<update id="memberUpdate" parameterType="spring.mvc.bookstore.vo.Member">
+		UPDATE member 
+		SET 
+			pwd=#{pwd}, name=#{name}, phone=#{phone}, email=#{email}, address=#{address} 
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 회원 탈퇴 - id 남기기 -->
+	<update id="memberDelete" parameterType="String">
+		UPDATE member 
+		SET 
+			pwd='x', name='x', phone='010-0000-0000', address='x', memo='x', rating=3, e_key='0'
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 장바구니 추가 -->
+	<insert id="setCart" parameterType="spring.mvc.bookstore.vo.Cart">
+		INSERT INTO cart 
+		VALUES 
+			(#{id}, #{no}, #{title}, #{cart_price}, #{cart_count}, #{image})
+	</insert>
+	
+	<!-- 장바구니 목록 -->
+	<select id="getCartList" resultType="spring.mvc.bookstore.vo.Cart">
+		SELECT *
+		FROM cart c, book b 
+		WHERE c.no = b.no AND id = #{id}
+	</select>
+	
+	<!-- 장바구니 삭제 -->
+	<delete id="cartDelete" parameterType="java.util.Map">
+		DELETE FROM cart 
+		WHERE id = #{id} AND no = #{no}
+	</delete>
+	
+	<!-- 장바구니 수량 수정 -->
+	<update id="cartCountUpdate" parameterType="spring.mvc.bookstore.vo.Cart">
+		UPDATE cart 
+		SET 
+			cart_count = #{cart_count} 
+		WHERE id = #{id} AND no = #{no}
+	</update>
+	
+	<!-- 장바구니 중복 확인 -->
+	<select id="cartCheck" resultType="String">
+		SELECT cart_count 
+		FROM cart 
+		WHERE id = #{id} AND no = #{no}
+	</select>	
+
+	<!-- 장바구니 수량 추가 -->
+	<update id="setCartCount" parameterType="java.util.Map">
+		UPDATE cart 
+		SET 
+			cart_count = #{cart_count} 
+		WHERE id = #{id} AND no = #{no}
+	</update>
+	
+	<!-- 찜 추가 -->
+	<insert id="setWishlist" parameterType="java.util.Map">
+		INSERT INTO wishlist 
+		VALUES (#{id}, #{no})
+	</insert>
+	
+	<!-- 찜 중복 확인 -->
+	<select id="wishlistCheck" resultType="int">
+		SELECT COUNT(*) 
+		FROM wishlist 
+		WHERE id=#{id} AND no=#{no}
+	</select>
+	
+	
+	<!-- 주문 추가-1) 주문번호 -->
+	<select id="orderNumberCreate" resultType="String">
+		SELECT order_sq.nextval FROM dual
+	</select>
+	
+	<!-- 주문 추가-2) 장바구니 목록 중 해당 품목 -->
+	<select id="cartListBook" resultType="java.util.Map">
+		SELECT cart_count, cart_price 
+		FROM cart 
+		WHERE id = #{id} AND no = #{no}
+	</select>
+	
+	<!-- 주문 추가-3) Order에 저장하기 -->
+	<insert id="setOrder" parameterType="spring.mvc.bookstore.vo.Bespeak">
+		INSERT INTO bespeak 
+			(order_num, id, name, phone, address, no,  order_count, order_price, etc, bank, account)
+		VALUES
+			(TO_CHAR(sysdate, 'yyyyMMdd') || LPAD(order_sq.currval, 3, '0'), #{id}, #{name}, #{phone}, #{address}, #{no}, #{order_count}, #{order_price}, #{etc}, #{bank}, #{account})
+	</insert>
+	
+	<!-- 바로 주문 추가 -->
+	<insert id="setNowOrder" parameterType="spring.mvc.bookstore.vo.Bespeak">
+		INSERT INTO bespeak 
+			(order_num, id, name, phone, address, no, order_count, order_price, etc, bank, account)
+		VALUES 
+			(TO_CHAR(sysdate, 'yyyyMMdd') || LPAD(order_sq.nextval, 3, '0'), #{id}, #{name}, #{phone}, #{address}, #{no}, #{order_count}, #{order_price}, #{etc}, #{bank}, #{account})
+	</insert>
+
+	<!-- 주문 내역-1) 중복 없는 주문번호 목록 -->
+	<select id="getMemberOrderDistinctList" resultType="String">
+		SELECT DISTINCT order_num
+		FROM bespeak
+		WHERE id = #{id} AND order_state NOT IN(7, 8, 9)
+		ORDER BY order_num DESC
+	</select>
+
+	<!-- 주문 내역-2) 회원의 주문 내역 -->
+	<select id="getMemberOrderList" resultMap="bespeakMap">
+		SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title
+		FROM bespeak JOIN book
+			ON bespeak.no = book.no
+		WHERE id = #{id} AND order_state NOT IN(7, 8, 9)
+		ORDER BY order_num DESC
+	</select>
+
+	<!-- 해당 주문 정보 -->
+	<select id="getOrderDetail" resultMap="bespeakMap">
+		SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title, image
+		FROM bespeak JOIN book
+			ON bespeak.no = book.no
+		WHERE order_num = #{order_num}
+	</select>
+	
+	<!-- 송장 번호 -->
+	<select id="getShipping" resultType="String">
+		SELECT ship_num FROM shipping WHERE order_num = #{order_num}
+	</select>
+	
+	<!-- 관리자 주문 내역-2) 중복 없는 내역 -->
+	<select id="getHostOrderDistinctList" resultType="spring.mvc.bookstore.vo.Bespeak">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT order_num, rownum as num
+			 FROM (SELECT DISTINCT order_num
+			 FROM bespeak
+			 WHERE order_state NOT IN(7, 8, 9) 
+			 ORDER BY order_num DESC))
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+	
+	<!-- 관리자 주문 내역-1) 모든 내역 -->
+	<select id="getHostOrderList" resultMap="bespeakMap">
+		SELECT *
+		FROM (SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title
+			  FROM bespeak JOIN book
+			  		ON bespeak.no = book.no 
+			  WHERE order_state NOT IN (7, 8, 9) 
+			  ORDER BY order_num DESC)
+	</select>
+
+	<!-- 주문 내역 총 개수 -->
+	<select id="getHostOrderCnt" resultType="int">
+		SELECT COUNT(DISTINCT order_num) FROM bespeak WHERE order_state NOT IN(7, 8, 9)
+	</select>
+
+	<!-- 관리자 주문 상태 수정 -->
+	<update id="orderStateUpdate" parameterType="java.util.Map">
+		UPDATE bespeak
+		SET 
+			order_state = #{state} 
+		WHERE order_num = #{num}
+	</update>
+
+	<!--  배송 시작 -->
+	<insert id="shippingInsert" parameterType="java.util.Map">
+		INSERT INTO shipping 
+		VALUES 
+			(#{order}, #{ship})
+	</insert>
+	
+	<!-- 관리자 환불 내역 총 개수 -->
+	<select id="getRefundCnt" resultType="int">
+		SELECT COUNT(DISTINCT order_num) 
+		FROM bespeak 
+		WHERE order_state IN(7, 8, 9)
+	</select>
+
+	<!-- 관리자 환불내역-1) 모든 주문 내역 -->	
+	<select id="getHostRefundList" resultMap="bespeakMap">
+		SELECT * 
+		FROM (SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title 
+			  FROM bespeak JOIN book
+			  		ON bespeak.no = book.no
+			  WHERE order_state IN (7, 8, 9) 
+			  ORDER BY order_num DESC)
+	</select>
+	
+	<!-- 관리자 환불 내역-2 -->
+	<select id="getHostRefundDistinctList" resultType="spring.mvc.bookstore.vo.Bespeak">
+		<![CDATA[
+		SELECT * 
+		FROM(SELECT order_num, rownum as num
+			 FROM (SELECT DISTINCT order_num
+				   FROM bespeak
+				   WHERE order_state IN(7, 8, 9)
+				   ORDER BY order_num DESC))
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 회원 목록 -->
+	<select id="getMemberList" resultType="spring.mvc.bookstore.vo.Member">
+		<![CDATA[
+		SELECT *
+		FROM (SELECT id, pwd, name, phone, email, address, memo, rating, rownum as num 
+			  FROM member)
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+	
+	<!-- 회원수 -->
+	<select id="getMemberCnt" resultType="int">
+		SELECT COUNT(*) FROM member
+	</select>
+	
+	<!-- 관리자 회원 수정 -->
+	<update id="setHostMemberUpdate" parameterType="java.util.Map">
+		UPDATE member 
+		SET
+			memo=#{memo}, rating=#{rating} 
+		WHERE id = #{id}
+	</update>
+
+	<!-- 주문 삭제 -->
+	<delete id="orderDelete" parameterType="String">
+		DELETE FROM bespeak 
+		WHERE order_num = #{order_num}
+	</delete>
+	
+	<!-- 회원 환불 내역-1) 해당 회원의 중복 없는 주문 목록 -->
+	<select id="getRefundDistinctList" resultType="String">
+		SELECT DISTINCT order_num 
+		FROM bespeak 
+		WHERE order_state IN(7, 8, 9) AND id = #{id}
+	</select>	
+
+	<!-- 회원 환불 내역-2 -->
+	<select id="getRefundList" resultMap="bespeakMap">
+		SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title 
+		FROM bespeak JOIN book
+			ON bespeak.no = book.no
+		WHERE order_state IN(7, 8, 9) AND id = #{id}
+	</select>
+
+	
+	<!-- 
+	spring.mvc.bookstore.vo.Member
+	spring.mvc.bookstore.vo.Cart
+	spring.mvc.bookstore.vo.Bespeak
+	spring.mvc.bookstore.vo.Book 
+	spring.mvc.bookstore.vo.BookSub 
+	spring.mvc.bookstore.vo.StringInt 
+	-->
+</mapper>

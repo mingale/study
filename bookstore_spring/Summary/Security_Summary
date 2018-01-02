@@ -1,0 +1,351 @@
+Spring Security 작성 방법
+폴더에 대한 접근 권한 설정
+
+개념 0.
+	1) 인증(Authentication) 처리
+		현재 사용자가 누구인지 확인하는 과정.
+		일반적인 웹 어플리케이션은 아이디/암호를 이용해서 인증을 처리한다.
+	2) 인가(Authorization) 처리
+		현재 사용자가 특정 대상(URL, 기능 등)을 사용(접근)할 권한이 있는 지 검사한다.
+	3) UI 처리
+		권한이 없는 사용자가 접근했을 때, 알맞은 에러 화면을 보여주거나 로그인 폼과 같이 인증을 위한 화면으로 이동시킨다.		
+
+개념 1. 역할의 종류
+	ROLE_ADMIN, ROLE_MANAGER 권한 존재
+	
+개념 2. 경로별 접근 제한
+	/member로 시작하는 경로	: 인증된 사용자만 접근 가능
+	/manager로 시작하는 경로	: ROLE_MANAGER 권한을 가진 사용자만 접근 가능
+	/admin로 시작하는 경로	: ROLE_ADMIN 권한을 가진 사용자만 접근 가능
+	나머지 경로				: 누구나 접근 가능
+	
+개념 3. 권한 없이 접근시 처리 방법
+	인증을 거치지 않은 사용자가 /member, /manager, /admin으로 접근할 때 로그인 화면으로 이동
+	ROLE_ADMIN 권한이 없는 인증된 사용자가 /admin 경로에 접근할 경우 403 에러 응답(권한 없음) 보여줌
+	ROLE_MANAGER 권한이 없는 인증된 사용자가 /manager 경로에 접근할 경우 403 에러 응답(권한 없음) 보여줌
+	
+개념 4. 인증
+	폼 기반 로그인 : ID/암호를 입력받아 인증 처리
+	인증 상태 유지 : HTTP 세션 사용해서 유지
+	
+
+==================================================================
+=================================================================
+DB 이용하지 않을 경우
+
+1. pom.xml
+	라이브러리 추가
+	spring-security-config
+	spring-security-core
+	spring-security-taglibs
+	spring-security-web
+	
+		<!-- Security START -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
+		<!-- Security END -->
+	
+	
+2. appSelvet > security-context.xml
+	xml 파일 생성: new > Spring Bean Configuration File
+	namespace 탭: security	
+
+<!-- 공통 START -->
+	<security:http use-expressions="true"> <!-- 스프링 표현식을 사용 가능하도록 함 -->
+	<!--  
+		intercept-url		: 접근 권한을 설정하며 순서대로 적용된다. 따라서 접근 권한이 없으면 맨 아래 permitAll 권한 부여.
+		pattern				: 접근 경로를 Ant 패턴으로 설정
+		access				: 해당 경로 패턴에 누가 접근 가능한지를 설정
+		hasAuthority()와 hasRole()은 동일한 기능
+		isAuthenticated()	: 인증된 사용자만 접근 가능하도록 설정
+		permitAll			: 누구나 접근 가능. 맨 아래 쪽에 설정
+		form-login			: 인증된 사용자만 허용하는 경로에 접근할 때 로그인 폼을 보여준다.
+							 	로그인 폼에서 아이디/암호를 전송하면, 로그인(인증) 처리를 한다.
+	-->
+		<!-- pattern으로 들어왔을 때 지정된 access 권한을 가진 자만 접근 가능 -->
+		<security:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/manager/**" access="hasRole('ROLE_MANAGER')"/>
+		<security:intercept-url pattern="/member/**" access="isAuthenticated()"/>
+		<security:intercept-url pattern="/**" access="permitAll"/> <!-- 누구나 접근 가능. /home -->
+		<security:form-login/>
+		<security:logout/>
+	</security:http>
+<!-- 공통 END -->
+	
+<!-- 방법2. DB 이용하지 않을 경우 -->
+<!--
+	DB를 이용하지 않을 경우에는 주석을 처리해야 아래 수행되지 않는다.
+	만약 주석 처리 안하면 DB 반영이 안되며, 아래 하드코딩된 내역으로 인증을 한다.
+-->
+	<!-- 권한 부여 하드코딩 -->
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:user-service>
+				<security:user name="mem1" password="p1234" authorities="ROLE_USER"/>					<!-- mem1에 ROLE_USER 권한 부여 -->
+				<security:user name="manager" password="m1234" authorities="ROLE_MANAGER,ROLE_USER"/>	<!-- manager에 ROLE_MANAGER,ROLE_USER 권한 부여 -->
+				<security:user name="admin" password="a1234" authorities="ROLE_ADMIN,ROLE_USER"/>		<!-- admin에 ROLE_ADMIN,ROLE_USER 권한 부여 -->
+			</security:user-service>
+		</security:authentication-provider>
+	</security:authentication-manager>
+<!-- 방법2 END -->
+
+3. web.xml
+
+	1) context-param의 param-value에 security-context.xml 추가
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/appServlet/security-context.xml <!-- 추가 -->
+		</param-value>
+	</context-param>
+
+	2) Security 추가
+	<!-- Security 추가 : security-context.xml에서 지정한 권한이 적용되도록하기 위한 설정 -->
+	<filter>
+		<!--
+			springSecurityFilterChain
+			spring-security.xml 설정의 스프링 시큐리티 네임스페이스를 처리하는 과정에서 등록된다.
+			
+			*중요* 
+			FilterChainProxy 객체를 스프링 빈으로 등록하는 데, 이 빈의 이름이 springSecurityFilterChain
+			FilterChainProxy: 여러 서블릿 필터를 이용해서 접근 제어, 로그인/로그아웃 등의 보안 관련 서블릿 필터들을 묶어서 실행하는 기능
+							  스프링 시큐리티 설정을 통해 보안 필터 체인을 생성하고, 이 필터 체인을 통해서 웹 요청에 대한 접근을 제어한다.
+					=> 보안 필터체인(SecurityFilterChain) : 다음 하위 기능을 사용할 수 있게 한다.
+						- LogourFilter : <logout>
+						- UsernamePassword AuthenticationFilter : <form-login>
+						- FilterSecurityInterceptor : <intercept-url>
+		-->
+		<filter-name>springSecurityFilterChain</filter-name>
+		<!-- 
+			DelegatingFilterProxy
+			스프링 빈 객체를 필터로 사용하고자 할 때 사용
+			security-context.xml에서 namespace Security 설정시 객체 생성됨.
+			Security 권한들을 Chain 형식으로 작업 
+		-->
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	3) 한글 Encoding
+	<!-- 한글 안 깨지게 처리 시작 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 한글 안깨지게 처리 종료-->
+
+
+4. Controller
+@Controller
+public class SecurityController {
+
+	@RequestMapping(value = "home/main/homeMain")
+	public String homeMain() {
+		System.out.println("homeMain()");
+
+		return "home/main/homeMain";
+	}
+	
+	@RequestMapping(value="member/main/memberMain")
+	public String memberMain() {
+		System.out.println("memberMain()");
+		
+		return "member/main/memberMain";
+	}
+	
+	@RequestMapping(value="manager/main/managerMain")
+	public String managerMain() {
+		System.out.println("managerMain()");
+		
+		return "manager/main/managerMain";
+	}
+	
+	@RequestMapping(value="admin/main/adminMain")
+	public String adminMain() {
+		System.out.println("adminMain()");
+		
+		return "admin/main/adminMain";
+	}
+}
+
+
+5. JSP
+	1) 
+	<body>
+		home(연결 계정: <sec:authentication property="name" />) 메인 화면
+		<a href="<c:url value='/index.jsp'/>">[/index로 가기]</a>
+	</body>
+	
+	2) index.jsp (src/main/webapp/index.jsp)
+	<body>
+		<sec:authorize access="isAuthenticated() "> <!-- 권한 있으면 -->
+			<sec:authentication property="name"/>
+		</sec:authorize>
+		
+		<ul>
+			<li><a href="<c:url value='home/main/homeMain'/>">/home/main</a></li>
+			<li><a href="<c:url value='member/main/memberMain'/>">/member/main</a></li>
+			<li><a href="<c:url value='manager/main/managerMain'/>">/manager/main</a></li>
+			<li><a href="<c:url value='admin/main/adminMain'/>">/admin/main</a></li>
+			<sec:authorize access="isAuthenticated()">
+				<li><a href="<c:url value='/j_spring_security_logout'/>">/j_spring_security_logout</a></li> <!-- 오타X. 권한 있는 사람만 logout -->
+			</sec:authorize>
+		</ul>
+	</body>
+	</html>
+	
+	<!-- 
+	접속 가능 범위
+	비로그인 : home
+	member : home, member
+	manager : home, member, manager
+	admin : home, member, admin
+	-->
+	
+6. 실행 => http://localhost:8080/security/
+
+
+=================================================================
+=================================================================
+DB를 이용하는 방법
+
+1. appServlet/security-dataSource.xml
+	xml 파일 생성: new > Spring Bean Configuration File
+	
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<beans:bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+		<beans:property name="url" value="jdbc.oracle.thin:@localhost:1521:xe" />
+		<beans:property name="username" value="jsp" />
+		<beans:property name="password" value="tiger" />
+	</beans:bean>
+</beans:beans>
+
+2. web.xml
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/appServlet/security-context.xml
+			/WEB-INF/spring/appServlet/security-dataSource.xml <!-- 추가 -->
+		</param-value>
+	</context-param>
+	
+3. pom.xml
+		<!-- Security에 DB 사용 -->
+		<!-- MyBatis START -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>4.3.9.RELEASE</version>
+		</dependency>
+		<!-- MyBatis END -->
+
+4. security-context.xml
+<!-- 방법1. DB 이용할 경우 START -->
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<!-- DB를 이용해서 인증에 필요한 사용자 정보를 조회한다. 
+				data-source-ref 속성은 사용자 정보 DB를 연결할 때 사용할 DataSource를 지정한다.
+			-->
+			<security:jdbc-user-service data-source-ref="dataSource"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+<!-- 방법1. DB 이용할 경우 END -->
+
+
+<!-- 공통 START -->
+	<security:http use-expressions="true"> <!-- 스프링 표현식을 사용 가능하도록 함 -->
+	<!--  
+		intercept-url		: 접근 권한을 설정하며 순서대로 적용된다. 따라서 접근 권한이 없으면 맨 아래 permitAll 권한 부여.
+		pattern				: 접근 경로를 Ant 패턴으로 설정
+		access				: 해당 경로 패턴에 누가 접근 가능한지를 설정
+		hasAuthority()와 hasRole()은 동일한 기능
+		isAuthenticated()	: 인증된 사용자만 접근 가능하도록 설정
+		permitAll			: 누구나 접근 가능. 맨 아래 쪽에 설정
+		form-login			: 인증된 사용자만 허용하는 경로에 접근할 때 로그인 폼을 보여준다.
+							 	로그인 폼에서 아이디/암호를 전송하면, 로그인(인증) 처리를 한다.
+	-->
+		<!-- pattern으로 들어왔을 때 지정된 access 권한을 가진 자만 접근 가능 -->
+		<security:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/manager/**" access="hasRole('ROLE_MANAGER')"/>
+		<security:intercept-url pattern="/member/**" access="isAuthenticated()"/>
+		<security:intercept-url pattern="/**" access="permitAll"/> <!-- 누구나 접근 가능. /home -->
+		<security:form-login/>
+		<security:logout/>
+	</security:http>
+<!-- 공통 END -->
+
+5. 테이블 작성
+	테이블명은 반드시 USERS 이어야 함
+	컬럼명도 지정된 단어 사용
+	
+--DB를 이용한 시큐리티 인증 처리
+-- 사용자 및 권한 매핑 DB 테이블 생성
+
+SELECT * FROM TAB;
+
+CREATE TABLE USERS ( --컬럼명 지키기
+    username    VARCHAR2(50)   PRIMARY KEY,  -- 사용자 이름(로그인 ID)
+    password    VARCHAR2(10)   NOT NULL,     --인증 암호
+    enabled     CHAR(1)        NOT NULL      --계정 사용 가능 여부true,false 없음
+);
+
+INSERT INTO users VALUES ('dbs', 'd1234', '1');
+INSERT INTO users VALUES ('admin', 'a1234', '1');
+INSERT INTO users VALUES ('manager', 'm1234', '1');
+COMMIT;
+
+SELECT * FROM users;
+-------------------------------
+CREATE TABLE authorities (
+    username    VARCHAR2(50)    NOT NULL, --사용자 이름
+    authority   VARCHAR2(50)    NOT NULL --권한
+);
+
+INSERT INTO authorities VALUES ('admin', 'ROLE_ADMIN');
+INSERT INTO authorities VALUES ('admin', 'ROLE_USER');
+INSERT INTO authorities VALUES ('manager', 'ROLE_MANAGER');
+INSERT INTO authorities VALUES ('manager', 'ROLE_USER');
+INSERT INTO authorities VALUES ('dbs', 'ROLE_USER');
+COMMIT;

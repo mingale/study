@@ -1,0 +1,203 @@
+AOP
+AspectJ 문법을 사용하여 PointCut 설정
+
+* XML을 사용하여 Aspect 설정 (Spring 4.3.9.RELEASE)
+1. pom.xml
+	<!-- AspectJ -->
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjrt</artifactId>
+		<version>${org.aspectj-version}</version>
+	</dependency>
+	
+	<!-- AOP 추가 시작 -->
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjweaver</artifactId>
+		<version>1.8.8</version>
+	</dependency>
+	<!-- AOP 추가 종료 -->
+
+2-0. 비즈니스 클래스 작성
+	
+2. Aop Class (횡단관심 클래스) 작성
+package spring.mvc.aop;
+
+import org.aspectj.lang.ProceedingJoinPoint; //pom.xml에서 추가한 aspectj 라이브러리
+
+public class LogAop {
+
+	public void loggerAop(ProceedingJoinPoint joinpoint) throws Throwable {
+		String signatureStr = joinpoint.getSignature().toShortString(); //핵심관심의 정보 : 클래스명.메서드명()
+		System.out.println(signatureStr + " is start");
+		long startTime = System.currentTimeMillis();
+		
+		try {
+			Object obj = joinpoint.proceed(); //핵심관심 호출. Throwable 발생
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			long endTime = System.currentTimeMillis();
+			System.out.println(signatureStr + " is end");
+			System.out.println(signatureStr + " 작업 소요 시간: " + (endTime - startTime));
+		}
+	}
+}
+
+3. applicationCTX.xml 작성
+	src/main/resources > new > Spring Bean Configuration File > applicationCTX.xml
+	namespace 탭 : aop 클릭
+	(Spring Bean Configuration File : Bean 작성에 필요한 환경 제공)
+	
+	<!-- 1. Log Class bean 생성 -->
+	<bean id="logAop" class="spring.mvc.aop.LogAop"/>
+
+	<!--
+		AOP 설정 
+		특정 핵심 관심 범위에 AOP 적용 지정 
+	-->
+	<aop:config>
+		<!-- 
+			2. Aspect 설정: Log Class에 Aop 적용 설정
+		-->
+		<aop:aspect id="logger" ref="logAop">
+			<!-- 
+				4. PointCut 설정: 핵심 관심 정보 (핵심 관심 범위 지정)
+				expression: 핵심관심 적용 범위. (execution을 주로 사용)
+					execution 명시자: Advice 적용할 메서드 명시
+						execution="수식어패턴 리턴타입 패키지.이름패턴(파라미터패턴)"
+						- 수식어패턴: 생략 가능. public, private 등
+						- 리턴타입: 리턴타입
+						- 이름패턴: 클래스명 또는 메서드명
+						- 파라미터패턴: 매칭될 파라미터. (..)은 0개 이상이라는 의미.
+					within 명시자: 메서드가 아닌 특정 타입에 속하는 메서드를 PointCut으로 섲렁
+				EX)
+				<aop:pointcut id="allPointCut" expression="execution(* spring.mvc.aop.ex.*.*())"/>
+					- * spring.mvc.aop.ex.*.*(): 리턴 타입 없이 spring.mvc.aop.ex 내의 모든 클래스 중 매개변수 없는 메서드
+				<aop:pointcut id="allPointCut" expression="within(spring.mvc.aop.*)"/> 
+			-->
+			<aop:pointcut id="allPointCut" expression="execution(* spring.mvc.aop.ex.*.*())"/>
+			<!--
+				3. 메서드 적용 설정: 메서드 적용 시점, 수행할 메서드 설정
+				pointcut-ref="메서드 적용 범위 참조" method="실행할 메서드"
+					around: 핵심 관심 실행 전, 후에 메서드 수행
+					before: 핵심 관심 실행 전에 수행
+					after: 핵심 관심 실행 후에 수행
+			--> 
+			<aop:around pointcut-ref="allPointCut" method="loggerAop"/>
+		</aop:aspect>
+	</aop:config>
+
+	<!-- XML로 값 넣기 -->
+	<bean id="member" class="spring.mvc.aop.ex.Member">
+		<property name="id" value="park"></property>	<!-- setProperty : setId -->
+		<property name="pwd" value="pass"></property>	<!-- setPwd -->
+		<property name="name" value="박"></property>		<!-- setName -->
+		<property name="hobby" value="coding"></property>
+	</bean>
+
+4. Main Class
+package spring.mvc.aop;
+
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+import spring.mvc.aop.ex.Member;
+
+public class Main {
+
+	public static void main(String[] args) {
+		AbstractApplicationContext ctx = new GenericXmlApplicationContext("classpath:applicationCTX_1.xml");
+		
+		Member member = ctx.getBean("member", Member.class);
+		member.getMemberInfo();
+		
+		ctx.close();
+	}
+}
+
+=> 결과
+Member.getMemberInfo() is start
+=== 핵심 관심 / 비즈니스 로직 ===
+ID: park
+PWD: pass
+NAME: 박
+HOBBY: coding
+Member.getMemberInfo() is end
+Member.getMemberInfo() 작업 소요 시간: 13
+
+NotFoundError => 설치
+ aopaliance1.0, cglib cannot 등
+ 
+ 
+ 
+ 
+ 
+ 
+ ===================================================
+ 
+ 
+* Anotation 방식
+
+1. pom.xml
+	<!-- AspectJ -->
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjrt</artifactId>
+		<version>${org.aspectj-version}</version>
+	</dependency>
+	
+	<!-- AOP 추가 시작 -->
+	<dependency>
+		<groupId>org.aspectj</groupId>
+		<artifactId>aspectjweaver</artifactId>
+		<version>1.8.8</version>
+	</dependency>
+	<!-- AOP 추가 종료 -->
+
+2. servlet-context.xml
+	<context:component-scan base-package="spring.mvc.aop_anotation" />
+
+3. 비즈니스 Class
+
+4. 횡단관심 Class
+@Aspect
+public class LogAop {
+
+	//Pointcut 지정									Xml의 Reference?
+	@Pointcut("execution(* spring.mvc.aop_anotation.*.*())") //spring.mvc.aop_anotation 패키지 하위의 모든 클래스 중 매개변수 없는 메서드가 핵심 관심
+	private void allPointCut() {}
+	
+	//수행 시점 지정
+	@Around("allPointCut()")
+	public Object loggerAop(ProceedingJoinPoint joinpoint) throws Throwable {
+		String signatureStr = joinpoint.getSignature().toShortString(); //핵심관심의 정보 : 클래스명.메서드명
+		System.out.println(signatureStr + " is start");
+		long startTime = System.currentTimeMillis();
+		
+		try {
+			Object obj = joinpoint.proceed(); //핵심관심 호출. Throwable 발생
+			return obj;
+		} finally {
+			long endTime = System.currentTimeMillis();
+			System.out.println(signatureStr + " is end");
+			System.out.println(signatureStr + " 작업 소요 시간: " + (endTime - startTime));
+		}
+	}
+}
+
+5. applicationCTX_2.xml 작성
+	<aop:aspectj-autoproxy/>
+	
+	<bean id="logAop" class="spring.mvc.aop_anotation.LogAop"/>
+
+	<bean id="member" class="spring.mvc.aop_anotation.Member">
+		<property name="id" value="아이디"/>
+		<property name="pwd" value="비번"/>
+		<property name="name" value="이름"/>
+		<property name="hobby" value="코딩"/>
+	</bean>
+	
+6. Main Class
+
+7. 실행 : Main > Run as > Java Application

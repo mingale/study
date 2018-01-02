@@ -1,0 +1,29 @@
+--DB를 이용한 시큐리티 인증 처리
+-- 사용자 및 권한 매핑 DB 테이블 생성
+
+SELECT * FROM TAB;
+
+CREATE TABLE USERS ( --컬럼명 지키기
+    username    VARCHAR2(50)   PRIMARY KEY,  -- 사용자 이름(로그인 ID)
+    password    VARCHAR2(10)   NOT NULL,     --인증 암호
+    enabled     CHAR(1)        NOT NULL      --계정 사용 가능 여부true,false 없음
+);
+
+INSERT INTO users VALUES ('dbs', 'd1234', '1');
+INSERT INTO users VALUES ('admin', 'a1234', '1');
+INSERT INTO users VALUES ('manager', 'm1234', '1');
+COMMIT;
+
+SELECT * FROM users;
+-------------------------------
+CREATE TABLE authorities (
+    username    VARCHAR2(50)    NOT NULL, --사용자 이름
+    authority   VARCHAR2(50)    NOT NULL --권한
+);
+
+INSERT INTO authorities VALUES ('admin', 'ROLE_ADMIN');
+INSERT INTO authorities VALUES ('admin', 'ROLE_USER');
+INSERT INTO authorities VALUES ('manager', 'ROLE_MANAGER');
+INSERT INTO authorities VALUES ('manager', 'ROLE_USER');
+INSERT INTO authorities VALUES ('dbs', 'ROLE_USER');
+COMMIT;

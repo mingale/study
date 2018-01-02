@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="spring.mvc.bookstore.persistence.BookPers">
+	<!-- namespace의 intertace method와 일치해야 한다. (returnType, methodName, parameterType) -->
+	
+ 	<resultMap id="bookMap" type="spring.mvc.bookstore.vo.Book">
+		<id property="no" column="no" />
+		<result property="title" column="title" />
+		<result property="author" column="author"/>
+		<result property="publisher" column="publisher"/>
+		<result property="pub_date" column="pub_date"/>
+		<result property="price" column="price"/>
+		<result property="count" column="count"/>
+		<result property="image" column="image"/>
+		<collection property="bookSub" ofType="spring.mvc.bookstore.vo.BookSub">
+			<result property="no" column="no"/>
+			<result property="tag" column="tag"/>
+			<result property="tag_main" column="tag_main"/>
+			<result property="intro" column="intro"/>
+			<result property="list" column="list"/>
+			<result property="pub_intro" column="pub_intro"/>
+			<result property="review" column="review"/>
+			<result property="add_date" column="add_date"/>
+			<result property="views" column="views"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap id="bespeakMap" type="spring.mvc.bookstore.vo.Bespeak">
+		<result property="order_num" column="order_num"/>
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="phone" column="phone"/>
+		<result property="address" column="address"/>
+		<result property="no" column="no"/>
+		<result property="order_count" column="order_count"/>
+		<result property="order_price" column="order_price"/>
+		<result property="etc" column="etc"/>
+		<result property="bank" column="bank"/>
+		<result property="account" column="account"/>
+		<result property="order_state" column="order_state"/>
+		<collection property="book" column="no" ofType="spring.mvc.bookstore.vo.Book">
+			<id property="no" column="no" />
+			<result property="title" column="title" />
+			<result property="author" column="author"/>
+			<result property="publisher" column="publisher"/>
+			<result property="pub_date" column="pub_date"/>
+			<result property="price" column="price"/>
+			<result property="count" column="count"/>
+			<result property="image" column="image"/>
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 도서 검색 -->
+	<select id="bookSearch" resultType="spring.mvc.bookstore.vo.Book">
+		<![CDATA[
+		SELECT * 
+		FROM (SELECT no, title, author, publisher, pub_date, price, count, image, rownum as num
+			  FROM book 
+			  WHERE title LIKE '%'||#{keyword}||'%') 
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 도서 검색 결과수 -->
+	<select id="bookSearchCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM book 
+		WHERE title LIKE '%'||#{keyword}||'%'
+	</select>
+
+	<!-- 도서 조회수 증가 -->
+	<update id="bookViewsUpdate" parameterType="String">
+		UPDATE book_sub 
+		SET
+			views=views+1 
+		WHERE no = #{no}
+	</update>
+
+	<!-- 모든 도서 목록 -->
+	<select id="getAllBook" resultType="spring.mvc.bookstore.vo.Book">
+		SELECT * FROM book
+	</select>
+
+	<!-- 도서 정보 -->
+	<select id="getBookInfo" resultMap="bookMap">
+		SELECT book.no, title, author, publisher, pub_date, price, count, image, tag, tag_main, intro, list, pub_intro, review, add_date
+		FROM book JOIN book_sub ON book.no = book_sub.no
+		WHERE book.no = #{no}
+	</select>
+
+	<!-- 신간 도서 목록 -->
+	<select id="getNewBook" resultType="spring.mvc.bookstore.vo.Book">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT no, title, author, publisher, pub_date, price, count, image, rownum as num  
+			FROM book 
+			WHERE pub_date > ADD_MONTHS(sysdate, -18)  
+			ORDER BY pub_date DESC, TITLE) 
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 베스트셀러(인기) 도서 목록 -->
+	<select id="getBestBook" resultType="spring.mvc.bookstore.vo.Book">
+		<![CDATA[
+		SELECT *
+		FROM (SELECT no, title, author, publisher, pub_date, price, count, image, rownum as num
+		      FROM(SELECT b.no, b.title, b.author, b.publisher, b.pub_date, b.price, b.count, b.image, bs.views, order_count
+			   	   FROM (SELECT b.no, sum(o.order_count) as order_count
+						 FROM book b, bespeak o
+					   	 WHERE b.no = o.no
+					   	 GROUP BY b.no) p, book b, book_sub bs
+				   WHERE b.no = bs.no AND b.no = p.no
+				   ORDER BY order_count DESC, views DESC))
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 추천 도서 목록 -->
+	<select id="getGoodTagBook" resultType="spring.mvc.bookstore.vo.Book">
+		<![CDATA[
+		SELECT *
+		FROM (SELECT b.no, title, author, publisher, pub_date, price, count, image, tag, tag_main, intro, list, pub_intro, review, add_date, rownum as num
+			  FROM book_sub bs, book b
+			  WHERE b.no = bs.no AND tag = 1
+			  ORDER BY add_date)
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 도서 목록 -->
+	<select id="getBookList" resultMap="bookMap">
+		<![CDATA[
+		SELECT *
+		FROM (SELECT no, title, author, publisher, pub_date, price, count, image, add_date, rownum as num
+			  FROM (SELECT book.no, title, author, publisher, pub_date, price, count, image, add_date 
+			  		FROM book JOIN book_sub
+			  			ON book.no = book_sub.no 
+			  		ORDER BY book.no DESC)) 
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 메인태그 목록 -->
+	<select id="getTag_mainList" resultType="spring.mvc.bookstore.vo.BookSub">
+		SELECT * FROM tag_main
+	</select>
+
+	<!-- tag_main 도서 목록 -->
+	<select id="getTagMainBook" resultType="spring.mvc.bookstore.vo.Book">
+		<![CDATA[
+		SELECT * 
+		FROM (SELECT b.no, title, author, publisher, pub_date, price, count, image, tag, tag_main, intro, list, pub_intro, review, add_date, rownum as num 
+			  FROM (SELECT * FROM book ORDER BY no DESC) b join (SELECT * FROM book_sub ORDER BY no DESC) bs 
+				 on b.no = bs.no 
+			  WHERE tag_main = #{tagNum}) 
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 국내도서 목록 -->
+	<select id="getDomesticBook" resultType="spring.mvc.bookstore.vo.Book">
+		<![CDATA[
+		SELECT * 
+		FROM (SELECT b.no, title, author, publisher, pub_date, price, count, image, tag, tag_main, intro, list, pub_intro, review, add_date, rownum as num 
+			  FROM (SELECT * FROM book ORDER BY no DESC) b join (SELECT * FROM book_sub ORDER BY no DESC) bs 
+					on b.no = bs.no 
+			  WHERE tag_main != '21') 
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 도서 개수 -->
+	<select id="getBookCnt" resultType="int">
+		SELECT COUNT(*) FROM book
+	</select>
+
+	<!-- tag_main 수 -->
+	<select id="getTag_mainCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM tag_main
+	</select>
+
+	<!-- 베스트(인기) 도서 개수 -->
+	<select id="getBestCount" resultType="int">
+		SELECT COUNT(*)
+		FROM(SELECT b.no, views, sum(o.order_count)
+			 FROM book_sub b, bespeak o
+			 WHERE b.no = o.no
+			 GROUP BY b.no, views)
+	</select>
+
+	<!-- 신간 도서 개수 -->
+	<select id="getNewCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM book
+		WHERE pub_date > ADD_MONTHS(sysdate, -18)
+	</select>
+
+	<!-- 추천 도서 개수 -->
+	<select id="getGoodCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM book b, book_sub bs 
+		WHERE b.no = bs.no AND bs.tag = 1
+	</select>
+
+	<!-- tag/tag_main 도서 개수 -->
+	<select id="getTagMainCount" resultType="int">
+		SELECT COUNT(*) 
+		FROM book_sub 
+		WHERE tag_main = #{tag}
+	</select>
+
+	<!-- 도서 수정 -->
+	<update id="bookUpdate" parameterType="spring.mvc.bookstore.vo.Book">
+		UPDATE book 
+		SET
+			title=#{title}, author=#{author}, publisher=#{publisher}, pub_date=#{pub_date}, price=#{price}, count=#{count}, image=#{image}
+		WHERE no=#{no}
+	</update>
+
+	<!-- 도서 수량 수정-1, 환불 도서 수량-1) 주문 내역 + 도서 정보-->
+	<select id="getOrderBookCount" resultMap="bespeakMap">
+		SELECT *
+		FROM bespeak JOIN book
+			ON bespeak.no = book.no  
+		WHERE order_num = #{order_num}
+	</select>
+
+	<!-- 도서 수량 수정-2) 재고가 충분하면 수량 감소 -->
+	<update id="orderBookCountMul" parameterType="java.util.Map">
+		UPDATE book 
+		SET
+			count=#{count} WHERE no=#{no}
+	</update>
+
+	<!-- 환불 도서 수량-2) 도서 수량 다시 추가하기 -->
+	<update id="refundBookCountAdd" parameterType="spring.mvc.bookstore.vo.Book">
+		UPDATE book 
+		SET
+			count=#{count} WHERE no=#{no}
+	</update>
+
+	<!-- 도서 삭제 -->
+	<delete id="bookDelete" parameterType="String">
+		DELETE FROM book WHERE no = #{no}
+	</delete>
+
+	<!-- 도서 추가 -->
+	<insert id="bookInsert" parameterType="spring.mvc.bookstore.vo.Book">
+		INSERT INTO book 
+		VALUES
+			(LPAD(book_sq.nextval, 4, '0'), #{title}, #{author}, #{publisher}, #{pub_date}, #{price}, #{count}, #{image})
+	</insert>
+
+	<!-- 도서 수정 -->
+	<update id="bookSubUpdate" parameterType="spring.mvc.bookstore.vo.BookSub">
+		UPDATE book_sub 
+		SET
+			tag=#{tag}, tag_main=#{tag_main}, intro=#{intro}, list=#{list}, pub_intro=#{pub_intro}, review=#{review} 
+		WHERE no = #{no}
+	</update>
+
+	<!-- 도서 부가 정보 추가 -->
+	<insert id="bookSubInsert" parameterType="spring.mvc.bookstore.vo.BookSub">
+		INSERT INTO book_sub
+			(no, tag, tag_main, intro, list, pub_intro, review)
+		VALUES
+			(LPAD(book_sq.currval, 4, '0'), #{tag}, #{tag_main}, #{intro}, #{list}, #{pub_intro}, #{review})
+	</insert>
+
+	<!-- 총 판매 도서수 -->
+	<select id="getSalesTotalCount" resultType="int">
+		SELECT SUM(order_count)
+		FROM bespeak 
+		WHERE order_state NOT IN(0, 8, 9)
+	</select>
+
+	<!-- 총 매출액 -->
+	<select id="getSalesTotalAmount" resultType="int">
+		SELECT SUM(order_price * order_count) 
+		FROM bespeak 
+		WHERE order_state NOT IN(0, 8, 9)
+	</select>
+
+	<!-- 올해 태그별 판매량 -->
+	<select id="getTagSalesTotal" resultType="spring.mvc.bookstore.vo.StringInt">
+		SELECT tag as str, sum(order_count) as count
+		FROM (SELECT * 
+			  FROM bespeak b, book_sub bs
+			  WHERE b.no = bs.no AND order_state NOT IN(0, 8, 9))
+		GROUP BY tag, substr(order_num, 1, 4)
+		HAVING substr(order_num, 1, 4) = TO_CHAR(sysdate, 'yyyy')
+	</select>
+
+	<!-- 올해 태그별 환불량 -->
+	<select id="getTagRefundTotal" resultType="spring.mvc.bookstore.vo.StringInt">
+		SELECT tag as str, sum(order_count) as count
+		FROM (SELECT *
+			  FROM bespeak b, book_sub bs
+			  WHERE b.no = bs.no AND order_state IN(8, 9))
+			  GROUP BY tag, substr(order_num, 1, 4)
+		HAVING substr(order_num, 1, 4) = TO_CHAR(sysdate, 'yyyy')
+	</select>
+
+	<!-- 연간 매출액 -->
+	<select id="getYearSalesTotalAmount" resultType="spring.mvc.bookstore.vo.StringInt">
+		SELECT substr(order_num, 1, 4) as str, SUM(order_count * order_price) as count
+		FROM (SELECT *
+			  FROM bespeak
+			  WHERE order_state NOT IN(0, 8, 9))
+		GROUP BY substr(order_num, 1, 4)
+	</select>
+
+	<!-- 연간 판매량 -->
+	<select id="getYearSalesTotalCount" resultType="spring.mvc.bookstore.vo.StringInt">
+		SELECT substr(order_num, 1, 4) as str, SUM(order_count) as count
+		FROM (SELECT *
+			 FROM bespeak
+			 WHERE order_state NOT IN(0, 8, 9))
+		GROUP BY substr(order_num, 1, 4)
+	</select>
+
+	<!-- 연간 환불액 -->
+	<select id="getYearRefundTotalAmount" resultType="spring.mvc.bookstore.vo.StringInt">
+		SELECT substr(order_num, 1, 4) as str, SUM(order_price * order_count) as count
+		FROM bespeak
+		WHERE order_state IN(8, 9)
+		GROUP BY substr(order_num, 1, 4)
+	</select>
+
+	<!-- 주간별 태그별 매출액-1 -->
+	<select id="getTagWeeklyCount" resultType="spring.mvc.bookstore.vo.StringInt">
+		<![CDATA[
+		SELECT md, SUM(order_price * order_count) as count, tag_main as str
+		FROM (SELECT substr(b.order_num, 1, 8) as md, b.order_price, b.order_count, bs.tag_main
+			  FROM bespeak b, book_sub bs
+			  WHERE b.no = bs.no
+				AND TO_DATE(SUBSTR(b.order_num, 1, 8), 'yyyyMMdd') >= TO_CHAR(TRUNC(sysdate,'MM'),'YYYYMMdd')
+				AND TO_DATE(SUBSTR(b.order_num, 1, 8), 'yyyyMMdd') <= LAST_DAY(sysdate))
+		GROUP BY md, tag_main
+		ORDER BY md, tag_main
+		]]>
+	</select>
+	
+	
+	<!-- 검색 
+		동적 SQL 추가 (519p 참조)
+	-->
+	<!-- <select id="searchList" resultType="spring.mvc.board_mybatis.vo.BoardVO">
+		<![CDATA[
+		SELECT * 
+		FROM ( SELECT num, writer, pwd, subject, content, readCnt,
+		            ref, ref_step, ref_level, reg_date, iP, rownum rNum
+		         FROM (
+		            SELECT * FROM mvc_board
+		            ORDER BY ref DESC, ref_step ASC
+		        )
+		    )
+		WHERE rNum >= 1 AND rNum <= 5
+		]]>
+		<if test="searchCondition == 'TITLE'">
+		    AND writer LIKE '%'||#{searchKeyword}||'%';
+		</if>
+	</select> -->
+</mapper>

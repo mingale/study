@@ -1,0 +1,213 @@
+1. 프로젝트 생성
+	new Project > Spring Legacy Project > 프로젝트명 입력, Spring MVC Project > 패키지명 입력(경로 - 3단계 이상)
+	세번째 패키기명은 컨텍스트명이 된다. (예: spring.mvc.Board_mybatis : localhost:8080/Board_mybatis)
+	HomeController.java 실행 테스트할 것
+	
+2. 패키지 생성 후 소스 복붙 ('src/main/java'/)
+	패키지: Controller, Persistence, Service, VO
+	소스: JSP_mvcBoard (공통 패키지 경로가 3개 이상)
+	- servlet-context.xml에 component-scan하기 위해 아래처럼 되어 있다.
+	- <context:component-scan base-package="spring.mvc.Board_mybatis" />
+	spring.mvc.Board_mybatis.controller
+	spring.mvc.Board_mybatis.service
+	spring.mvc.Board_mybatis.persistence
+	spring.mvc.Board_mybatis.vo
+	
+3. JSP 폴더 생성 (WEB-INF/views/)
+	WEB-INF/views/Board폴더 생성 후 jsp를 복사해서 붙여 넣는다.
+
+4. Resource 파일 (webapp/resources/) 
+	script.js, css 파일을 넣는 다.
+	setting.jsp 수정 : project 경로를 /Board_mybatis/resources/로 수정
+		컨텍스트 명(=패키지 세번째 경로)/resources
+	
+5. 컨트롤러 작성 (Java Class)
+	[
+		@Controller
+		public class ControllerName {
+	  		@Autowired
+			ServiceName service;
+			
+	  		@RequestMapping("url")
+	  		//@RequestMapping(value="url", method=RequestMethod.GET)
+	  		public String method(HttpServletRequest req, Model model) {
+	  			req.setAttribute("key", value); =>> model.addAttribute("key", value);
+	  			return "/경로/jspName";
+	  		}
+	  	}
+	]
+	- req, res => req, Model model로 수정
+	
+6. 서비스 작성 
+	[ 
+		@Service
+		public class ServiceNameImpl implements ServiceName {
+	  		@Autowired //@Inject
+	  		RepositoryName dao;
+	  }
+	]
+	패키지 경로 수정. req, res => req, Model model로 수정, @Service
+	  
+7. DAO 작성 : 패키지 경로 수정. 
+	[
+		@Repository
+		public class RepositoryNameImpl implements RepositoryName {} 
+	]
+
+8. VO 작성 : 패키지 경로 수정
+
+9. JSP 작성 : .do 뺀다.
+
+10. 단계별로 수정되지 않은 메소드들은 주석처리한다.
+
+11. ojdbc6.jar
+	java.lang.ClassNotFoundException
+	C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib\ojdbc6.jar 복사
+	=> C:\Program Files\Java\jre1.8.0_144\lib에 ojdbc6.jar 붙여넣는다.
+	=> C:\Program Files\Java\jre1.8.0_144\lib\ext에 ojdbc6.jar 붙여넣는다.
+
+12. 한글 Encoding (web.xml)
+	<!-- 한글 안 깨지게 처리 시작 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 한글 안깨지게 처리 종료-->
+ 
+
+	<!--
+		기본 환경 설정.
+		수정 후 반드시 server restart
+	-->
+	
+13. 컨텍스트 충돌
+	서버에서 톰캣 우클릭 > Add And Remove 설택 > remove All
+ 	또는 프로젝트 우클릭 > Properties > Web Project Settings > Context root 수정
+ 	또는 서버 톰캣 더블클릭 > 모듈 탭 선택 > 중복 path 클릭 > edit 버튼 클릭하여 수정한다.
+ 	
+ 
+ *********** Mybatis 설정 ********************************************************************************************
+ 14. Spring - Mybatis 연동 설정 파일 등록 (pom.xml)
+ 	서버 종료된 상태에서 진행
+ 	mybatis-spring, spring-jdbc, mybatis, spring-test 추가.
+ 	- 파일 검색 : Dependencies 탭 > Add
+ 	- 직접 입력: pom.xml 탭
+ 			<!-- Mybatis 등록 시작-->	
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis-spring</artifactId>
+				<version>1.3.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mybatis</groupId>
+				<artifactId>mybatis</artifactId>
+				<version>3.4.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-jdbc</artifactId>
+				<version>4.3.9.RELEASE</version> <!-- <org.springframework-version>과 동일 -->
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-test</artifactId>
+				<version>4.3.9.RELEASE</version>
+			</dependency>
+			<!-- Mybatis 등록 종료 -->
+			
+15. servlet-context.xml
+	<!-- MyBatis -->
+	
+	<!-- 3. ConnectionPool 접속 -->
+	<beans:bean name="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<beans:property name="jndiName" value="java:comp/env/jdbc/Oracle11g/board" />  <!-- context.xml의 컨넥션풀 lookup -->
+	    <beans:property name="resourceRef" value="true" />
+	</beans:bean>
+	
+	<!-- 2. ConnectionPool 호출, MyBatis 경로 지정 -->
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+		<!-- ConnectionPool setter,호출 -->
+		<beans:property name="dataSource" ref="dataSource"/>
+		<!-- Mybatis.xml 경로 설정 -->	
+		<beans:property name="mapperLocations" value="classpath:board_mybatis/mapper/*.xml" />
+	</beans:bean>
+	
+	<!-- ConnectionPool 접근할 수 있도록 지원 -->
+	<!-- 1. DAO에서 사용할 ConnectionPool 접근 변수 -->
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory"/>	
+	</beans:bean>
+		
+	<!-- MyBatis -->
+	
+16. Mapper 작성 (XML file)
+	1) 위치: src/main/resources(기본)/board_mybatis/mapper/mapperName.xml
+			beans의 mapperLocations에서 지정한 경로
+			
+	2) DOCTYPE 추가: mybatis.org 사이트 > products > MyBatis3 - docs Link > Configuration XML > Handling Enums - Sample Source
+		<!DOCTYPE mapper
+	    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	    
+	3)
+		<mapper namespace="packageName.interfaceName">
+			- select 문장은 반드시 resultType을 기술해야 한다.
+				select의 return type이 int형이면 SELECT *을 SELECT COUNT(*)로 바꾼다.
+			- insert, update, delete 문장은 parameterType만 기술한다.
+				MyBatis가 알아서 성공, 실패 여부의 결과값을 넘겨준다.
+			- parameterType, resultType이 클래스 타입인 경우 packageName.className을 기술한다.
+			- 문장의 끝에 ;을 붙이지 않는다.
+			- 매개변수가 2개 이상일 때는 parameterType=java.util.Map으로 받는다.
+			- 매개변수명은 반드시 일치해야 한다. ex) method(String str) => #{str}
+			- <id="식별자">는 유일해야 하며, 인터페이스의 메서드명이 와야 한다.
+				따라서 인터페이스 메서드 개수만큼 Mapper도 작성
+			- ? 대신에 prepareStatement에서 set한 #{변수명}이 와야 한다.
+			* method의 returnType, methodName, parameterType이 mapper의 resultType, id, parameterType과 일치해야 한다.
+			<select id="methodName" parameterType="methodParameterType" resultType="methodReturnType>
+			
+			</select>
+		</mapper>
+
+17. 어노테이션 확인
+	@Controller
+	public class BoardController {
+	
+		@Autowired
+		BoardService service;
+		
+	@Service
+	public class BoardServiceImpl implements BoardService{
+		
+		@Autowired //== @Inject
+		BoardDAO dao;
+		
+	@Repository
+	public class BoardDAOImpl implements BoardDAO{
+	
+		@Autowired //@Inject
+		private SqlSession sqlSession;
+
+		
+*** TEST
+
+
+18. Controller, Service, BoardDAO Interface 주석 해제해가면서, Mapper 작성, BoardDAOImpl에서 호출
+
+19. 주석 해제
+Controller	: 중복확인,회원가입,가입 성공	/ 로그인,로그아웃 / 탈퇴폼,탈퇴처리 / 회원정보수정
+Service		: 중복확인,회원가입			/ 로그인,로그아웃 / 탈퇴폼,탈퇴처리 / 회원정보수정
+DAO			: 중복확인,회원가입			/ 로그인,로그아웃 / 탈퇴폼,탈퇴처리 / 회원정보수정
+Mapper 작성, DAOImpl 작성 
