@@ -1,0 +1,91 @@
+﻿@charset "utf-8";
+
+/* 공통 */
+.wrap{width:1024px;margin:0 auto;}
+.clearfix::after{display:block;content:"";clear:both;}
+
+/* layout */
+header{top:0;left:0;right:0;background-color:lightblue;}
+header .menu_gnb{padding:5px 10px;margin:auto 0;}
+header .logo {float:left;font-weight:bold;}
+header .gnb{float:right;font-size:12px;}
+header li{float:left;padding:0 10px;}
+header .search_area{width:100%;height:30px;line-height:30px;text-align:center;margin:20px 0;}
+header .search{width:300px;height:26px;padding:0 5px;border:none;}
+header .searButton{width:50px;height:25px;background:white;}
+header .sub_gnb{width:600px;margin:0 auto;padding: 5px 0 25px 0;text-align:center;font-size:14px;}
+header nav a{padding:0 10px;}
+
+.slideContainer{height:300px;margin-bottom:30px;}
+.mySlides{display:none;text-align:center;}
+.fade{-webkit-animation-name:fade;-webkit-animation-duration:1.5s;animation-name:fade;animation-duration:1.5s;}
+.slideImg{height:300px;}
+
+section{margin:0;}
+section .wrap{min-height:500px;}
+section .container{width:100%;padding:0 10px 10px;}
+section .input{width:100%;max-width:400px;height:50px;border:none;padding:5px;}
+section .inputButton{width:100%;max-width:400px;height:50px;margin-bottom:15px;font-size:14px;background:lightblue;}
+section .middleButton{width:100px;height:30px;margin-bottom:5px;background:lightblue;}
+section .smallButton{width:120px;height:25px;margin-bottom:5px;background:lightblue;}
+
+aside{position:fixed;top:50%;right:20px;font-size:11px;}
+aside .wrap{width:70px;text-align:center;background-color:steelblue;padding:0 2px;}
+aside .quick_area img{width:65px;height:85px;margin:2px 0;}
+aside input{width:80px;}
+aside span{background-color:steelblue;margin:7px 3px;line-height:29px;color:white;}
+aside .btn{display:block;width:100%;background-color:steelblue;margin:1px 0;padding:3px 0;font-weight:bold;}
+
+footer{bottom:0;left:0;right:0;padding-bottom:5px;font-size:12px;background-color:lightblue;}
+footer nav{width:100%;text-align:center;padding:10px 0;margin:0 auto;background-color:steelblue;} 
+footer nav a{padding:0 10px;}
+footer .f_left{float:left;width:47%;padding:10px;}
+footer .f_right{float:right;width:47%;padding:10px;}
+
+input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}
+.inputNumber{width:40px;height:25px;text-align:center;border-radius:0.5em;border:1px solid #c6c6c6;}
+
+
+
+@media(max-width:1024px) {
+	.wrap{width:auto;}
+	
+	header .sub_gnb{width:auto;}
+	
+	section{width:auto;}
+	section .slider{width:auto;background-color:red;}
+	
+}
+
+@media(max-width:680px) {
+	header .search{width:200px;}
+	
+	footer .f_left{clear:both;width:auto;}
+	footer .f_right{clear:both;width:auto;}
+}
+
+
+
+
+/* test용 */
+/* .wrap{border:1px solid black;} */
+
+/* ul 가운데 정렬 방법
+	block이라서 text-align 적용 안됨 -> margin으로 자동 정렬.
+	width:100% -> margin이 없으므로 사이즈를 지정하여 margin 생기게 해야 함
+	텍스트 사이즈만큼만 하고싶으면 inline-block 적용*/
+	
+/* 
+	white-space:nowrap-영역 상관없이 한줄 쓰기
+	overflow:hidden 영역 벗어나면 문자 자르기, text-overflow:ellipsis와 함께 사용하면 말줄임표 표기
+	text-overflow:ellipsis - 영역 벗어나기(무조건 한줄 쓰기)
+*/
+
+/* 
+ 	word-wrap:break-word
+	가로 사이즈나 엘러먼트에 맞춰서 강제 줄 바꿈 해준다. word-break:break-all; 같은결과물
+*/
+/*
+	input type numer의 증감 버튼 없애기
+	input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button {-webkit-appearance: none;margin: 0;}
+*/
