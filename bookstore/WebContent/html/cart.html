@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>동네 서점 - 장바구니</title>
+
+	<link rel="stylesheet" href="../css/reset.css">	
+	<link rel="stylesheet" href="../css/common.css">
+	<link rel="stylesheet" href="../css/a_board.css">
+
+	<style>
+		section{margin-top:20px;}
+
+		.item_title{width:100%;font-size:12px;}
+
+		.item{text-align:center;}
+		.title{width:550px;}
+		.title a > div{float:left;width:450px;word-wrap:break-word;text-align:left;}
+		.title img{float:left;width:90px;height:120px;margin-right:10px;}
+		.price{width:80px;}
+		.count{width:120px;}
+		.count input{width:40px;}
+		.total{width:80px;}
+		/* .item_btn_area{width:100px;font-size:12px;} */
+
+		#all_order{width:300px;height:50px;margin:0 auto;}
+
+		.btn_area + div{text-align:center;margin:10px 0 20px 0;}
+	</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+	<div class="menu_gnb clearfix">
+		<a href="./index.html" class="logo">logo</a>
+	
+		<nav class="gnb">
+			<a href="./login.html">로그인</a><!-- 로그인 완료 -> 회원명 -->
+			<a href="./member/mypage.html">마이페이지</a>
+			<a href="./cart.html">장바구니</a>
+			<a href="./help.html">고객센터</a>
+			<a href="./index.html" id="logout">로그아웃</a><!-- 로그인 활성화 -> 로그아웃 비활성화 -->
+		</nav>
+	</div>
+	<form name="index" method="post" class="search_area">
+		<input type="text" id="search"><input type="submit" value="검색">
+	</form>
+	<nav class="sub_gnb">
+		<a href="./bookList.html">베스트셀러</a>
+		<a href="./bookList.html">신간도서</a>
+		<a href="./bookList.html">추천도서</a>
+		<a href="./bookList.html">국내도서</a>
+		<a href="./bookList.html">외국도서</a>
+		<a href="./bookList.html">중고장터</a>
+	</nav>
+</div>
+</header>
+
+<section>
+<div class="wrap">
+	<div class="cart_list">
+		<ul>
+			<li>
+				<ul class="item_title item clearfix">
+					<li class="chk"><input type="checkbox" id="all_check" name="all_check"></li>
+					<li class="title">도서명</li>
+					<li class="price">가격</li>
+					<li class="count">수량</li>
+					<li class="total">합계</li>
+					<li class="item_btn_area">선택</li>
+				</ul>
+				<hr>
+			</li>
+			<li>
+				<ul class="item clearfix">
+					<li class="chk"><input type="checkbox" id="book1" name="cart_check" class="list"></li>
+					<li class="title">
+						<a href="#" class="clearfix">
+							<img src="../images/book1.jpg">
+							<div>도서1dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</div>
+						</a>
+					</li>
+					<li class="price">1000</li>
+					<li class="count"><input type="number" min="1" max="100">
+						<input type="button" id="btn_up" value="변경">
+					</li>
+					<li class="total">1000</li>
+					<li class="item_btn_area">
+						<input type="button" id="btn_no" value="삭제">
+					</li>
+				</ul>
+			</li>
+		</ul>
+		
+		<hr>
+	</div>
+	
+	<div class="btn_area clearfix">
+		<input type="button" id="all_del" value="선택 도서 삭제">
+		<input type="button" id="all_wish" value="선택 도서 찜하기">
+	</div>
+	
+	<div>
+		<input type="button" id="all_order" value="구매하기">
+	</div>
+</div>
+</section>
+
+<aside>
+<div class="wrap">
+	최근 본 도서
+	<div id="quick_area">
+		<a href=""><img src=""></a>
+	</div>
+	
+	<input type="button" id="up" value="TOP"><br>
+	<input type="button" id="down" value="DOWN">
+</div>
+</aside>
+
+<footer>
+<div class="wrap clearfix">
+	<nav>
+		<a href="">회사소개</a>
+		<a href="">이용약관</a>
+		<a href="">개인정보처리방침</a>
+		<a href="">광고안내</a>
+		<a href="">서비스전체</a>
+	</nav>
+
+	<div class="f_left">
+		<ul>
+			<li>상호 : 동네 서점</li>
+			<li>대표이사 : 홍길동</li>
+			<li>사업자등록번호 : 201-71-03120</li>
+			<li>대표전화 : 1544-7979 (발신자 부담전화)</li>
+			<li>팩스 : 0505-112-1711 (지역번호공통)</li>
+			<li>개인정보보호최고책임자 : 춘향이 cnsgiddl@book.co.kr</li>
+		</ul>
+	</div>
+
+	<div class="f_right">
+		<p>구매안전 서비스(고객님은 안전거래를 위해 현금으로 5만원 이상 결제시 구매자가 보호를 받을 수 있는 구매안전 서비스를(쇼핑몰보증보험) 이용하실수 있습니다.)</p>
+	</div>
+</div>
+</footer>
+</body>
+</html>

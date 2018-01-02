@@ -1,0 +1,26 @@
+@charset "UTF-8";
+/* 공통 */
+.clearfix::after{display:block;content:"";clear:both;}
+.wrap{width:1024px;margin:0 auto;}
+
+/* layout */
+header{top:0;left:0;right:0;height:50px;line-height:50px;padding:0 10px;background-color:lightblue;}
+header .logo {float:left;font-weight:bold;}
+header .gnb{float:right;margin:auto 0;font-size:12px;}
+header li{float:left;padding:0 10px;}
+header .search_area{width:100%;text-align:center;}
+header #search{width:300px;}
+header .sub_gnb{width:600px;margin:0 auto;}
+
+section .sub_nav{float:left;width:20%;height:100%;text-align:center;margin-top:10px;}
+section .sub_nav a{display:block;height:36px;line-height:36px;margin-left:10px;background-color:powderblue;}
+/* section .container{float:left;width:1000;margin:0 auto;} */
+section .container{width:100%;}
+section .btn_area{margin-left:10px;}
+section .smallButton{width:120px;height:25px;margin-bottom:5px;background:lightblue;}
+
+footer{height:100px;bottom:0;left:0;right:0;padding:0 10px;font-size:12px;text-align:center;line-height:100px;background-color:lightblue;}
+
+/* test용 
+.wrap{border:1px solid black;}*/
+

@@ -1,0 +1,23 @@
+@charset "UTF-8";
+.book_list{padding-left:50px;font-size:12px;margin-bottom:25px;border:1px solid #c6c6c6;background-color:#fff;}
+.book_list li{float:left;width:100px;padding:5px 3px}
+
+.page_title{padding:10px 0;font-size:18px;}
+
+.item{margin:30px 0;}
+.item > input{float:left;}
+.item img{float:left;width:120px;height:150px;padding-left:30px;}
+.info_area{float:left;width:auto;margin:5px 20px;word-wrap:break-word;}
+
+.btn_area{float:right;width:150px;margin:22px 0;}
+.btn_area input{width:100%;float:left;}
+
+@media(max-width:400px){
+	.info_area{width:185px;}
+	.btn_area{display:none;}
+}
+
+/* 
+	word-wrap:break-word
+	가로 사이즈나 엘러먼트에 맞춰서 강제 줄 바꿈 해준다. word-break:break-all; 같은결과물
+ */

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- http://localhost:8081/yun.minkyung.bookstore/idex.html->
+	<!-- 방법1) content="1; url=''" = 1초 후에 뒤에서 지정한 url로 이동-->
+	<meta charset="UTF-8">
+	<meta http-equiv="refresh" content="1; url='./html/index.html'">
+	<title>Insert title here</title>
+	
+	<!-- 방법2) -->
+	<script type="text/javascript">
+		SetTimeout(function() {
+			// window.location='url(WebContent 밑에 있는 주소 모두 기입)';
+			// window.location='html/index.html';
+		}, 1000);
+		
+		//cmd ipconfig
+		//http://192.168.0.133:8081/yun.minkyung.bookstore/idex.html
+	</script>
+</head>
+<body>
+
+</body>
+</html>
