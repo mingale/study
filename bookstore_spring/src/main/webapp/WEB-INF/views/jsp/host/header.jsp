@@ -15,6 +15,7 @@
 			<li><a href="stock">재고 관리</a></li>
 			<li><a href="hostOrder">주문 관리</a></li>
 			<li><a href="member">회원 관리</a></li>
+			<li><a href="notice">공지 사항</a></li>
 			<li><a href="signOut">로그아웃</a></li>
 		</ul>
 	</nav>

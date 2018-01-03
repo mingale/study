@@ -68,4 +68,13 @@ public interface HostService {
 		
 		//결산
 		public void getResultTotal(HttpServletRequest req, Model model);
+		
+		//공지사항
+		public void getNotice(HttpServletRequest req, Model model);
+		
+		//공지사항 글쓰기 처리
+		public void noticeWritePro(HttpServletRequest req, Model model);
+		
+		//공지사항 상세보기
+		public void noticeView(HttpServletRequest req, Model model);
 }

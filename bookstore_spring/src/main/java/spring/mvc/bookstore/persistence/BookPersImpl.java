@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import spring.mvc.bookstore.vo.Bespeak;
 import spring.mvc.bookstore.vo.Book;
 import spring.mvc.bookstore.vo.BookSub;
+import spring.mvc.bookstore.vo.Notice;
 import spring.mvc.bookstore.vo.RecentBook;
 import spring.mvc.bookstore.vo.StringInt;
 
@@ -22,7 +23,7 @@ public class BookPersImpl implements BookPers {
 	private SqlSession sqlSession;
 
 	/*
-	 * private BookPers dao = sqlSession.getMapper(BookPers.class); Error 발생:
+	 * private BookPers mapper = sqlSession.getMapper(BookPers.class); Error 발생:
 	 * java.lang.NullPointerException 원인: Mapper를 멤버변수에서 선언하면 Bean 생성이 되지 않아 사용 불가능
 	 * Type Exception Report Message Servlet.init() for servlet [appServlet] threw
 	 * exception Description The server encountered an unexpected condition that
@@ -43,8 +44,10 @@ public class BookPersImpl implements BookPers {
 	// 도서 검색
 	public ArrayList<Book> bookSearch(Map<String, Object> map) {
 		System.out.println("BookPersImple START - bookSearch");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.bookSearch(map);
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.bookSearch(map);
+
 		System.out.println("BookPersImple END - bookSearch");
 		return list;
 	}
@@ -52,8 +55,10 @@ public class BookPersImpl implements BookPers {
 	// 도서 검색 결과수
 	public int bookSearchCount(String keyword) {
 		System.out.println("BookPersImple START - bookSearchCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookSearchCount(keyword);
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookSearchCount(keyword);
+
 		System.out.println("BookPersImple END - bookSearchCount");
 		return cnt;
 	}
@@ -61,8 +66,10 @@ public class BookPersImpl implements BookPers {
 	// 해당 도서 조회수 증가
 	public int bookViewsUpdate(String no) {
 		System.out.println("BookPersImple START - bookViewsUpdate");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookViewsUpdate(no);
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookViewsUpdate(no);
+
 		System.out.println("BookPersImple END - bookViewsUpdate");
 		return cnt;
 	}
@@ -70,8 +77,10 @@ public class BookPersImpl implements BookPers {
 	// 모든 도서 목록
 	public ArrayList<Book> getAllBook() {
 		System.out.println("BookPersImple START - getAllBook");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.getAllBook();
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.getAllBook();
+
 		System.out.println("BookPersImple END - getAllBook");
 		return list;
 	}
@@ -87,8 +96,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public Book getBookInfo(String no) {
 		System.out.println("BookPersImple START - getBookInfo");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		Book b = dao.getBookInfo(no);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		Book b = mapper.getBookInfo(no);
 		String image = b.getImage();
 		if (image == null)
 			b.setImage("000.jpg");
@@ -115,8 +124,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<Book> getNewBook(Map<String, Object> map) {
 		System.out.println("BookPersImple START - getNewBook");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.getNewBook(map);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.getNewBook(map);
 		System.out.println("BookPersImple END - getNewBook");
 		return list;
 	}
@@ -125,8 +134,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<Book> getBestBook(Map<String, Object> map) {
 		System.out.println("BookPersImple START - getBestBook");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.getBestBook(map);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.getBestBook(map);
 		System.out.println("BookPersImple END - getBestBook");
 		return list;
 	}
@@ -135,8 +144,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<Book> getGoodTagBook(Map<String, Object> map) {
 		System.out.println("BookPersImple START - getGoodTagBook");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.getGoodTagBook(map);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.getGoodTagBook(map);
 		System.out.println("BookPersImple END - getGoodTagBook");
 		return list;
 	}
@@ -146,8 +155,8 @@ public class BookPersImpl implements BookPers {
 	public ArrayList<Book> getBookList(Map<String, Object> map) {
 		System.out.println("BookPersImple START - getBookList");
 
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> books = dao.getBookList(map);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> books = mapper.getBookList(map);
 
 		System.out.println("BookPersImple END - getBookList");
 		return books;
@@ -156,7 +165,7 @@ public class BookPersImpl implements BookPers {
 	// 도서 부가 정보 목록
 	/*
 	 * @Override public ArrayList<BookSub> getBookSubList(Map<String, Object> map) {
-	 * System.out.println("BookPersImple START - getBookSubList"); BookPers dao =
+	 * System.out.println("BookPersImple START - getBookSubList"); BookPers mapper =
 	 * sqlSession.getMapper(BookPers.class); ArrayList<BookSub> bSubs =
 	 * dao.getBookSubList(map);
 	 * System.out.println("BookPersImple END - getBookSubList"); return bSubs; }
@@ -165,8 +174,8 @@ public class BookPersImpl implements BookPers {
 	// tag_main 수
 	public int getTag_mainCount() {
 		System.out.println("BookPersImple START - getTag_mainCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.getTag_mainCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.getTag_mainCount();
 		System.out.println("BookPersImple END - getTag_mainCount");
 		return cnt;
 	}
@@ -175,8 +184,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<BookSub> getTag_mainList() {
 		System.out.println("BookPersImple START - getTag_mainList");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<BookSub> tags = dao.getTag_mainList();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<BookSub> tags = mapper.getTag_mainList();
 		System.out.println("BookPersImple END - getTag_mainList");
 		return tags;
 	}
@@ -205,8 +214,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getBestCount() {
 		System.out.println("BookPersImple START - getBestCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.getBestCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.getBestCount();
 		System.out.println("BookPersImple END - getBestCount");
 		return cnt;
 	}
@@ -215,8 +224,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getNewCount() {
 		System.out.println("BookPersImple START - getNewCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.getNewCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.getNewCount();
 		System.out.println("BookPersImple END - getNewCount");
 		return cnt;
 	}
@@ -225,8 +234,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getGoodCount() {
 		System.out.println("BookPersImple START - getGoodCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.getGoodCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.getGoodCount();
 		System.out.println("BookPersImple END - getGoodCount");
 		return cnt;
 	}
@@ -235,8 +244,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getTagMainCount(String tag) {
 		System.out.println("BookPersImple START - getTagMainCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.getTagMainCount(tag);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.getTagMainCount(tag);
 		System.out.println("BookPersImple END - getTagMainCount");
 		return cnt;
 	}
@@ -245,8 +254,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<Book> getTagMainBook(Map<String, Object> map) {
 		System.out.println("BookPersImple START - getTagMainBook");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.getTagMainBook(map);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.getTagMainBook(map);
 		System.out.println("BookPersImple END - getTagMainBook");
 		return list;
 	}
@@ -255,8 +264,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<Book> getDomesticBook(Map<String, Object> map) {
 		System.out.println("BookPersImple START - getDomesticBook");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Book> list = dao.getDomesticBook(map);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Book> list = mapper.getDomesticBook(map);
 		System.out.println("BookPersImple END - getDomesticBook");
 		return list;
 	}
@@ -265,8 +274,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getBookCnt() {
 		System.out.println("BookPersImple START - getBookCnt");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.getBookCnt();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.getBookCnt();
 		System.out.println("BookPersImple END - getBookCnt");
 		return cnt;
 	}
@@ -275,8 +284,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int bookUpdate(Book book) {
 		System.out.println("BookPersImple START - bookUpdate");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookUpdate(book);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookUpdate(book);
 		System.out.println("BookPersImple END - bookUpdate");
 		return cnt;
 	}
@@ -286,8 +295,8 @@ public class BookPersImpl implements BookPers {
 	public ArrayList<Bespeak> getOrderBookCount(String order_num) {
 		System.out.println("BookPersImple START - getOrderNoCount");
 
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<Bespeak> list = dao.getOrderBookCount(order_num);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Bespeak> list = mapper.getOrderBookCount(order_num);
 
 		System.out.println("BookPersImple END - getOrderNoCount");
 		return list;
@@ -297,8 +306,8 @@ public class BookPersImpl implements BookPers {
 	 * System.out.println("BookPersImple START - getOrderNoCount");
 	 * System.out.println(order_num);
 	 * 
-	 * BookPers dao = sqlSession.getMapper(BookPers.class); Map<String, Object> map
-	 * = dao.getOrderNoCount(order_num);
+	 * BookPers mapper = sqlSession.getMapper(BookPers.class); Map<String, Object>
+	 * map = mapper.getOrderNoCount(order_num);
 	 * 
 	 * //DB의 NUMBER 타입은 반드시 캐스트 변환이 아닌 메소드 사용 //Map으로 가져온 Column은 대문자. int bookCount
 	 * = Integer.parseInt(String.valueOf(map.get("BC"))); int orderCount =
@@ -314,13 +323,13 @@ public class BookPersImpl implements BookPers {
 		System.out.println("BookPersImple START - orderBookCountMul");
 		System.out.println((String) map.get("order_num"));
 
-		BookPers dao = sqlSession.getMapper(BookPers.class);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
 
 		int cnt = 0;
 
 		// 주문 내역 + 도서 정보
 		ArrayList<Bespeak> list = getOrderBookCount((String) map.get("order_num"));
-		
+
 		// 재고가 충분한 지 확인
 		boolean flg = false;
 		for (Bespeak order : list) {
@@ -339,7 +348,7 @@ public class BookPersImpl implements BookPers {
 				map = new HashMap<>();
 				map.put("no", order.getBook().getNo());
 				map.put("count", order.getBook().getCount());
-				cnt = dao.orderBookCountMul(map);
+				cnt = mapper.orderBookCountMul(map);
 			}
 		} else {
 			cnt = 9;
@@ -353,18 +362,18 @@ public class BookPersImpl implements BookPers {
 	public int refundBookCountAdd(Map<String, Object> map) {
 		System.out.println("BookPersImple START - refundBookCountAdd");
 
-		BookPers dao = sqlSession.getMapper(BookPers.class);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
 
 		// 주문 내역 + 도서 정보
 		ArrayList<Bespeak> list = getOrderBookCount((String) map.get("order_num"));
-		
+
 		int cnt = 0;
 		// 도서 수량 다시 추가하기 (환불할 주문의 도서 수량 + 재고량)
 		for (Bespeak order : list) {
 			map = new HashMap<>();
 			map.put("count", order.getBook().getCount() + order.getOrder_count());
 			map.put("no", order.getBook().getNo());
-			cnt = dao.refundBookCountAdd(map);
+			cnt = mapper.refundBookCountAdd(map);
 		}
 		System.out.println("BookPersImple END - refundBookCountAdd");
 		return cnt;
@@ -374,8 +383,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int bookDelete(String no) {
 		System.out.println("BookPersImple START - bookDelete");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookDelete(no);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookDelete(no);
 		System.out.println("BookPersImple END - bookDelete");
 		return cnt;
 	}
@@ -384,10 +393,10 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int bookInsert(Book book) {
 		System.out.println("BookPersImple START - bookInsert");
-		
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookInsert(book);
-		
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookInsert(book);
+
 		System.out.println("BookPersImple END - bookInsert");
 		return cnt;
 	}
@@ -396,8 +405,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int bookSubUpdate(BookSub bSub) {
 		System.out.println("BookPersImple START - bookSubUpdate");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookSubUpdate(bSub);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookSubUpdate(bSub);
 		System.out.println("BookPersImple END - bookSubUpdate");
 		return cnt;
 	}
@@ -406,8 +415,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int bookSubInsert(BookSub bSub) {
 		System.out.println("BookPersImple START - bookSubInsert");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int cnt = dao.bookSubInsert(bSub);
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.bookSubInsert(bSub);
 		System.out.println("BookPersImple END - bookSubInsert");
 		return cnt;
 	}
@@ -416,7 +425,7 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<RecentBook> recentUpdate(ArrayList<RecentBook> list, Book b) {
 		System.out.println("BookPersImple START - recentUpdate");
-		
+
 		ArrayList<RecentBook> reb = list;
 		RecentBook rb = new RecentBook();
 		rb.setNo(b.getNo());
@@ -449,8 +458,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getSalesTotalCount() {
 		System.out.println("BookPersImple START - getSalesTotalCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int sales = dao.getSalesTotalCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int sales = mapper.getSalesTotalCount();
 		System.out.println("BookPersImple END - getSalesTotalCount");
 		return sales;
 	}
@@ -459,8 +468,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int getSalesTotalAmount() {
 		System.out.println("BookPersImple START - getSalesTotalAmount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		int sales = dao.getSalesTotalAmount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int sales = mapper.getSalesTotalAmount();
 		System.out.println("BookPersImple END - getSalesTotalAmount");
 		return sales;
 	}
@@ -468,7 +477,7 @@ public class BookPersImpl implements BookPers {
 	// no-title
 	public Map<String, String> getNoTitle() {
 		System.out.println("BookPersImple START - getNoTitle");
-		
+
 		Map<String, String> map = new HashMap<>();
 
 		ArrayList<Book> list = getAllBook();
@@ -485,8 +494,8 @@ public class BookPersImpl implements BookPers {
 	// 올해 태그별 판매량
 	public ArrayList<StringInt> getTagSalesTotal() {
 		System.out.println("BookPersImple START - getTagSalesTotal");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<StringInt> list = dao.getTagSalesTotal();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<StringInt> list = mapper.getTagSalesTotal();
 		for (int i = 0; i < list.size(); i += 1) {
 			list.get(i).setStr(list.get(i).getStr() + "S");
 		}
@@ -498,8 +507,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<StringInt> getTagRefundTotal() {
 		System.out.println("BookPersImple START - getTagRefundTotal");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<StringInt> list = dao.getTagRefundTotal();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<StringInt> list = mapper.getTagRefundTotal();
 		for (int i = 0; i < list.size(); i += 1) {
 			list.get(i).setStr(list.get(i).getStr() + "R");
 		}
@@ -512,8 +521,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<StringInt> getYearSalesTotalAmount() {
 		System.out.println("BookPersImple START - getYearSalesTotalAmount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<StringInt> list = dao.getYearSalesTotalAmount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<StringInt> list = mapper.getYearSalesTotalAmount();
 		System.out.println("BookPersImple END - getYearSalesTotalAmount");
 		return list;
 	}
@@ -522,8 +531,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<StringInt> getYearSalesTotalCount() {
 		System.out.println("BookPersImple START - getYearSalesTotalCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<StringInt> list = dao.getYearSalesTotalCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<StringInt> list = mapper.getYearSalesTotalCount();
 		System.out.println("BookPersImple END - getYearSalesTotalCount");
 		return list;
 	}
@@ -532,10 +541,10 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<StringInt> getYearRefundTotalAmount() {
 		System.out.println("BookPersImple START - getYearRefundTotalAmount");
-		
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<StringInt> list = dao.getYearRefundTotalAmount();
-		
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<StringInt> list = mapper.getYearRefundTotalAmount();
+
 		System.out.println("BookPersImple END - getYearRefundTotalAmount");
 		return list;
 	}
@@ -544,8 +553,8 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public ArrayList<StringInt> getTagWeeklyCount() {
 		System.out.println("BookPersImple START - getTagWeeklyCount");
-		BookPers dao = sqlSession.getMapper(BookPers.class);
-		ArrayList<StringInt> list = dao.getTagWeeklyCount();
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<StringInt> list = mapper.getTagWeeklyCount();
 
 		Calendar cal = Calendar.getInstance();
 		for (int i = 0; i < list.size(); i += 1) {
@@ -608,6 +617,55 @@ public class BookPersImpl implements BookPers {
 		}
 		System.out.println("BookPersImple END - getTagWeeklyCountDistinct");
 		return map;
+	}
+
+	@Override
+	public int getNoticeCnt() {
+		System.out.println("BookPers START - getNoticeCnt()");
+		int cnt = 0;
+		
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		cnt = mapper.getNoticeCnt();
+	
+		System.out.println("BookPers END - getNoticeCnt()");
+		return cnt;
+	}
+	
+	// 공지사항
+	@Override
+	public ArrayList<Notice> getNotice(Map<String, Object> map) {
+		System.out.println("BookPersImple START- getNotice()");
+
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<Notice> list = mapper.getNotice(map);
+
+		System.out.println("BookPersImple END - getNotice()");
+		return list;
+	}
+	
+
+	//공지사항 글쓰기 처리
+	@Override
+	public int noticeWritePro(Notice notice) {
+		System.out.println("BookPersImpl START - noticeWritePro()");
+		
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		int cnt = mapper.noticeWritePro(notice);
+		
+		System.out.println("BookPersImpl END - noticeWritePro()");
+		return cnt;
+	}
+
+	//공지사항 상세보기
+	@Override
+	public Notice noticeView(String idx) {
+		System.out.println("BookPersImpl START - noticeView()");
+		
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		Notice notice = mapper.noticeView(idx);
+		
+		System.out.println("BookPersImpl END - noticeView()");
+		return notice;
 	}
 }
 // ROWNUM 이 있는절에는 WHERE절과, ORDER BY 절이 붙으면 안된다.

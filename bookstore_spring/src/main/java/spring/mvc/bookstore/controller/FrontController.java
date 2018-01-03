@@ -236,7 +236,7 @@ public class FrontController extends HttpServlet {
 	//주문 처리
 	@RequestMapping("orderPro")
 	public String orderPro(HttpServletRequest req, Model model) {
-		System.out.println("orderPro");
+		System.out.println("orderPro()");
 		
 		gs.addOrder(req, model);
 		
@@ -246,7 +246,7 @@ public class FrontController extends HttpServlet {
 	//장바구니 목록
 	@RequestMapping("cart")
 	public String cart(HttpServletRequest req, Model model) {
-		System.out.println("cart");
+		System.out.println("cart()");
 		
 		gs.cartView(req, model);
 		
@@ -256,7 +256,7 @@ public class FrontController extends HttpServlet {
 	//바로구매,장바구니,찜하기 버튼 처리
 	@RequestMapping("bookBtnPro")
 	public String cartBtn(HttpServletRequest req, Model model) {
-		System.out.println("bookBtnPro");
+		System.out.println("bookBtnPro()");
 		String id = (String) req.getSession().getAttribute("memId");
 		
 		if(id != null) {
@@ -276,7 +276,7 @@ public class FrontController extends HttpServlet {
 	//장바구니 삭제 또는 수정
 	@RequestMapping("cartPro")
 	public String cartPro(HttpServletRequest req, Model model) {
-		System.out.println("cartPro");
+		System.out.println("cartPro()");
 		
 		gs.cartPro(req, model);
 		
@@ -286,7 +286,7 @@ public class FrontController extends HttpServlet {
 	//주문 내역
 	@RequestMapping("myOrder")
 	public String myOrder(HttpServletRequest req, Model model) {
-		System.out.println("myOrder");
+		System.out.println("myOrder()");
 		
 		gs.myOrderView(req, model);
 
@@ -295,7 +295,7 @@ public class FrontController extends HttpServlet {
 	
 	@RequestMapping("orderDetail")
 	public String orderDetail(HttpServletRequest req, Model model) { 
-		System.out.println("orderDetail");
+		System.out.println("orderDetail()");
 		
 		gs.orderDetailView(req, model);
 		
@@ -305,7 +305,7 @@ public class FrontController extends HttpServlet {
 	//주문 취소
 	@RequestMapping("myOrderDelete")
 	public String myOrderDelete(HttpServletRequest req, Model model) {
-		System.out.println("myOrderDelete");
+		System.out.println("myOrderDelete()");
 		
 		hs.orderDelete(req, model);
 		
@@ -325,7 +325,7 @@ public class FrontController extends HttpServlet {
 	//환불 내역
 	@RequestMapping("myRefund")
 	public String myRefund(HttpServletRequest req, Model model) {
-		System.out.println("myRefund");
+		System.out.println("myRefund()");
 		
 		gs.getRefundView(req, model);
 		
@@ -340,7 +340,7 @@ public class FrontController extends HttpServlet {
 	 */
 	@RequestMapping("main")
 	public String main(HttpServletRequest req, Model model) {
-		System.out.println("main");
+		System.out.println("main()");
 		
 		hs.mainView(req, model);
 		
@@ -350,7 +350,7 @@ public class FrontController extends HttpServlet {
 	//재고 관리 페이지
 	@RequestMapping("stock")
 	public String stock(HttpServletRequest req, Model model) {
-		System.out.println("stock");
+		System.out.println("stock()");
 		
 		bs.hostStockView(req, model); //도서 정보와 서브 정보의 총개수가 다르면, 가져온 목록에 차이가 생겨서 서브 정보가 올바르게 표시되지 못한다.
 		
@@ -360,7 +360,7 @@ public class FrontController extends HttpServlet {
 	//도서 수정 페이지
 	@RequestMapping("stockUpdate")
 	public String stockUpdate(HttpServletRequest req, Model model) {
-		System.out.println("stockUpdate");
+		System.out.println("stockUpdate()");
 		
 		bs.detailView(req, model);
 		
@@ -380,7 +380,7 @@ public class FrontController extends HttpServlet {
 	//도서 삭제
 	@RequestMapping("stockDelete")
 	public String stockDelete(HttpServletRequest req, Model model) {
-		System.out.println("stockDelete");
+		System.out.println("stockDelete()");
 		
 		bs.bookDelete(req, model);
 		
@@ -390,7 +390,7 @@ public class FrontController extends HttpServlet {
 	//도서 추가
 	@RequestMapping("stockAdd")
 	public String stockAdd(HttpServletRequest req, Model model) {
-		System.out.println("stockAdd");
+		System.out.println("stockAdd()");
 		
 		bs.bookInsertView(req, model);
 		
@@ -400,7 +400,7 @@ public class FrontController extends HttpServlet {
 	//주문 관리 페이지  order.ho => hostOrder
 	@RequestMapping("hostOrder")
 	public String hostOrder(HttpServletRequest req, Model model) {
-		System.out.println("hostOrder");
+		System.out.println("hostOrder()");
 		
 		hs.hostOrderView(req, model);
 		
@@ -410,7 +410,7 @@ public class FrontController extends HttpServlet {
 	//주문 승인
 	@RequestMapping("orderOk")
 	public String orderOk(HttpServletRequest req, Model model) {
-		System.out.println("orderOk");
+		System.out.println("orderOk()");
 		
 		hs.orderStateUpdate(req, model);
 		
@@ -420,7 +420,7 @@ public class FrontController extends HttpServlet {
 	//주문 삭제
 	@RequestMapping("orderDelete")
 	public String orderDelete(HttpServletRequest req, Model model) {
-		System.out.println("orderDelete");
+		System.out.println("orderDelete()");
 		
 		hs.orderDelete(req, model);
 		
@@ -430,7 +430,7 @@ public class FrontController extends HttpServlet {
 	//관리자 주문목록의 배송 시작 버튼
 	@RequestMapping("orderShipping")
 	public String orderShipping(HttpServletRequest req, Model model) {
-		System.out.println("orderShipping");
+		System.out.println("orderShipping()");
 		
 		model.addAttribute("order_num", req.getParameter("order_num"));
 		
@@ -440,7 +440,7 @@ public class FrontController extends HttpServlet {
 	//배송시작 송장번호
 	@RequestMapping("shippingPro")
 	public String shippingPro(HttpServletRequest req, Model model) {
-		System.out.println("shippingPro");
+		System.out.println("shippingPro()");
 		
 		hs.shippingPro(req, model);
 		
@@ -450,7 +450,7 @@ public class FrontController extends HttpServlet {
 	//환불 목록
 	@RequestMapping("refund")
 	public String refund(HttpServletRequest req, Model model) {
-		System.out.println("refund.ho");
+		System.out.println("refund()");
 		
 		hs.getHostRefundView(req, model);
 		
@@ -460,7 +460,7 @@ public class FrontController extends HttpServlet {
 	//환불 완료
 	@RequestMapping("refundOk")
 	public String refundOk(HttpServletRequest req, Model model) {
-		System.out.println("refundOk");
+		System.out.println("refundOk()");
 		
 		hs.refundOk(req, model);
 		
@@ -470,7 +470,7 @@ public class FrontController extends HttpServlet {
 	//환불 거부
 	@RequestMapping("refundNo")
 	public String refundNo(HttpServletRequest req, Model model) {
-		System.out.println("refundNo");
+		System.out.println("refundNo()");
 		
 		hs.refundNo(req, model);
 		
@@ -480,7 +480,7 @@ public class FrontController extends HttpServlet {
 	//회원 관리 페이지
 	@RequestMapping("member")
 	public String member(HttpServletRequest req, Model model) {
-		System.out.println("member");
+		System.out.println("member()");
 		
 		hs.getMemberView(req, model);
 		
@@ -490,7 +490,7 @@ public class FrontController extends HttpServlet {
 	//회원 관리 수정
 	@RequestMapping("memberUpdate")
 	public String memberUpdate(HttpServletRequest req, Model model) {
-		System.out.println("memberUpdate");
+		System.out.println("memberUpdate()");
 
 		hs.setHostMemberUpdate(req, model);
 
@@ -500,7 +500,7 @@ public class FrontController extends HttpServlet {
 	//회원 강제 탈퇴
 	@RequestMapping("memberDelete")
 	public String memberDelete(HttpServletRequest req, Model model) {
-		System.out.println("memberDelete");
+		System.out.println("memberDelete()");
 		
 		hs.memberDelete(req, model);
 		
@@ -510,10 +510,46 @@ public class FrontController extends HttpServlet {
 	//결산
 	@RequestMapping("result")
 	public String result(HttpServletRequest req, Model model) {
-		System.out.println("result");
+		System.out.println("result()");
 		
 		hs.getResultTotal(req, model);
 		
 		return "jsp/host/result";
+	}
+	
+	//공지사항
+	@RequestMapping("notice") 
+	public String notice(HttpServletRequest req, Model model){
+		System.out.println("notice()");
+		
+		hs.getNotice(req, model);
+		
+		return "jsp/host/notice";
+	}
+	
+	//공지사항 글쓰기
+	@RequestMapping("noticeWrite")
+	public String noticeWrite(HttpServletRequest req, Model model) {
+		System.out.println("noticeWrite()");
+		return "jsp/host/noticeWrite";
+	}
+	
+	//공지사항 글쓰기 처리
+	@RequestMapping("noticeWritePro")
+	public String noticeWritePro(HttpServletRequest req, Model model) {
+		System.out.println("noticeWritePro()");
+		
+		hs.noticeWritePro(req, model);
+		
+		return "jsp/host/noticeWritePro";
+	}
+	
+	//공지사항 상세보기
+	@RequestMapping("noticeView")
+	public String noticeView(HttpServletRequest req, Model model) {
+		System.out.println("noticeView()");
+		
+		hs.noticeView(req, model);
+		return "jsp/host/noticeView";
 	}
 }

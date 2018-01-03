@@ -105,8 +105,9 @@
 	<div class="notice">
 		<span>공지사항</span>
 		<hr>
-		
-		<p><a href="result">올해 결산</a></p>
+		<c:forEach var="notice" items="${notices}">
+			<p><a href="noticeView?idx=${notice.idx}">${notice.title} (${notice.add_date})</a></p>
+		</c:forEach>
 	</div>
 </div>
 </section>
