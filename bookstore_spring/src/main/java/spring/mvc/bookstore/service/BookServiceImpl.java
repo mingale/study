@@ -349,6 +349,7 @@ public class BookServiceImpl implements BookService {
 	//도서 정보 수정 or 추가
 	@Override
 	public void bookUpdate(MultipartHttpServletRequest req, Model model) {
+		System.out.println("===============================================================");
 		int cnt = 0;
 
 		MultipartFile file = req.getFile("img");
@@ -420,8 +421,6 @@ public class BookServiceImpl implements BookService {
 				bSub.setPub_intro(pub_intro);
 				bSub.setReview(review);
 
-				System.out.println(intro + " / " + list + " / " + pub_intro + " / " + review);
-				
 				if (!no.equals("-1")) { // 도서 수정
 					cnt = dao.bookSubUpdate(bSub);
 				} else { // 도서 추가

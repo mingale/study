@@ -384,8 +384,10 @@ public class BookPersImpl implements BookPers {
 	@Override
 	public int bookInsert(Book book) {
 		System.out.println("BookPersImple START - bookInsert");
+		
 		BookPers dao = sqlSession.getMapper(BookPers.class);
 		int cnt = dao.bookInsert(book);
+		
 		System.out.println("BookPersImple END - bookInsert");
 		return cnt;
 	}

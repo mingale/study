@@ -25,8 +25,7 @@ section .wrap{width:840px;}
 <%@ include file="header.jsp" %>
 <section>
 <div class="wrap clearfix" onload="updateFocus();">
-	<!-- <form action="stockUpdatePro" name="stockUpdateForm" method="post" enctype="multipart/form-data" onsubmit="return updateCheck();"> -->
-	<form action="stockUpdatePro" name="stockUpdateForm" method="post" onsubmit="return updateCheck();">
+	<form action="stockUpdatePro" name="stockUpdateForm" method="post" enctype="multipart/form-data" onsubmit="return updateCheck();">
 
 		<c:if test="${no != -1}">
 			<input type="hidden" name="no" value="${book.no}">
