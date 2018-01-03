@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import spring.mvc.bookstore.service.BookService;
 import spring.mvc.bookstore.service.GuestService;
@@ -368,7 +369,7 @@ public class FrontController extends HttpServlet {
 		
 	//도서 수정 처리
 	@RequestMapping("stockUpdatePro")
-	public String stockUpdatePro(HttpServletRequest req, Model model) {
+	public String stockUpdatePro(MultipartHttpServletRequest req, Model model) {
 		System.out.println("stockUpdatePro()");
 		
 		bs.bookUpdate(req, model);

@@ -51,4 +51,7 @@
 	</beans:bean>	
 	<!-- MyBatis -->
 	
+	<!-- ImageUpload -->
+	<!-- Multipart를 받기 위한 Resolver 추가 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 </beans:beans>

@@ -1,5 +1,9 @@
 package spring.mvc.bookstore.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import spring.mvc.bookstore.persistence.BookPers;
 import spring.mvc.bookstore.vo.Book;
@@ -244,7 +250,7 @@ public class BookServiceImpl implements BookService {
 		model.addAttribute("number", number);
 		model.addAttribute("pageNum", pageNum);
 	}
-
+/*
 	// 도서 정보 수정 or 추가
 	@Override
 	public void bookUpdate(HttpServletRequest req, Model model) {
@@ -308,7 +314,7 @@ public class BookServiceImpl implements BookService {
 		}
 		model.addAttribute("cnt", cnt);
 	}
-
+*/
 	// 도서 삭제 처리
 	@Override
 	public void bookDelete(HttpServletRequest req, Model model) {
@@ -336,47 +342,35 @@ public class BookServiceImpl implements BookService {
 		model.addAttribute("no", req.getParameter("no"));
 		model.addAttribute("tag_mains", tag_mains);
 	}
-}
 
 
-/*
 
-//도서 정보 수정 or 추가
+
+	//도서 정보 수정 or 추가
 	@Override
-	public void bookUpdate(HttpServletRequest req, Model model) {
+	public void bookUpdate(MultipartHttpServletRequest req, Model model) {
 		int cnt = 0;
 
+		MultipartFile file = req.getFile("img");
 
-		 * form의 encType을 지정했을 경우, 해당 타입으로 값을 가져와야 한다. request가 아닌 MultipartRequest로 값을
-		 * 받는다.
-		 * 
-		MultipartRequest mr = null;
-
-		String fileName = "imgFile";
-		int maxSize = 10 * 1024 * 1024; // 업로드 파일 최대 사이즈 (10*1024*1024=10MB)
-		String saveDir = req.getRealPath("/images/book/"); // 임시 파일 저장 위치 - 논리적인 경로
+		String saveDir = req.getRealPath("/resources/images/book/"); // 저장 경로. 논리적인 경로
 		String realDir = "C:\\Dev\\workspace\\bookstore\\WebContent\\images\\book\\"; // 업로드 위치 - 물리적인 경로
-		String encType = "UTF-8";
 
 		try {
-		
-			 * new DefaultFileRenamePolicy() : 중복된 파일명이 있을 경우 자동으로 파일명을 변경한다. ex)
-			 * filename.png가 이미 존재할 경우 filename1.png
-			 * 
-			mr = new MultipartRequest(req, saveDir, maxSize, encType, new DefaultNamingPolicy());
+			String no = req.getParameter("no"); // -1이면 도서 추가. 아니면 도서 수정
 
-			String no = mr.getParameter("no"); // -1이면 도서 추가. 아니면 도서 수정
-
-			String title = mr.getParameter("title");
-			String author = mr.getParameter("author");
-			String publisher = mr.getParameter("publisher");
-			Date pub_date = Date.valueOf(mr.getParameter("pub_date"));
-			int price = Integer.parseInt(mr.getParameter("price"));
-			int count = Integer.parseInt(mr.getParameter("count"));
-			String image = mr.getParameter("image");
-			if (image.equals("null.jpg")) {
-				FileInputStream fis = new FileInputStream(saveDir + mr.getFilesystemName(fileName)); // 임시 저장
-				FileOutputStream fos = new FileOutputStream(realDir + mr.getFilesystemName(fileName));
+			String title = req.getParameter("title");
+			String author = req.getParameter("author");
+			String publisher = req.getParameter("publisher");
+			Date pub_date = Date.valueOf(req.getParameter("pub_date"));
+			int price = Integer.parseInt(req.getParameter("price"));
+			int count = Integer.parseInt(req.getParameter("count"));
+			String image = req.getParameter("image");
+			if (!image.equals("null.jpg")) {
+				file.transferTo(new File(saveDir + file.getOriginalFilename()));;
+				
+				FileInputStream fis = new FileInputStream(saveDir + file.getOriginalFilename()); // 임시 저장
+				FileOutputStream fos = new FileOutputStream(realDir + file.getOriginalFilename());
 				int data = 0;
 
 				// 임시 저장한 파일을 물리적 경로로 복사
@@ -386,8 +380,10 @@ public class BookServiceImpl implements BookService {
 				fis.close();
 				fos.close();
 
-				image = mr.getFilesystemName(fileName);
+				image = file.getOriginalFilename();
+				System.out.println("**************************** bookUpdate - " + image);
 			}
+			System.out.println("**************************** bookUpdate - " + image);
 
 			Book b = new Book();
 			b.setNo(no);
@@ -408,12 +404,12 @@ public class BookServiceImpl implements BookService {
 			// book_sub
 			if (cnt != 0) {
 
-				String tag = mr.getParameter("tag");
-				String tag_main = mr.getParameter("tag_main");
-				String intro = mr.getParameter("intro");
-				String list = mr.getParameter("list");
-				String pub_intro = mr.getParameter("pub_intro");
-				String review = mr.getParameter("review");
+				String tag = req.getParameter("tag");
+				String tag_main = req.getParameter("tag_main");
+				String intro = req.getParameter("intro");
+				String list = req.getParameter("list");
+				String pub_intro = req.getParameter("pub_intro");
+				String review = req.getParameter("review");
 
 				BookSub bSub = new BookSub();
 				bSub.setNo(no);
@@ -432,10 +428,10 @@ public class BookServiceImpl implements BookService {
 					cnt = dao.bookSubInsert(bSub);
 				}
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("bookUpdate() 실패");
 		}
 		model.addAttribute("cnt", cnt);
 	}
-*/
+}

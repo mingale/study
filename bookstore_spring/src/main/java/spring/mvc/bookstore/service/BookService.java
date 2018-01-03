@@ -3,6 +3,7 @@ package spring.mvc.bookstore.service;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface BookService {
 
@@ -24,7 +25,7 @@ public interface BookService {
 	public void hostStockView(HttpServletRequest req, Model model);
 	
 	//도서 수정 처리
-	public void bookUpdate(HttpServletRequest req, Model model);
+	public void bookUpdate(MultipartHttpServletRequest req, Model model);
 	
 	//도서 삭제 처리
 	public void bookDelete(HttpServletRequest req, Model model);

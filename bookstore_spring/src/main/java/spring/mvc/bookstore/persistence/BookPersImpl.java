@@ -107,7 +107,7 @@ public class BookPersImpl implements BookPers {
 		if (review == null)
 			b.getBookSub().setReview("준비 중입니다.");
 
-		System.out.println("BookPersImpl END - getBookInfo : " + b.getImage());
+		System.out.println("BookPersImpl END - getBookInfo");
 		return b;
 	}
 
