@@ -31,7 +31,7 @@ function getXMLHttpRequest() {
 }
 
 // 화면의 javaScript에서 발생시킨 요청이벤트를 서버로 보낸다.
-// callback, url만 던져도 됨
+// callback, URL만 던져도 됨
 function sendRequest(callback, url, method, params) { /*url.jsp?params => 결과 => method 방식으로 callback 함수를 통해 결과값이 넘어감*/
 	
 	// 비동기 통신을 관리하는 XMLHttpRequest 생성
@@ -39,7 +39,7 @@ function sendRequest(callback, url, method, params) { /*url.jsp?params => 결과
 	
 	// onreadystatechange : 오브젝트 상태가 변한 시점에 불러오는 이벤트핸들러.. 즉 대기상태가 바뀌면 실행할 이벤트
 	// callback 함수 : 서버로부터 응답이 오면 동작할 콜백함수(시스템이 자동호출)
-	httpRequest.onreadystatechange = callback; //+ 요청이 처리 되어 결과가 나왔을 때 어떻게 응답할지 callback 기술
+	httpRequest.onreadystatechange = callback(); //+ 요청이 처리 되어 결과가 나왔을 때 어떻게 응답할지 callback 기술
 	
 	var httpMethod = method ? method : "GET";
 	if(httpMethod != "GET" && httpMethod != "POST") {
@@ -56,7 +56,9 @@ function sendRequest(callback, url, method, params) { /*url.jsp?params => 결과
 	// open(방식, 응답페이지, 비동기)
 	httpRequest.open(httpMethod , httpUrl, true); //open
 	httpRequest.setRequestHeader("content-type", "application/x-www-form-urlencoded;charset=utf-8"); //loading
+	httpRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	
-	httpRequest.send(httpMethod == "POST" ? httpParams : null); //send
+	//send
+	httpRequest.send(httpMethod == "POST" ? httpParams : null);
 }
 

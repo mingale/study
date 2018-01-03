@@ -40,6 +40,16 @@ public class FrontController extends HttpServlet {
 		return "jsp/main/index";
 	}
 	
+	//검색어 제안
+	@RequestMapping("suggest")
+	public String suggest(HttpServletRequest req, Model model) {
+		System.out.println("suggest()");
+		
+		bs.keywordSuggest(req, model);
+		
+		return "jsp/main/suggest";
+	}
+	
 	//도서 검색
 	@RequestMapping("bookSearch")
 	public String bookSearch(HttpServletRequest req, Model model) {

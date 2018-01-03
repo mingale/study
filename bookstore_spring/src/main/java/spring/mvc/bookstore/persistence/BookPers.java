@@ -15,6 +15,9 @@ public interface BookPers {
  * 도서 목록 : 순서 필요 > ArrayList
  * 주문 목록 : 순서 불필요? > Map
  */
+	// 검색어 제안
+	public ArrayList<String> getKeywordSuggest(String keyword);
+	
 	//도서 검색
 	public ArrayList<Book> bookSearch(Map<String, Object> map);
 	

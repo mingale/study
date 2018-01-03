@@ -53,6 +53,10 @@
 		</collection>
 	</resultMap>
 	
+	<!-- 검색어 제안 -->
+	<select id="getKeywordSuggest" resultType="String">
+		SELECT * FROM book WHERE title LIKE #{keyword}||'%'
+	</select>
 	
 	<!-- 도서 검색 -->
 	<select id="bookSearch" resultType="spring.mvc.bookstore.vo.Book">

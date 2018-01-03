@@ -10,6 +10,9 @@ public interface BookService {
 	//홈
 	public void indexView(HttpServletRequest req, Model model);
 	
+	//검색어 제안
+	public void keywordSuggest(HttpServletRequest req, Model model);
+	
 	//도서 검색
 	public void bookSearch(HttpServletRequest req, Model model);
 	

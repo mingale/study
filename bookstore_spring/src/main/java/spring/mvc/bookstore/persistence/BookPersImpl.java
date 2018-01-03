@@ -41,6 +41,17 @@ public class BookPersImpl implements BookPers {
 	 * spring.mvc.bookstore.persistence.BookPersImpl.<init>(BookPersImpl.java:33)
 	 */
 
+	// 검색어 제안
+	public ArrayList<String> getKeywordSuggest(String keyword) {
+		System.out.println("BookPersImpl START - getKeywordSuggest()");
+		
+		BookPers mapper = sqlSession.getMapper(BookPers.class);
+		ArrayList<String> list = mapper.getKeywordSuggest(keyword);
+		
+		System.out.println("BookPersImpl END - getKeywordSuggest()");
+		return list;
+	}
+	
 	// 도서 검색
 	public ArrayList<Book> bookSearch(Map<String, Object> map) {
 		System.out.println("BookPersImple START - bookSearch");

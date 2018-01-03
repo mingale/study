@@ -46,6 +46,15 @@ public class BookServiceImpl implements BookService {
 		model.addAttribute("newB", newB);
 	}
 
+	//검색어 제안
+	public void keywordSuggest(HttpServletRequest req, Model model) {
+		String keyword = req.getParameter("keyword");
+		
+		ArrayList<String> suggest = dao.getKeywordSuggest(keyword);
+		
+		model.addAttribute("suggest", suggest);
+	}
+	
 	// 도서 검색
 	public void bookSearch(HttpServletRequest req, Model model) {
 		String keyword = req.getParameter("search");
