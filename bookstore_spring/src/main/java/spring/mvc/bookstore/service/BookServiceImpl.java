@@ -250,109 +250,13 @@ public class BookServiceImpl implements BookService {
 		model.addAttribute("number", number);
 		model.addAttribute("pageNum", pageNum);
 	}
-/*
-	// 도서 정보 수정 or 추가
-	@Override
-	public void bookUpdate(HttpServletRequest req, Model model) {
-		int cnt = 0;
-
-		String no = req.getParameter("no"); // -1이면 도서 추가. 아니면 도서 수정
-
-		String title = req.getParameter("title");
-		String author = req.getParameter("author");
-		String publisher = req.getParameter("publisher");
-		Date pub_date = Date.valueOf(req.getParameter("pub_date"));
-		int price = Integer.parseInt(req.getParameter("price"));
-		int count = Integer.parseInt(req.getParameter("count"));
-		String image = req.getParameter("image");
-		if (image.equals("null.jpg")) {
-			//image = req.getFilesystemName(fileName);
-		}
-
-		Book b = new Book();
-		b.setNo(no);
-		b.setTitle(title);
-		b.setAuthor(author);
-		b.setPublisher(publisher);
-		b.setPub_date(pub_date);
-		b.setPrice(price);
-		b.setCount(count);
-		b.setImage(image);
-
-		if (!no.equals("-1")) { // 도서 수정
-			cnt = dao.bookUpdate(b);
-		} else { // 도서 추가
-			cnt = dao.bookInsert(b);
-		}
-
-		// book_sub
-		if (cnt != 0) {
-
-			String tag = req.getParameter("tag");
-			String tag_main = req.getParameter("tag_main");
-			String intro = req.getParameter("intro");
-			String list = req.getParameter("list");
-			String pub_intro = req.getParameter("pub_intro");
-			String review = req.getParameter("review");
-
-			BookSub bSub = new BookSub();
-			bSub.setNo(no);
-			bSub.setTag(tag);
-			bSub.setTag_main(tag_main);
-			bSub.setIntro(intro);
-			bSub.setList(list);
-			bSub.setPub_intro(pub_intro);
-			bSub.setReview(review);
-
-			System.out.println(intro + " / " + list + " / " + pub_intro + " / " + review);
-			
-			if (!no.equals("-1")) { // 도서 수정
-				cnt = dao.bookSubUpdate(bSub);
-			} else { // 도서 추가
-				cnt = dao.bookSubInsert(bSub);
-			}
-		}
-		model.addAttribute("cnt", cnt);
-	}
-*/
-	// 도서 삭제 처리
-	@Override
-	public void bookDelete(HttpServletRequest req, Model model) {
-		int chk = Integer.parseInt(req.getParameter("chk"));
-		String no = req.getParameter("no");
-
-		int cnt = 0;
-
-		if (chk == 0) {
-			cnt = dao.bookDelete(no);
-		} else {
-			String[] nos = no.split(",");
-			for (String n : nos) {
-				cnt = dao.bookDelete(n);
-			}
-		}
-		model.addAttribute("cnt", cnt);
-	}
-
-	// 도서 추가 페이지
-	@Override
-	public void bookInsertView(HttpServletRequest req, Model model) {
-		ArrayList<BookSub> tag_mains = dao.getTag_mainList();
-
-		model.addAttribute("no", req.getParameter("no"));
-		model.addAttribute("tag_mains", tag_mains);
-	}
-
-
-
 
 	//도서 정보 수정 or 추가
 	@Override
 	public void bookUpdate(MultipartHttpServletRequest req, Model model) {
-		System.out.println("===============================================================");
 		int cnt = 0;
 
-		MultipartFile file = req.getFile("img");
+		MultipartFile file = req.getFile("imgFile"); //input name
 
 		String saveDir = req.getRealPath("/resources/images/book/"); // 저장 경로. 논리적인 경로
 		String realDir = "C:\\Dev\\workspace\\bookstore\\WebContent\\images\\book\\"; // 업로드 위치 - 물리적인 경로
@@ -366,8 +270,8 @@ public class BookServiceImpl implements BookService {
 			Date pub_date = Date.valueOf(req.getParameter("pub_date"));
 			int price = Integer.parseInt(req.getParameter("price"));
 			int count = Integer.parseInt(req.getParameter("count"));
-			String image = req.getParameter("image");
-			if (!image.equals("null.jpg")) {
+			String image = req.getParameter("image"); //upload=null.jpg, not upload=000.jpg
+			if (image.equals("null.jpg")) {
 				file.transferTo(new File(saveDir + file.getOriginalFilename()));;
 				
 				FileInputStream fis = new FileInputStream(saveDir + file.getOriginalFilename()); // 임시 저장
@@ -382,9 +286,7 @@ public class BookServiceImpl implements BookService {
 				fos.close();
 
 				image = file.getOriginalFilename();
-				System.out.println("**************************** bookUpdate - " + image);
 			}
-			System.out.println("**************************** bookUpdate - " + image);
 
 			Book b = new Book();
 			b.setNo(no);
@@ -432,5 +334,33 @@ public class BookServiceImpl implements BookService {
 			System.out.println("bookUpdate() 실패");
 		}
 		model.addAttribute("cnt", cnt);
+	}
+	
+	// 도서 삭제 처리
+	@Override
+	public void bookDelete(HttpServletRequest req, Model model) {
+		int chk = Integer.parseInt(req.getParameter("chk"));
+		String no = req.getParameter("no");
+
+		int cnt = 0;
+
+		if (chk == 0) {
+			cnt = dao.bookDelete(no);
+		} else {
+			String[] nos = no.split(",");
+			for (String n : nos) {
+				cnt = dao.bookDelete(n);
+			}
+		}
+		model.addAttribute("cnt", cnt);
+	}
+
+	// 도서 추가 페이지
+	@Override
+	public void bookInsertView(HttpServletRequest req, Model model) {
+		ArrayList<BookSub> tag_mains = dao.getTag_mainList();
+
+		model.addAttribute("no", req.getParameter("no"));
+		model.addAttribute("tag_mains", tag_mains);
 	}
 }

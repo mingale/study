@@ -35,7 +35,6 @@ public class FrontController extends HttpServlet {
 	public String index(HttpServletRequest req, Model model) {
 		System.out.println("index()");
 		
-		System.out.println("----------------------------------------");
 		bs.indexView(req, model);
 		
 		return "jsp/main/index";
