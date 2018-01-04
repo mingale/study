@@ -18,7 +18,7 @@
 		.new{float:left;width:490px;height:250px;margin-top:30px;padding:0 10px;}
 		.new > ul{margin-top:20px;border:1px solid #c6c6c6;}
 		.div{width:100%;height:100%;line-height:180px;margin:auto 0;text-align:center}
-		.notice{float:right;width:100%;height:50px;margin-top:20px;}
+		.notice{float:right;width:100%;margin-top:20px;padding-bottom:20px;}
 		
 		.item > li{width:100%;font-size:14px;}
 		.item li li{float:left;margin:5px 0;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;}
@@ -106,7 +106,7 @@
 		<span>공지사항</span>
 		<hr>
 		<c:forEach var="notice" items="${notices}">
-			<p><a href="noticeView?idx=${notice.idx}">${notice.title} (${notice.add_date})</a></p>
+			<a href="noticeView?idx=${notice.idx}">${notice.title} (${notice.add_date})</a><br>
 		</c:forEach>
 	</div>
 </div>

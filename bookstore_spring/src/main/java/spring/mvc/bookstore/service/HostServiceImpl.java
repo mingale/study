@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -29,6 +30,8 @@ public class HostServiceImpl implements HostService {
 	MemberPers mDao;
 	@Autowired
 	BookPers bDao;
+	
+	private Logger log = Logger.getLogger(this.getClass());
 
 	// 아이디 중복 확인
 	public void confirmId(HttpServletRequest req, Model model) {
@@ -139,7 +142,7 @@ public class HostServiceImpl implements HostService {
 			}
 		}
 
-		System.out.println("키: " + key + " / 인증 : " + view + " / 성공여부: " + cnt);
+		log.debug("키: " + key + " / 인증 : " + view + " / 성공여부: " + cnt);
 
 		model.addAttribute("cnt", cnt);
 		model.addAttribute("view", view);
@@ -490,7 +493,7 @@ public class HostServiceImpl implements HostService {
 
 		model.addAttribute("cnt", cnt);
 
-		System.out.println(chk);
+		log.debug(chk);
 	}
 
 	// 관리자 주문 삭제
@@ -653,18 +656,19 @@ public class HostServiceImpl implements HostService {
 						model.addAttribute("t" + e.getKey(), e.getValue());
 						flg = true;
 						break;
-						// System.out.println("t" + e.getKey() + " : MAP");
+						// log.debug("t" + e.getKey() + " : MAP");
 					}
 				}
 
 				if (!flg) { // 매출 없는 분야
 					model.addAttribute("t" + str, 0);
-					// System.out.println("t" + str);
+					// log.debug("t" + str);
 				}
 			}
 		}
 	}
 
+	//공지사항
 	@Override
 	public void getNotice(HttpServletRequest req, Model model) {
 		int postCnt = bDao.getNoticeCnt();
@@ -705,6 +709,7 @@ public class HostServiceImpl implements HostService {
 		model.addAttribute("postCnt", postCnt);
 	}
 	
+	//공지사항 글쓰기 처리
 	@Override
 	public void noticeWritePro(HttpServletRequest req, Model model) {
 		String id = (String) req.getSession().getAttribute("memId");

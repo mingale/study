@@ -3,6 +3,7 @@ package spring.mvc.bookstore.controller;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import spring.mvc.bookstore.service.HostService;
 @Controller
 public class FrontController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private Logger log = Logger.getLogger(this.getClass());
 
 	@Autowired
 	BookService bs;
@@ -33,7 +35,7 @@ public class FrontController extends HttpServlet {
 	//main
 	@RequestMapping("index")
 	public String index(HttpServletRequest req, Model model) {
-		System.out.println("index()");
+		log.debug("index()");
 		
 		bs.indexView(req, model);
 		
@@ -43,7 +45,7 @@ public class FrontController extends HttpServlet {
 	//검색어 제안
 	@RequestMapping("suggest")
 	public String suggest(HttpServletRequest req, Model model) {
-		System.out.println("suggest()");
+		log.debug("suggest()");
 		
 		bs.keywordSuggest(req, model);
 		
@@ -53,7 +55,7 @@ public class FrontController extends HttpServlet {
 	//도서 검색
 	@RequestMapping("bookSearch")
 	public String bookSearch(HttpServletRequest req, Model model) {
-		System.out.println("bookSearch()");
+		log.debug("bookSearch()");
 		
 		bs.bookSearch(req, model);
 		
@@ -63,7 +65,7 @@ public class FrontController extends HttpServlet {
 	//도서 상세 보기
 	@RequestMapping("detail")
 	public String detail(HttpServletRequest req, Model model) {
-		System.out.println("detail()");
+		log.debug("detail()");
 		
 		bs.detailView(req, model);
 		
@@ -73,7 +75,7 @@ public class FrontController extends HttpServlet {
 	//도서 리스트
 	@RequestMapping("bookList")
 	public String bookList(HttpServletRequest req, Model model) {
-		System.out.println("bookList()");
+		log.debug("bookList()");
 		
 		bs.bookListView(req, model);
 		
@@ -83,14 +85,14 @@ public class FrontController extends HttpServlet {
 	//로그인 화면
 	@RequestMapping("signIn")
 	public String signIn() {
-		System.out.println("signIn()");
+		log.debug("signIn()");
 		return "jsp/join/signIn";
 	}
 	
 	//로그인 처리
 	@RequestMapping("signInPro")
 	public String signInPro(HttpServletRequest req, Model model) {
-		System.out.println("signInPro()");
+		log.debug("signInPro()");
 		
 		hs.signIn(req, model);
 		
@@ -100,7 +102,7 @@ public class FrontController extends HttpServlet {
 	//로그아웃
 	@RequestMapping("signOut")
 	public String signOut(HttpServletRequest req, Model model) {
-		System.out.println("signOut()");
+		log.debug("signOut()");
 		
 		req.getSession().invalidate();
 		return index(req, model);
@@ -109,21 +111,21 @@ public class FrontController extends HttpServlet {
 	//회원 가입 약관
 	@RequestMapping("join")
 	public String join(HttpServletRequest req, Model model) {
-		System.out.println("join()");
+		log.debug("join()");
 		return "jsp/join/join";
 	}
 	
 	//회원 가입 화면
 	@RequestMapping("signUp")
 	public String signUp() {
-		System.out.println("signUp()");
+		log.debug("signUp()");
 		return "jsp/join/signUp";
 	}	
 	
 	//회원 가입 처리
 	@RequestMapping("signUpPro")
 	public String signUpPro(HttpServletRequest req, Model model) {
-		System.out.println("signUpPro()");
+		log.debug("signUpPro()");
 			
 		hs.signUp(req, model);
 			
@@ -133,7 +135,7 @@ public class FrontController extends HttpServlet {
 	//아이디 중복 확인
 	@RequestMapping("confirmId")
 	public String confirmId(HttpServletRequest req, Model model) {
-		System.out.println("confirmId()");
+		log.debug("confirmId()");
 		
 		hs.confirmId(req, model);
 		
@@ -143,7 +145,7 @@ public class FrontController extends HttpServlet {
 	//이메일 중복 확인
 	@RequestMapping("confirmEmail")
 	public String confirmEmail(HttpServletRequest req, Model model) {
-		System.out.println("confirmEmail()");
+		log.debug("confirmEmail()");
 		
 		hs.confirmEmail(req, model);
 		
@@ -153,7 +155,7 @@ public class FrontController extends HttpServlet {
 	//이메일 인증 확인
 	@RequestMapping("emailCheck")
 	public String emailCheck(HttpServletRequest req, Model model) {
-		System.out.println("emailCheck()");
+		log.debug("emailCheck()");
 		
 		hs.confirmEmailKey(req, model);
 		
@@ -163,7 +165,7 @@ public class FrontController extends HttpServlet {
 	//아이디, 비밀번호 찾기 화면
 	@RequestMapping("signFindView")
 	public String signFindView(HttpServletRequest req, Model model) {
-		System.out.println("signFindView()");
+		log.debug("signFindView()");
 		
 		return "jsp/join/signFindView";
 	}
@@ -171,7 +173,7 @@ public class FrontController extends HttpServlet {
 	//아이디/비밀번호 찾기
 	@RequestMapping("signFind")
 	public String signFind(HttpServletRequest req, Model model) {
-		System.out.println("signFind()");
+		log.debug("signFind()");
 		
 		hs.memberFindEmailKey(req, model);
 		
@@ -181,7 +183,7 @@ public class FrontController extends HttpServlet {
 	//마이페이지 비밀번호 확인
 	@RequestMapping("myPagePwd")
 	public String myPagePwd(HttpServletRequest req, Model model) {
-		System.out.println("myPagePwd()");
+		log.debug("myPagePwd()");
 		
 		return "jsp/process/myPagePwd";
 	}
@@ -189,7 +191,7 @@ public class FrontController extends HttpServlet {
 	//회원 정보 출력
 	@RequestMapping("myPageView")
 	public String myPageView(HttpServletRequest req, Model model) {
-		System.out.println("myPageView()");
+		log.debug("myPageView()");
 		
 		hs.memberQuery(req, model);
 		
@@ -199,7 +201,7 @@ public class FrontController extends HttpServlet {
 	//회원 정보 수정
 	@RequestMapping("myPagePro")
 	public String myPagePro(HttpServletRequest req, Model model) {
-		System.out.println("myPagePro()");
+		log.debug("myPagePro()");
 		
 		hs.memberUpdate(req, model);
 		
@@ -209,7 +211,7 @@ public class FrontController extends HttpServlet {
 	//회원 탈퇴
 	@RequestMapping("memOutPro")
 	public String memOutPro(HttpServletRequest req, Model model) {
-		System.out.println("memOutPro()");
+		log.debug("memOutPro()");
 		
 		hs.memberDelete(req, model);
 		
@@ -219,7 +221,7 @@ public class FrontController extends HttpServlet {
 	//고객센터
 	@RequestMapping("help")
 	public String help(HttpServletRequest req, Model model) {
-		System.out.println("help()");
+		log.debug("help()");
 
 		hs.helpView(req, model);
 		
@@ -236,7 +238,7 @@ public class FrontController extends HttpServlet {
 	//장바구니에서 구매 버튼
 	@RequestMapping("order")
 	public String order(HttpServletRequest req, Model model) {
-		System.out.println("order()");
+		log.debug("order()");
 		
 		gs.orderView(req, model);
 		
@@ -246,7 +248,7 @@ public class FrontController extends HttpServlet {
 	//주문 처리
 	@RequestMapping("orderPro")
 	public String orderPro(HttpServletRequest req, Model model) {
-		System.out.println("orderPro()");
+		log.debug("orderPro()");
 		
 		gs.addOrder(req, model);
 		
@@ -256,7 +258,7 @@ public class FrontController extends HttpServlet {
 	//장바구니 목록
 	@RequestMapping("cart")
 	public String cart(HttpServletRequest req, Model model) {
-		System.out.println("cart()");
+		log.debug("cart()");
 		
 		gs.cartView(req, model);
 		
@@ -266,7 +268,7 @@ public class FrontController extends HttpServlet {
 	//바로구매,장바구니,찜하기 버튼 처리
 	@RequestMapping("bookBtnPro")
 	public String cartBtn(HttpServletRequest req, Model model) {
-		System.out.println("bookBtnPro()");
+		log.debug("bookBtnPro()");
 		String id = (String) req.getSession().getAttribute("memId");
 		
 		if(id != null) {
@@ -286,7 +288,7 @@ public class FrontController extends HttpServlet {
 	//장바구니 삭제 또는 수정
 	@RequestMapping("cartPro")
 	public String cartPro(HttpServletRequest req, Model model) {
-		System.out.println("cartPro()");
+		log.debug("cartPro()");
 		
 		gs.cartPro(req, model);
 		
@@ -296,7 +298,7 @@ public class FrontController extends HttpServlet {
 	//주문 내역
 	@RequestMapping("myOrder")
 	public String myOrder(HttpServletRequest req, Model model) {
-		System.out.println("myOrder()");
+		log.debug("myOrder()");
 		
 		gs.myOrderView(req, model);
 
@@ -305,7 +307,7 @@ public class FrontController extends HttpServlet {
 	
 	@RequestMapping("orderDetail")
 	public String orderDetail(HttpServletRequest req, Model model) { 
-		System.out.println("orderDetail()");
+		log.debug("orderDetail()");
 		
 		gs.orderDetailView(req, model);
 		
@@ -315,7 +317,7 @@ public class FrontController extends HttpServlet {
 	//주문 취소
 	@RequestMapping("myOrderDelete")
 	public String myOrderDelete(HttpServletRequest req, Model model) {
-		System.out.println("myOrderDelete()");
+		log.debug("myOrderDelete()");
 		
 		hs.orderDelete(req, model);
 		
@@ -325,7 +327,7 @@ public class FrontController extends HttpServlet {
 	//환불 신청
 	@RequestMapping("myOrderRefund")		
 	public String myOrderRefund(HttpServletRequest req, Model model) {
-		System.out.println("myOrderRefund()");
+		log.debug("myOrderRefund()");
 		
 		gs.orderRefund(req, model);
 
@@ -335,7 +337,7 @@ public class FrontController extends HttpServlet {
 	//환불 내역
 	@RequestMapping("myRefund")
 	public String myRefund(HttpServletRequest req, Model model) {
-		System.out.println("myRefund()");
+		log.debug("myRefund()");
 		
 		gs.getRefundView(req, model);
 		
@@ -350,7 +352,7 @@ public class FrontController extends HttpServlet {
 	 */
 	@RequestMapping("main")
 	public String main(HttpServletRequest req, Model model) {
-		System.out.println("main()");
+		log.debug("main()");
 		
 		hs.mainView(req, model);
 		
@@ -360,7 +362,7 @@ public class FrontController extends HttpServlet {
 	//재고 관리 페이지
 	@RequestMapping("stock")
 	public String stock(HttpServletRequest req, Model model) {
-		System.out.println("stock()");
+		log.debug("stock()");
 		
 		bs.hostStockView(req, model); //도서 정보와 서브 정보의 총개수가 다르면, 가져온 목록에 차이가 생겨서 서브 정보가 올바르게 표시되지 못한다.
 		
@@ -370,7 +372,7 @@ public class FrontController extends HttpServlet {
 	//도서 수정 페이지
 	@RequestMapping("stockUpdate")
 	public String stockUpdate(HttpServletRequest req, Model model) {
-		System.out.println("stockUpdate()");
+		log.debug("stockUpdate()");
 		
 		bs.detailView(req, model);
 		
@@ -380,7 +382,7 @@ public class FrontController extends HttpServlet {
 	//도서 수정 처리
 	@RequestMapping("stockUpdatePro")
 	public String stockUpdatePro(MultipartHttpServletRequest req, Model model) {
-		System.out.println("stockUpdatePro()");
+		log.debug("stockUpdatePro()");
 		
 		bs.bookUpdate(req, model);
 		
@@ -390,7 +392,7 @@ public class FrontController extends HttpServlet {
 	//도서 삭제
 	@RequestMapping("stockDelete")
 	public String stockDelete(HttpServletRequest req, Model model) {
-		System.out.println("stockDelete()");
+		log.debug("stockDelete()");
 		
 		bs.bookDelete(req, model);
 		
@@ -400,7 +402,7 @@ public class FrontController extends HttpServlet {
 	//도서 추가
 	@RequestMapping("stockAdd")
 	public String stockAdd(HttpServletRequest req, Model model) {
-		System.out.println("stockAdd()");
+		log.debug("stockAdd()");
 		
 		bs.bookInsertView(req, model);
 		
@@ -410,7 +412,7 @@ public class FrontController extends HttpServlet {
 	//주문 관리 페이지  order.ho => hostOrder
 	@RequestMapping("hostOrder")
 	public String hostOrder(HttpServletRequest req, Model model) {
-		System.out.println("hostOrder()");
+		log.debug("hostOrder()");
 		
 		hs.hostOrderView(req, model);
 		
@@ -420,7 +422,7 @@ public class FrontController extends HttpServlet {
 	//주문 승인
 	@RequestMapping("orderOk")
 	public String orderOk(HttpServletRequest req, Model model) {
-		System.out.println("orderOk()");
+		log.debug("orderOk()");
 		
 		hs.orderStateUpdate(req, model);
 		
@@ -430,7 +432,7 @@ public class FrontController extends HttpServlet {
 	//주문 삭제
 	@RequestMapping("orderDelete")
 	public String orderDelete(HttpServletRequest req, Model model) {
-		System.out.println("orderDelete()");
+		log.debug("orderDelete()");
 		
 		hs.orderDelete(req, model);
 		
@@ -440,7 +442,7 @@ public class FrontController extends HttpServlet {
 	//관리자 주문목록의 배송 시작 버튼
 	@RequestMapping("orderShipping")
 	public String orderShipping(HttpServletRequest req, Model model) {
-		System.out.println("orderShipping()");
+		log.debug("orderShipping()");
 		
 		model.addAttribute("order_num", req.getParameter("order_num"));
 		
@@ -450,7 +452,7 @@ public class FrontController extends HttpServlet {
 	//배송시작 송장번호
 	@RequestMapping("shippingPro")
 	public String shippingPro(HttpServletRequest req, Model model) {
-		System.out.println("shippingPro()");
+		log.debug("shippingPro()");
 		
 		hs.shippingPro(req, model);
 		
@@ -460,7 +462,7 @@ public class FrontController extends HttpServlet {
 	//환불 목록
 	@RequestMapping("refund")
 	public String refund(HttpServletRequest req, Model model) {
-		System.out.println("refund()");
+		log.debug("refund()");
 		
 		hs.getHostRefundView(req, model);
 		
@@ -470,7 +472,7 @@ public class FrontController extends HttpServlet {
 	//환불 완료
 	@RequestMapping("refundOk")
 	public String refundOk(HttpServletRequest req, Model model) {
-		System.out.println("refundOk()");
+		log.debug("refundOk()");
 		
 		hs.refundOk(req, model);
 		
@@ -480,7 +482,7 @@ public class FrontController extends HttpServlet {
 	//환불 거부
 	@RequestMapping("refundNo")
 	public String refundNo(HttpServletRequest req, Model model) {
-		System.out.println("refundNo()");
+		log.debug("refundNo()");
 		
 		hs.refundNo(req, model);
 		
@@ -490,7 +492,7 @@ public class FrontController extends HttpServlet {
 	//회원 관리 페이지
 	@RequestMapping("member")
 	public String member(HttpServletRequest req, Model model) {
-		System.out.println("member()");
+		log.debug("member()");
 		
 		hs.getMemberView(req, model);
 		
@@ -500,7 +502,7 @@ public class FrontController extends HttpServlet {
 	//회원 관리 수정
 	@RequestMapping("memberUpdate")
 	public String memberUpdate(HttpServletRequest req, Model model) {
-		System.out.println("memberUpdate()");
+		log.debug("memberUpdate()");
 
 		hs.setHostMemberUpdate(req, model);
 
@@ -510,7 +512,7 @@ public class FrontController extends HttpServlet {
 	//회원 강제 탈퇴
 	@RequestMapping("memberDelete")
 	public String memberDelete(HttpServletRequest req, Model model) {
-		System.out.println("memberDelete()");
+		log.debug("memberDelete()");
 		
 		hs.memberDelete(req, model);
 		
@@ -520,7 +522,7 @@ public class FrontController extends HttpServlet {
 	//결산
 	@RequestMapping("result")
 	public String result(HttpServletRequest req, Model model) {
-		System.out.println("result()");
+		log.debug("result()");
 		
 		hs.getResultTotal(req, model);
 		
@@ -530,7 +532,7 @@ public class FrontController extends HttpServlet {
 	//공지사항
 	@RequestMapping("notice") 
 	public String notice(HttpServletRequest req, Model model){
-		System.out.println("notice()");
+		log.debug("notice()");
 		
 		hs.getNotice(req, model);
 		
@@ -540,14 +542,14 @@ public class FrontController extends HttpServlet {
 	//공지사항 글쓰기
 	@RequestMapping("noticeWrite")
 	public String noticeWrite(HttpServletRequest req, Model model) {
-		System.out.println("noticeWrite()");
+		log.debug("noticeWrite()");
 		return "jsp/host/noticeWrite";
 	}
 	
 	//공지사항 글쓰기 처리
 	@RequestMapping("noticeWritePro")
 	public String noticeWritePro(HttpServletRequest req, Model model) {
-		System.out.println("noticeWritePro()");
+		log.debug("noticeWritePro()");
 		
 		hs.noticeWritePro(req, model);
 		
@@ -557,7 +559,7 @@ public class FrontController extends HttpServlet {
 	//공지사항 상세보기
 	@RequestMapping("noticeView")
 	public String noticeView(HttpServletRequest req, Model model) {
-		System.out.println("noticeView()");
+		log.debug("noticeView()");
 		
 		hs.noticeView(req, model);
 		return "jsp/host/noticeView";

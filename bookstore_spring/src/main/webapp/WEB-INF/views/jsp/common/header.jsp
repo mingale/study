@@ -15,9 +15,10 @@
 		var lastKeyword = null; //마지막키워드
 
 		function keywordSuggest() {
+			
 			if(checkFirst == true) { //처음
 				loopStop = false;  //0.5초마다 반복해라	
-				setTimeout("sendKeyword()", 500); //0.5초마다 sendKeyword() 반복
+				setTimeout('sendKeyword()', 500); //0.5초마다 sendKeyword() 반복
 			}
 			checkFirst = false; //작업종료
 		}	
@@ -29,7 +30,7 @@
 			var keyword = document.indexForm.search.value; //검색어
 			
 			//검색어를 지운 경우 출력결과를 지운다(=출력위치를 숨겨라)
-			if(keyword == null) {
+			if(keyword == null || keyword == '') {
 				hide('suggest');
 				lastKeyword = '';
 			}
@@ -38,9 +39,8 @@
 				lastKeyword = keyword;
 				var params = 'keyword=' + keyword;
 				
-				sendRequest(result_callback, 'suggest', 'POST', params); //suggest.jsp으로 요청한 결과가 result로 돌아온다.
+				sendRequest(result_callback, 'suggest', 'GET', params); //suggest.jsp으로 요청한 결과가 result로 돌아온다.
 			}
-			
 			setTimeout('sendKeyword()', 500); //재귀호출.(function안에서 호출하므로)
 		}		
 
@@ -50,32 +50,32 @@
 			
 			if(httpRequest.readyState == 4) { //completed : 전 데이터가 취득완료된 상태
 				if(httpRequest.status == 200) { //200 : 정상종료
-					
+			
 					var books = '';
 					var data = httpRequest.responseText; //결과값. suggest.jsp의 list
 					var dataList = data.split('|'); //list.size()|단어-단어-단어,...
 					var count = dataList[0]; //건수. list.size()
 					
 					if(count > 0) {
-						var bookList = dataList[1].split('-');
+						var bookList = dataList[1].split('_');
 						for(var i = 0; i < count; i += 1) {
 							//결과 리스트 중에서, 검색하고자 하는 키워드를 클릭하면, input 박스로 키워드가 들어간다.
-							books += "<a href=\"javascript:select(' " + bookList[i] +" ')\">" //javascript의 select 함수에 책이름 전달
+							books += "<a href=\"javascript:select('" + bookList[i] +"')\">" //javascript의 select 함수에 책이름 전달
 									+ bookList[i]
 									+ "</a>"
 									+ "<br>";
 						}
 						show('suggest');
 						
-						suggestList.innerHTML = book;
+						suggestList.innerHTML = books;
 					} else {
 						hide('suggest');
 					}
 				} else {
-					// 에러
+					console.log('에러 발생');
 				}
 			} else {
-				// 에러 상태 : httpRequest.readyState;
+				console.log('상태 : ' + httpRequest.readyState);
 			}
 		}
 
@@ -92,6 +92,7 @@
 			var element = document.getElementById(str);
 			if(element) {
 				element.style.display = '';
+				element.style.background = 'white';
 			}
 		}		
 
@@ -130,7 +131,7 @@
 	
 	<form class="search_area" action="bookSearch" name="indexForm" method="post">
 		<input class="search" type="text" name="search" onkeydown="keywordSuggest();"><input class="searButton" type="submit" value="검색">
-		<div id="suggest" class="keyword">keyword</div>
+		<div id="suggest" class="keyword"></div>
 	</form>
 	<nav class="sub_gnb">
 		<a href="bookList?tagName=베스트셀러&tag=best">베스트셀러</a>

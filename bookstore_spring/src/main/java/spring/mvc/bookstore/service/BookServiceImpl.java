@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -24,10 +25,12 @@ import spring.mvc.bookstore.vo.RecentBook;
 
 @Service
 public class BookServiceImpl implements BookService {
-	
+
 	@Autowired
 	BookPers dao;
 
+	private Logger log = Logger.getLogger(this.getClass());
+	
 	// 홈
 	@Override
 	public void indexView(HttpServletRequest req, Model model) {
@@ -46,15 +49,23 @@ public class BookServiceImpl implements BookService {
 		model.addAttribute("newB", newB);
 	}
 
-	//검색어 제안
+	// 검색어 제안
 	public void keywordSuggest(HttpServletRequest req, Model model) {
 		String keyword = req.getParameter("keyword");
-		
-		ArrayList<String> suggest = dao.getKeywordSuggest(keyword);
-		
+
+		ArrayList<String> list = dao.getKeywordSuggest(keyword);
+
+		String suggest = null;
+		for (String str : list) {
+			if (suggest == null)
+				suggest = list.size() + "|" + str;
+			else {
+				suggest += "_" + str;
+			}
+		}
 		model.addAttribute("suggest", suggest);
 	}
-	
+
 	// 도서 검색
 	public void bookSearch(HttpServletRequest req, Model model) {
 		String keyword = req.getParameter("search");
@@ -109,14 +120,14 @@ public class BookServiceImpl implements BookService {
 
 		// 해당 book 정보
 		Book b = dao.getBookInfo(bookNo);
-		
+
 		// tag_main 정보
 		ArrayList<BookSub> tag_mains = dao.getTag_mainList();
 
 		model.addAttribute("book", b);
 		model.addAttribute("tag_mains", tag_mains);
 
-		//최근 본 도서
+		// 최근 본 도서
 		// recentBookAdd
 		@SuppressWarnings("unchecked")
 		ArrayList<RecentBook> recent = (ArrayList<RecentBook>) req.getSession().getAttribute("recent");
@@ -125,8 +136,8 @@ public class BookServiceImpl implements BookService {
 		}
 		recent = dao.recentUpdate(recent, b);
 		req.getSession().setAttribute("recent", recent);
-		
-		//조회수 증가
+
+		// 조회수 증가
 		dao.bookViewsUpdate(bookNo);
 	}
 
@@ -138,7 +149,7 @@ public class BookServiceImpl implements BookService {
 
 		// 태그 목록
 		ArrayList<BookSub> tag_mains = dao.getTag_mainList();
-		
+
 		int cnt = 0;
 		if (tag.equals("best")) {
 			cnt = dao.getBestCount();
@@ -180,17 +191,17 @@ public class BookServiceImpl implements BookService {
 			map.put("start", start);
 			map.put("end", end);
 			ArrayList<Book> books = null;
-			//베스트 셀러, 추천도서, 신간 도서 목록
+			// 베스트 셀러, 추천도서, 신간 도서 목록
 			if (tag.equals("best")) {
 				books = dao.getBestBook(map);
 			} else if (tag.equals("new")) {
 				books = dao.getNewBook(map);
 			} else if (tag.equals("good")) {
 				books = dao.getGoodTagBook(map);
-			//국내 도서 목록
+				// 국내 도서 목록
 			} else if (tag.equals("dom")) {
 				books = dao.getDomesticBook(map);
-			//외국 도서
+				// 외국 도서
 			} else {
 				map.put("tagNum", "21");
 				books = dao.getTagMainBook(map);
@@ -237,7 +248,7 @@ public class BookServiceImpl implements BookService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("start", start);
 			map.put("end", end);
-			
+
 			ArrayList<Book> books = dao.getBookList(map);
 			model.addAttribute("books", books);
 
@@ -260,15 +271,15 @@ public class BookServiceImpl implements BookService {
 		model.addAttribute("pageNum", pageNum);
 	}
 
-	//도서 정보 수정 or 추가
+	// 도서 정보 수정 or 추가
 	@Override
 	public void bookUpdate(MultipartHttpServletRequest req, Model model) {
 		int cnt = 0;
 
-		MultipartFile file = req.getFile("imgFile"); //input name
+		MultipartFile file = req.getFile("imgFile"); // input name
 
-		String saveDir = req.getRealPath("/resources/images/book/"); // 저장 경로. 논리적인 경로
-		String realDir = "C:\\Dev\\workspace\\bookstore\\WebContent\\images\\book\\"; // 업로드 위치 - 물리적인 경로
+		String saveDir = req.getRealPath("/resources/images/book/"); // 임시 저장 경로. 논리적인 경로
+		String realDir = "C:\\Dev\\git\\Study\\bookstore_spring\\src\\main\\webapp\\resources\\images\\book\\"; // 업로드 위치 - 물리적인 경로
 
 		try {
 			String no = req.getParameter("no"); // -1이면 도서 추가. 아니면 도서 수정
@@ -279,10 +290,10 @@ public class BookServiceImpl implements BookService {
 			Date pub_date = Date.valueOf(req.getParameter("pub_date"));
 			int price = Integer.parseInt(req.getParameter("price"));
 			int count = Integer.parseInt(req.getParameter("count"));
-			String image = req.getParameter("image"); //upload=null.jpg, not upload=000.jpg
+			String image = req.getParameter("image"); // upload=null.jpg, not upload=000.jpg
 			if (image.equals("null.jpg")) {
-				file.transferTo(new File(saveDir + file.getOriginalFilename()));;
-				
+				file.transferTo(new File(saveDir + file.getOriginalFilename()));
+
 				FileInputStream fis = new FileInputStream(saveDir + file.getOriginalFilename()); // 임시 저장
 				FileOutputStream fos = new FileOutputStream(realDir + file.getOriginalFilename());
 				int data = 0;
@@ -340,11 +351,11 @@ public class BookServiceImpl implements BookService {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("bookUpdate() 실패");
+			log.debug("bookUpdate() 실패");
 		}
 		model.addAttribute("cnt", cnt);
 	}
-	
+
 	// 도서 삭제 처리
 	@Override
 	public void bookDelete(HttpServletRequest req, Model model) {

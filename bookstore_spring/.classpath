@@ -33,6 +33,6 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/apache-tomcat-8.5.23/lib/catalina.jar"/>
+	<classpathentry kind="lib" path="C:/apache-tomcat-8.5.24/lib/catalina.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

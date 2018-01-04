@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,9 @@ import spring.mvc.bookstore.vo.Member;
 public class MemberPersImpl implements MemberPers {
 	@Autowired
 	SqlSession sqlSession;
-
+	
+	private Logger log = Logger.getLogger(this.getClass());
+	
 	/*
 	 * MemberPers dao = sqlSession.getMapper(MemberPers.class); BookPers bDao =
 	 * sqlSession.getMapper(BookPers.class);
@@ -32,31 +35,31 @@ public class MemberPersImpl implements MemberPers {
 	// 아이디 중복 확인
 	@Override
 	public int confirmId(String id) {
-		System.out.println("MemberPersImple START - confirmId");
+		log.debug("MemberPersImple START - confirmId");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.confirmId(id);
 
-		System.out.println("MemberPersImple END - confirmId");
+		log.debug("MemberPersImple END - confirmId");
 		return tmp;
 	}
 
 	// 이메일 인증key 존재 확인-2) 해당 계정의 권한 등급 UP
 	@Override
 	public int emailKeyRatingUp(String e_key) {
-		System.out.println("MemberPersImple START - emailKeyRatingUp");
+		log.debug("MemberPersImple START - emailKeyRatingUp");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.emailKeyRatingUp(e_key);
 
-		System.out.println("MemberPersImple END - emailKeyRatingUp");
+		log.debug("MemberPersImple END - emailKeyRatingUp");
 		return tmp;
 	}
 
 	// 이메일 인증key 존재 확인-1
 	@Override
 	public int confirmEmailKey(String e_key) {
-		System.out.println("MemberPersImple START- confirmEmailKey");
+		log.debug("MemberPersImple START- confirmEmailKey");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int cnt = dao.confirmEmailKey(e_key);
@@ -64,67 +67,67 @@ public class MemberPersImpl implements MemberPers {
 			emailKeyRatingUp(e_key);
 		}
 
-		System.out.println("MemberPersImple END - confirmEmailKey");
+		log.debug("MemberPersImple END - confirmEmailKey");
 		return cnt;
 	}
 
 	// 로그인
 	@Override
 	public int signIn(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - signIn");
+		log.debug("MemberPersImple START - signIn");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.signIn(map);
 
-		System.out.println("MemberPersImple END - signIn");
+		log.debug("MemberPersImple END - signIn");
 		return tmp;
 	}
 
 	// 회원가입
 	@Override
 	public int signUp(Member m) {
-		System.out.println("MemberPersImple START - signUp");
+		log.debug("MemberPersImple START - signUp");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.signUp(m);
 
-		System.out.println("MemberPersImple END - signUp");
+		log.debug("MemberPersImple END - signUp");
 		return tmp;
 	}
 
 	// 회원 정보
 	@Override
 	public Member getMemberInfo(String id) {
-		System.out.println("MemberPersImple START - getMemberInfo");
+		log.debug("MemberPersImple START - getMemberInfo");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		Member tmp = dao.getMemberInfo(id);
 		;
 
-		System.out.println("MemberPersImple END - getMemberInfo");
+		log.debug("MemberPersImple END - getMemberInfo");
 		return tmp;
 	}
 
 	// 이메일 존재 여부
 	@Override
 	public String confirmEmail(String email) {
-		System.out.println("MemberPersImple START - confirmEmail");
+		log.debug("MemberPersImple START - confirmEmail");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		String tmp = dao.confirmEmail(email);
-		System.out.println("MemberPersImple END - confirmEmail");
+		log.debug("MemberPersImple END - confirmEmail");
 		return tmp;
 	}
 
 	// 인증키 수정
 	@Override
 	public int memberEmailKeyUpdate(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - memberEmailKeyUpdate");
+		log.debug("MemberPersImple START - memberEmailKeyUpdate");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.memberEmailKeyUpdate(map);
 
-		System.out.println("MemberPersImple END - memberEmailKeyUpdate");
+		log.debug("MemberPersImple END - memberEmailKeyUpdate");
 		return tmp;
 	}
 
@@ -138,7 +141,7 @@ public class MemberPersImpl implements MemberPers {
 
 	@Override
 	public int sendGmail(String toEmail, String key, int view) {
-		System.out.println("MemberPersImple START - sendGmail");
+		log.debug("MemberPersImple START - sendGmail");
 		int cnt = 0;
 
 		try {
@@ -161,48 +164,48 @@ public class MemberPersImpl implements MemberPers {
 			}
 			sendMail.setFrom("admin@bookstore.com", "관리자");
 			sendMail.setTo(toEmail);
-			System.out.println("Email 전송");
+			log.debug("Email 전송");
 			sendMail.send();
-			System.out.println("Email 전송 완료");
+			log.debug("Email 전송 완료");
 			cnt = 1;
 		} catch (Exception e) { //throws MessagingException, UnsupportedEncodingException
 			e.printStackTrace();
 		}
 
-		System.out.println("MemberPersImple END - sendGmail");
+		log.debug("MemberPersImple END - sendGmail");
 		return cnt;
 	}
 
 	// 인증시 아이디 가져오기
 	@Override
 	public String getId(String key) {
-		System.out.println("MemberPersImple START - getId");
+		log.debug("MemberPersImple START - getId");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		String tmp = dao.getId(key);
 
-		System.out.println("MemberPersImple END - getId");
+		log.debug("MemberPersImple END - getId");
 		return tmp;
 	}
 
 	// 인증시 비밀번호 가져오기
 	@Override
 	public String getPwd(String key) {
-		System.out.println("MemberPersImple START - getPwd");
+		log.debug("MemberPersImple START - getPwd");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		String tmp = dao.getPwd(key);
 
-		System.out.println("MemberPersImple END - getPwd");
+		log.debug("MemberPersImple END - getPwd");
 		return tmp;
 	}
 
 	// 회원 수정
 	@Override
 	public int memberUpdate(Member m) {
-		System.out.println("MemberPersImple START - memberUpdate");
+		log.debug("MemberPersImple START - memberUpdate");
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
-		System.out.println("MemberPersImple END - memberUpdate");
+		log.debug("MemberPersImple END - memberUpdate");
 		return dao.memberUpdate(m);
 	}
 
@@ -210,103 +213,103 @@ public class MemberPersImpl implements MemberPers {
 	// email이 unique라 그대로 둠. NOT NULL
 	@Override
 	public int memberDelete(String id) {
-		System.out.println("MemberPersImple START - memberDelete");
+		log.debug("MemberPersImple START - memberDelete");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.memberDelete(id);
 
-		System.out.println("MemberPersImple END - memberDelete");
+		log.debug("MemberPersImple END - memberDelete");
 		return tmp;
 	}
 
 	// 장바구니 추가
 	@Override
 	public int setCart(Cart cart) {
-		System.out.println("MemberPersImple START - setCart");
+		log.debug("MemberPersImple START - setCart");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.setCart(cart);
 
-		System.out.println("MemberPersImple END - setCart");
+		log.debug("MemberPersImple END - setCart");
 		return tmp;
 	}
 
 	// 장바구니 목록
 	@Override
 	public ArrayList<Cart> getCartList(String id) {
-		System.out.println("MemberPersImple START - getCartList");
+		log.debug("MemberPersImple START - getCartList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Cart> tmp = dao.getCartList(id);
 
-		System.out.println("MemberPersImple END - getCartList");
+		log.debug("MemberPersImple END - getCartList");
 		return tmp;
 	}
 
 	// 장바구니 삭제
 	@Override
 	public int cartDelete(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - cartDelete");
+		log.debug("MemberPersImple START - cartDelete");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.cartDelete(map);
 
-		System.out.println("MemberPersImple END - cartDelete");
+		log.debug("MemberPersImple END - cartDelete");
 		return tmp;
 	}
 
 	// 장바구니 수량 수정
 	@Override
 	public int cartCountUpdate(Cart cart) {
-		System.out.println("MemberPersImple START - cartCountUpdate");
+		log.debug("MemberPersImple START - cartCountUpdate");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.cartCountUpdate(cart);
 
-		System.out.println("MemberPersImple END - cartCountUpdate");
+		log.debug("MemberPersImple END - cartCountUpdate");
 		return tmp;
 	}
 
 	// 장바구니 중복 확인
 	@Override
 	public String cartCheck(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - cartCheck");
+		log.debug("MemberPersImple START - cartCheck");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		String tmp = dao.cartCheck(map);
 
-		System.out.println("MemberPersImple END - cartCheck");
+		log.debug("MemberPersImple END - cartCheck");
 		return tmp;
 	}
 
 	// 장바구니 수량 추가
 	@Override
 	public int setCartCount(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - setCartCount");
+		log.debug("MemberPersImple START - setCartCount");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.setCartCount(map);
 
-		System.out.println("MemberPersImple END - setCartCount");
+		log.debug("MemberPersImple END - setCartCount");
 		return tmp;
 	}
 
 	// 찜 추가
 	@Override
 	public int setWishlist(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - setWishlist");
+		log.debug("MemberPersImple START - setWishlist");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.setWishlist(map);
 
-		System.out.println("MemberPersImple END - setWishlist");
+		log.debug("MemberPersImple END - setWishlist");
 		return tmp;
 	}
 
 	// 찜 중복 확인
 	@Override
 	public int wishlistCheck(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - wishlistCheck");
+		log.debug("MemberPersImple START - wishlistCheck");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int cnt = dao.wishlistCheck(map);
@@ -314,73 +317,73 @@ public class MemberPersImpl implements MemberPers {
 			cnt = 9;
 		}
 
-		System.out.println("MemberPersImple END - wishlistCheck");
+		log.debug("MemberPersImple END - wishlistCheck");
 		return cnt;
 	}
 
 	// 주문 추가-1) 주문번호
 	@Override
 	public void orderNumberCreate() {
-		System.out.println("MemberPersImple START - orderNumberCreate");
+		log.debug("MemberPersImple START - orderNumberCreate");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		dao.orderNumberCreate();
 
-		System.out.println("MemberPersImple END - orderNumberCreate");
+		log.debug("MemberPersImple END - orderNumberCreate");
 	}
 
 	// 주문 추가-2) 장바구니 목록 중 해당 품목
 	@Override
 	public Map<String, Object> cartListBook(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - cartListBook");
+		log.debug("MemberPersImple START - cartListBook");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		Map<String, Object> tmp = dao.cartListBook(map);
 
-		System.out.println("MemberPersImple END - cartListBook");
+		log.debug("MemberPersImple END - cartListBook");
 		return tmp;
 	}
 
 	// 주문 추가-3) Order에 저장하기
 	@Override
 	public int setOrder(Bespeak order) {
-		System.out.println("MemberPersImple START- setOrder");
+		log.debug("MemberPersImple START- setOrder");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.setOrder(order);
 
-		System.out.println("MemberPersImple END- setOrder");
+		log.debug("MemberPersImple END- setOrder");
 		return tmp;
 	}
 
 	// 바로 주문 추가
 	@Override
 	public int setNowOrder(Bespeak order) {
-		System.out.println("MemberPersImple START - setNowOrder");
+		log.debug("MemberPersImple START - setNowOrder");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.setNowOrder(order);
 
-		System.out.println("MemberPersImple END - setNowOrder");
+		log.debug("MemberPersImple END - setNowOrder");
 		return tmp;
 	}
 
 	// 주문 내역-1) 중복 없는 주문번호 목록
 	@Override
 	public ArrayList<String> getMemberOrderDistinctList(String id) {
-		System.out.println("MemberPersImple - getMemberOrderDistinctList");
+		log.debug("MemberPersImple - getMemberOrderDistinctList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<String> tmp = dao.getMemberOrderDistinctList(id);
 
-		System.out.println("MemberPersImple - getMemberOrderDistinctList");
+		log.debug("MemberPersImple - getMemberOrderDistinctList");
 		return tmp;
 	}
 
 	// 주문 내역-2) 회원의 주문 내역
 	@Override
 	public ArrayList<Bespeak> getMemberOrderList(String id) {
-		System.out.println("MemberPersImple START - getMemberOrderList");
+		log.debug("MemberPersImple START - getMemberOrderList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> list = new ArrayList<>();
@@ -417,50 +420,50 @@ public class MemberPersImpl implements MemberPers {
 		}
 		// getNoTitle(list);
 
-		System.out.println("MemberPersImple END - getMemberOrderList");
+		log.debug("MemberPersImple END - getMemberOrderList");
 		return list;
 	}
 
 	// 해당 주문 정보
 	@Override
 	public ArrayList<Bespeak> getOrderDetail(String order_num) {
-		System.out.println("MemberPersImple START - getOrderDetail");
+		log.debug("MemberPersImple START - getOrderDetail");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> list = dao.getOrderDetail(order_num);
 
-		System.out.println("MemberPersImple END - getOrderDetail");
+		log.debug("MemberPersImple END - getOrderDetail");
 		return list;
 	}
 
 	// 송장 번호
 	@Override
 	public String getShipping(String order_num) {
-		System.out.println("MemberPersImple - getShipping");
+		log.debug("MemberPersImple - getShipping");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		String tmp = dao.getShipping(order_num);
 
-		System.out.println("MemberPersImple - getShipping");
+		log.debug("MemberPersImple - getShipping");
 		return tmp;
 	}
 
 	// 관리자 주문 내역-1
 	@Override
 	public ArrayList<Bespeak> getHostOrderList() {
-		System.out.println("MemberPersImple - getHostOrderList");
+		log.debug("MemberPersImple - getHostOrderList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> tmp = dao.getHostOrderList();
 
-		System.out.println("MemberPersImple - getHostOrderList");
+		log.debug("MemberPersImple - getHostOrderList");
 		return tmp;
 	}
 
 	// 관리자 주문 내역-2
 	@Override
 	public ArrayList<Bespeak> getHostOrderDistinctList(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - getHostOrderDistinctList");
+		log.debug("MemberPersImple START - getHostOrderDistinctList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> list = new ArrayList<>();
@@ -502,74 +505,74 @@ public class MemberPersImpl implements MemberPers {
 		// 주문 도서 이름
 		// getNoTitle(list);
 
-		System.out.println("MemberPersImple END - getHostOrderDistinctList");
+		log.debug("MemberPersImple END - getHostOrderDistinctList");
 		return list;
 	}
 
 	// 주문 내역 총 개수
 	@Override
 	public int getHostOrderCnt() {
-		System.out.println("MemberPersImple START - getHostOrderCnt");
+		log.debug("MemberPersImple START - getHostOrderCnt");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.getHostOrderCnt();
 
-		System.out.println("MemberPersImple END - getHostOrderCnt");
+		log.debug("MemberPersImple END - getHostOrderCnt");
 		return tmp;
 	}
 
 	// 관리자 주문 상태 수정
 	@Override
 	public int orderStateUpdate(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - orderStateUpdate");
+		log.debug("MemberPersImple START - orderStateUpdate");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.orderStateUpdate(map);
 
-		System.out.println("MemberPersImple END - orderStateUpdate");
+		log.debug("MemberPersImple END - orderStateUpdate");
 		return tmp;
 	}
 
 	// 배송 시작
 	@Override
 	public int shippingInsert(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - shippingInsert");
+		log.debug("MemberPersImple START - shippingInsert");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.shippingInsert(map);
 
-		System.out.println("MemberPersImple END - shippingInsert");
+		log.debug("MemberPersImple END - shippingInsert");
 		return tmp;
 	}
 
 	// 관리자 환불 내역 총 개수
 	@Override
 	public int getRefundCnt() {
-		System.out.println("MemberPersImple START - getRefundCnt");
+		log.debug("MemberPersImple START - getRefundCnt");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int tmp = dao.getRefundCnt();
 
-		System.out.println("MemberPersImple END - getRefundCnt");
+		log.debug("MemberPersImple END - getRefundCnt");
 		return tmp;
 	}
 
 	// 관리자 환불내역-1) 모든 주문 내역
 	@Override
 	public ArrayList<Bespeak> getHostRefundList() {
-		System.out.println("MemberPersImple START - getHostRefundList");
+		log.debug("MemberPersImple START - getHostRefundList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> tmp = dao.getHostRefundList();
 
-		System.out.println("MemberPersImple END - getHostRefundList");
+		log.debug("MemberPersImple END - getHostRefundList");
 		return tmp;
 	}
 
 	// 관리자 환불 내역-2
 	@Override
 	public ArrayList<Bespeak> getHostRefundDistinctList(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - getHostRefundDistinctList");
+		log.debug("MemberPersImple START - getHostRefundDistinctList");
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> list = new ArrayList<>();
 
@@ -605,43 +608,43 @@ public class MemberPersImpl implements MemberPers {
 		}
 		// getNoTitle(list);
 
-		System.out.println("MemberPersImple END - getHostRefundDistinctList");
+		log.debug("MemberPersImple END - getHostRefundDistinctList");
 		return list;
 	}
 
 	// 회원 목록
 	@Override
 	public ArrayList<Member> getMemberList(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - getMemberList");
+		log.debug("MemberPersImple START - getMemberList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Member> list = dao.getMemberList(map);
 
-		System.out.println("MemberPersImple END - getMemberList");
+		log.debug("MemberPersImple END - getMemberList");
 		return list;
 	}
 
 	// 회원수
 	@Override
 	public int getMemberCnt() {
-		System.out.println("MemberPersImple START - getMemberCnt");
+		log.debug("MemberPersImple START - getMemberCnt");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int cnt = dao.getMemberCnt();
 
-		System.out.println("MemberPersImple END - getMemberCnt");
+		log.debug("MemberPersImple END - getMemberCnt");
 		return cnt;
 	}
 
 	// 관리자 회원 수정
 	@Override
 	public int setHostMemberUpdate(Map<String, Object> map) {
-		System.out.println("MemberPersImple START - setHostMemberUpdate");
+		log.debug("MemberPersImple START - setHostMemberUpdate");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int cnt = dao.setHostMemberUpdate(map);
 
-		System.out.println("MemberPersImple END - setHostMemberUpdate");
+		log.debug("MemberPersImple END - setHostMemberUpdate");
 		return cnt;
 	}
 
@@ -665,7 +668,7 @@ public class MemberPersImpl implements MemberPers {
 	 * for (String strId : ids) { ps.setString(1, strId);
 	 * 
 	 * cnt = ps.executeUpdate(); } } catch (SQLException e) { e.printStackTrace();
-	 * System.out.println("setHostMemberAllDelete() 실패"); } finally { try { if (ps
+	 * log.debug("setHostMemberAllDelete() 실패"); } finally { try { if (ps
 	 * != null) ps.close(); if (conn != null) conn.close(); } catch (SQLException e)
 	 * { e.printStackTrace(); } } return cnt; }
 	 */
@@ -673,31 +676,31 @@ public class MemberPersImpl implements MemberPers {
 	// 주문 삭제
 	@Override
 	public int orderDelete(String order_num) {
-		System.out.println("MemberPersImple START - orderDelete");
+		log.debug("MemberPersImple START - orderDelete");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		int cnt = dao.orderDelete(order_num);
 
-		System.out.println("MemberPersImple END - orderDelete");
+		log.debug("MemberPersImple END - orderDelete");
 		return cnt;
 	}
 
 	// 회원 환불 내역-1) 해당 회원의 중복 없는 주문 목록
 	@Override
 	public ArrayList<String> getRefundDistinctList(String id) {
-		System.out.println("MemberPersImple START - getRefundDistinctList");
+		log.debug("MemberPersImple START - getRefundDistinctList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<String> list = dao.getRefundDistinctList(id);
 
-		System.out.println("MemberPersImple END - getRefundDistinctList");
+		log.debug("MemberPersImple END - getRefundDistinctList");
 		return list;
 	}
 
 	// 회원 환불 내역-2
 	@Override
 	public ArrayList<Bespeak> getRefundList(String id) {
-		System.out.println("MemberPersImple START - getRefundList");
+		log.debug("MemberPersImple START - getRefundList");
 
 		MemberPers dao = sqlSession.getMapper(MemberPers.class);
 		ArrayList<Bespeak> list = new ArrayList<>();
@@ -734,14 +737,14 @@ public class MemberPersImpl implements MemberPers {
 		}
 		// getNoTitle(list);
 
-		System.out.println("MemberPersImple END - getRefundList");
+		log.debug("MemberPersImple END - getRefundList");
 		return list;
 	}
 
 	// 도서 이름
 	/*
 	 * @Override public void getNoTitle(ArrayList<Bespeak> list) {
-	 * System.out.println("MemberPersImple START - getNoTitle");
+	 * log.debug("MemberPersImple START - getNoTitle");
 	 * 
 	 * BookPers bDao = sqlSession.getMapper(BookPers.class);
 	 * 
@@ -754,6 +757,6 @@ public class MemberPersImpl implements MemberPers {
 	 * 
 	 * } }
 	 * 
-	 * System.out.println("MemberPersImple END - getNoTitle"); }
+	 * log.debug("MemberPersImple END - getNoTitle"); }
 	 */
 }

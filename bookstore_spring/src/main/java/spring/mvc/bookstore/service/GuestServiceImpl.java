@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -24,6 +25,8 @@ public class GuestServiceImpl implements GuestService {
 	MemberPers mDao;
 	@Autowired
 	BookPers bDao;
+	
+	private Logger log = Logger.getLogger(this.getClass());
 
 	@Override
 	public void orderView(HttpServletRequest req, Model model) {
@@ -98,8 +101,8 @@ public class GuestServiceImpl implements GuestService {
 			cart.setCart_count(Integer.parseInt(count));
 			cnt = mDao.cartCountUpdate(cart);
 			
-			System.out.println(id + "/" + no + "/" + count);
-			System.out.println(nos.length);
+			log.debug(id + "/" + no + "/" + count);
+			log.debug(nos.length);
 		}
 
 		model.addAttribute("cnt", cnt);
@@ -223,7 +226,7 @@ public class GuestServiceImpl implements GuestService {
 		} else {
 			count = Integer.parseInt(req.getParameter("count"));
 		} /////////////////// 도서 상세에서 장바구니 담기
-		System.out.println("bookBtnPro : " + count);
+		log.debug("bookBtnPro : " + count);
 
 		int cnt = 0;
 		if (btn.equals("장바구니 담기")) {

@@ -39,7 +39,7 @@ function sendRequest(callback, url, method, params) { /*url.jsp?params => 결과
 	
 	// onreadystatechange : 오브젝트 상태가 변한 시점에 불러오는 이벤트핸들러.. 즉 대기상태가 바뀌면 실행할 이벤트
 	// callback 함수 : 서버로부터 응답이 오면 동작할 콜백함수(시스템이 자동호출)
-	httpRequest.onreadystatechange = callback(); //+ 요청이 처리 되어 결과가 나왔을 때 어떻게 응답할지 callback 기술
+	httpRequest.onreadystatechange = callback; //+ 요청이 처리 되어 결과가 나왔을 때 어떻게 응답할지 callback 기술
 	
 	var httpMethod = method ? method : "GET";
 	if(httpMethod != "GET" && httpMethod != "POST") {
