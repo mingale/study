@@ -22,8 +22,6 @@ import spring.mvc.bookstore.vo.StringInt;
 public class BookPersImpl implements BookPers {
 	@Autowired
 	private SqlSession sqlSession;
-	
-	private Logger log = Logger.getLogger(this.getClass());
 
 	/*
 	 * private BookPers mapper = sqlSession.getMapper(BookPers.class); Error 발생:
@@ -46,56 +44,36 @@ public class BookPersImpl implements BookPers {
 
 	// 검색어 제안
 	public ArrayList<String> getKeywordSuggest(String keyword) {
-		log.debug("BookPersImpl START - getKeywordSuggest()");
-		
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<String> list = mapper.getKeywordSuggest(keyword);
-		
-		log.debug("BookPersImpl END - getKeywordSuggest()");
 		return list;
 	}
 	
 	// 도서 검색
 	public ArrayList<Book> bookSearch(Map<String, Object> map) {
-		log.debug("BookPersImple START - bookSearch");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.bookSearch(map);
-
-		log.debug("BookPersImple END - bookSearch");
 		return list;
 	}
 
 	// 도서 검색 결과수
 	public int bookSearchCount(String keyword) {
-		log.debug("BookPersImple START - bookSearchCount");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookSearchCount(keyword);
-
-		log.debug("BookPersImple END - bookSearchCount");
 		return cnt;
 	}
 
 	// 해당 도서 조회수 증가
 	public int bookViewsUpdate(String no) {
-		log.debug("BookPersImple START - bookViewsUpdate");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookViewsUpdate(no);
-
-		log.debug("BookPersImple END - bookViewsUpdate");
 		return cnt;
 	}
 
 	// 모든 도서 목록
 	public ArrayList<Book> getAllBook() {
-		log.debug("BookPersImple START - getAllBook");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.getAllBook();
-
-		log.debug("BookPersImple END - getAllBook");
 		return list;
 	}
 
@@ -109,7 +87,6 @@ public class BookPersImpl implements BookPers {
 	// 도서 정보
 	@Override
 	public Book getBookInfo(String no) {
-		log.debug("BookPersImple START - getBookInfo");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		Book b = mapper.getBookInfo(no);
 		String image = b.getImage();
@@ -129,50 +106,38 @@ public class BookPersImpl implements BookPers {
 			b.getBookSub().setPub_intro("준비 중입니다.");
 		if (review == null)
 			b.getBookSub().setReview("준비 중입니다.");
-
-		log.debug("BookPersImpl END - getBookInfo");
 		return b;
 	}
 
 	// 신간 도서 목록
 	@Override
 	public ArrayList<Book> getNewBook(Map<String, Object> map) {
-		log.debug("BookPersImple START - getNewBook");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.getNewBook(map);
-		log.debug("BookPersImple END - getNewBook");
 		return list;
 	}
 
 	// 베스트셀러(인기) 도서 목록
 	@Override
 	public ArrayList<Book> getBestBook(Map<String, Object> map) {
-		log.debug("BookPersImple START - getBestBook");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.getBestBook(map);
-		log.debug("BookPersImple END - getBestBook");
 		return list;
 	}
 
 	// 추천 도서 목록
 	@Override
 	public ArrayList<Book> getGoodTagBook(Map<String, Object> map) {
-		log.debug("BookPersImple START - getGoodTagBook");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.getGoodTagBook(map);
-		log.debug("BookPersImple END - getGoodTagBook");
 		return list;
 	}
 
 	// 도서 목록
 	@Override
 	public ArrayList<Book> getBookList(Map<String, Object> map) {
-		log.debug("BookPersImple START - getBookList");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> books = mapper.getBookList(map);
-
-		log.debug("BookPersImple END - getBookList");
 		return books;
 	}
 
@@ -187,20 +152,16 @@ public class BookPersImpl implements BookPers {
 
 	// tag_main 수
 	public int getTag_mainCount() {
-		log.debug("BookPersImple START - getTag_mainCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.getTag_mainCount();
-		log.debug("BookPersImple END - getTag_mainCount");
 		return cnt;
 	}
 
 	// 메인태그 목록
 	@Override
 	public ArrayList<BookSub> getTag_mainList() {
-		log.debug("BookPersImple START - getTag_mainList");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<BookSub> tags = mapper.getTag_mainList();
-		log.debug("BookPersImple END - getTag_mainList");
 		return tags;
 	}
 
@@ -227,92 +188,72 @@ public class BookPersImpl implements BookPers {
 	// 베스트(인기) 도서 개수
 	@Override
 	public int getBestCount() {
-		log.debug("BookPersImple START - getBestCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.getBestCount();
-		log.debug("BookPersImple END - getBestCount");
 		return cnt;
 	}
 
 	// 신간 도서 개수
 	@Override
 	public int getNewCount() {
-		log.debug("BookPersImple START - getNewCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.getNewCount();
-		log.debug("BookPersImple END - getNewCount");
 		return cnt;
 	}
 
 	// 추천 도서 개수
 	@Override
 	public int getGoodCount() {
-		log.debug("BookPersImple START - getGoodCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.getGoodCount();
-		log.debug("BookPersImple END - getGoodCount");
 		return cnt;
 	}
 
 	// tag/tag_main 도서 개수
 	@Override
 	public int getTagMainCount(String tag) {
-		log.debug("BookPersImple START - getTagMainCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.getTagMainCount(tag);
-		log.debug("BookPersImple END - getTagMainCount");
 		return cnt;
 	}
 
 	// tag_main 도서 목록
 	@Override
 	public ArrayList<Book> getTagMainBook(Map<String, Object> map) {
-		log.debug("BookPersImple START - getTagMainBook");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.getTagMainBook(map);
-		log.debug("BookPersImple END - getTagMainBook");
 		return list;
 	}
 
 	// 국내도서 목록
 	@Override
 	public ArrayList<Book> getDomesticBook(Map<String, Object> map) {
-		log.debug("BookPersImple START - getDomesticBook");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Book> list = mapper.getDomesticBook(map);
-		log.debug("BookPersImple END - getDomesticBook");
 		return list;
 	}
 
 	// 도서 개수
 	@Override
 	public int getBookCnt() {
-		log.debug("BookPersImple START - getBookCnt");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.getBookCnt();
-		log.debug("BookPersImple END - getBookCnt");
 		return cnt;
 	}
 
 	// 도서 수정
 	@Override
 	public int bookUpdate(Book book) {
-		log.debug("BookPersImple START - bookUpdate");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookUpdate(book);
-		log.debug("BookPersImple END - bookUpdate");
 		return cnt;
 	}
 
 	// 주문후 도서 수량 수정-1) 주문후 수량 = 재고량, 주문수량
 	@Override
 	public ArrayList<Bespeak> getOrderBookCount(String order_num) {
-		log.debug("BookPersImple START - getOrderNoCount");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Bespeak> list = mapper.getOrderBookCount(order_num);
-
-		log.debug("BookPersImple END - getOrderNoCount");
 		return list;
 	}
 	/*
@@ -334,9 +275,6 @@ public class BookPersImpl implements BookPers {
 	// 주문후 도서 수량 수정-2) 도서 수량 수정 처리
 	@Override
 	public int orderBookCountMul(Map<String, Object> map) {
-		log.debug("BookPersImple START - orderBookCountMul");
-		log.debug((String) map.get("order_num"));
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 
 		int cnt = 0;
@@ -358,7 +296,6 @@ public class BookPersImpl implements BookPers {
 		// 재고가 충분하면 수량 감소
 		if (!flg) {
 			for (Bespeak order : list) {
-				log.debug("orderBookCountMul 수량 확인 필요 - " + order.getBook().getCount());
 				map = new HashMap<>();
 				map.put("no", order.getBook().getNo());
 				map.put("count", order.getBook().getCount());
@@ -367,15 +304,12 @@ public class BookPersImpl implements BookPers {
 		} else {
 			cnt = 9;
 		}
-		log.debug("BookPersImple END - orderBookCountMul");
 		return cnt;
 	}
 
 	// 환불 도서 수량
 	@Override
 	public int refundBookCountAdd(Map<String, Object> map) {
-		log.debug("BookPersImple START - refundBookCountAdd");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 
 		// 주문 내역 + 도서 정보
@@ -389,57 +323,44 @@ public class BookPersImpl implements BookPers {
 			map.put("no", order.getBook().getNo());
 			cnt = mapper.refundBookCountAdd(map);
 		}
-		log.debug("BookPersImple END - refundBookCountAdd");
 		return cnt;
 	}
 
 	// 도서 삭제
 	@Override
 	public int bookDelete(String no) {
-		log.debug("BookPersImple START - bookDelete");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookDelete(no);
-		log.debug("BookPersImple END - bookDelete");
 		return cnt;
 	}
 
 	// 도서 추가
 	@Override
 	public int bookInsert(Book book) {
-		log.debug("BookPersImple START - bookInsert");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookInsert(book);
-
-		log.debug("BookPersImple END - bookInsert");
 		return cnt;
 	}
 
 	// 도서 부가 정보 수정
 	@Override
 	public int bookSubUpdate(BookSub bSub) {
-		log.debug("BookPersImple START - bookSubUpdate");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookSubUpdate(bSub);
-		log.debug("BookPersImple END - bookSubUpdate");
 		return cnt;
 	}
 
 	// 도서 부가 정보 추가
 	@Override
 	public int bookSubInsert(BookSub bSub) {
-		log.debug("BookPersImple START - bookSubInsert");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.bookSubInsert(bSub);
-		log.debug("BookPersImple END - bookSubInsert");
 		return cnt;
 	}
 
 	// 최근 본 도서 수정
 	@Override
 	public ArrayList<RecentBook> recentUpdate(ArrayList<RecentBook> list, Book b) {
-		log.debug("BookPersImple START - recentUpdate");
-
 		ArrayList<RecentBook> reb = list;
 		RecentBook rb = new RecentBook();
 		rb.setNo(b.getNo());
@@ -462,36 +383,28 @@ public class BookPersImpl implements BookPers {
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			log.debug("캐시 완전 비우기할 경우 발생");
 		}
-		log.debug("BookPersImple END - recentUpdate");
 		return reb;
 	}
 
 	// 총 판매 도서수
 	@Override
 	public int getSalesTotalCount() {
-		log.debug("BookPersImple START - getSalesTotalCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int sales = mapper.getSalesTotalCount();
-		log.debug("BookPersImple END - getSalesTotalCount");
 		return sales;
 	}
 
 	// 총 매출액
 	@Override
 	public int getSalesTotalAmount() {
-		log.debug("BookPersImple START - getSalesTotalAmount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int sales = mapper.getSalesTotalAmount();
-		log.debug("BookPersImple END - getSalesTotalAmount");
 		return sales;
 	}
 
 	// no-title
 	public Map<String, String> getNoTitle() {
-		log.debug("BookPersImple START - getNoTitle");
-
 		Map<String, String> map = new HashMap<>();
 
 		ArrayList<Book> list = getAllBook();
@@ -500,73 +413,57 @@ public class BookPersImpl implements BookPers {
 			String title = b.getTitle();
 			map.put(no, title);
 		}
-
-		log.debug("BookPersImple END - getNoTitle");
 		return map;
 	}
 
 	// 올해 태그별 판매량
 	public ArrayList<StringInt> getTagSalesTotal() {
-		log.debug("BookPersImple START - getTagSalesTotal");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<StringInt> list = mapper.getTagSalesTotal();
 		for (int i = 0; i < list.size(); i += 1) {
 			list.get(i).setStr(list.get(i).getStr() + "S");
 		}
-		log.debug("BookPersImple END - getTagSalesTotal");
 		return list;
 	}
 
 	// 올해 태그별 환불량
 	@Override
 	public ArrayList<StringInt> getTagRefundTotal() {
-		log.debug("BookPersImple START - getTagRefundTotal");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<StringInt> list = mapper.getTagRefundTotal();
 		for (int i = 0; i < list.size(); i += 1) {
 			list.get(i).setStr(list.get(i).getStr() + "R");
 		}
-
-		log.debug("BookPersImple END - getTagRefundTotal");
 		return list;
 	}
 
 	// 연간 매출액
 	@Override
 	public ArrayList<StringInt> getYearSalesTotalAmount() {
-		log.debug("BookPersImple START - getYearSalesTotalAmount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<StringInt> list = mapper.getYearSalesTotalAmount();
-		log.debug("BookPersImple END - getYearSalesTotalAmount");
 		return list;
 	}
 
 	// 연간 판매량
 	@Override
 	public ArrayList<StringInt> getYearSalesTotalCount() {
-		log.debug("BookPersImple START - getYearSalesTotalCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<StringInt> list = mapper.getYearSalesTotalCount();
-		log.debug("BookPersImple END - getYearSalesTotalCount");
 		return list;
 	}
 
 	// 연간 환불액
 	@Override
 	public ArrayList<StringInt> getYearRefundTotalAmount() {
-		log.debug("BookPersImple START - getYearRefundTotalAmount");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<StringInt> list = mapper.getYearRefundTotalAmount();
-
-		log.debug("BookPersImple END - getYearRefundTotalAmount");
 		return list;
 	}
 
 	// 주간별 태그별 매출액-1
 	@Override
 	public ArrayList<StringInt> getTagWeeklyCount() {
-		log.debug("BookPersImple START - getTagWeeklyCount");
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<StringInt> list = mapper.getTagWeeklyCount();
 
@@ -584,18 +481,13 @@ public class BookPersImpl implements BookPers {
 
 			// 주간 + 태그명. 주간별 태그 중복 제거 작업1
 			list.get(i).setStr(week + list.get(i).getStr());
-
-			log.debug("getTagWeeklyCount");
-			log.debug(year + "/ " + month + "/ " + day + " : " + week + "주 - " + list.get(i).getStr());
 		}
-		log.debug("BookPersImple END - getTagWeeklyCount");
 		return list;
 	}
 
 	// 주간별 태그별 매출액-2) 주간별 태그 중복 제거 작업2
 	@Override
 	public Map<String, Integer> getTagWeeklyCountDistinct() {
-		log.debug("BookPersImple START - getTagWeeklyCountDistinct");
 		Map<String, Integer> map = new HashMap<>();
 
 		ArrayList<StringInt> list = getTagWeeklyCount();
@@ -621,39 +513,31 @@ public class BookPersImpl implements BookPers {
 			}
 		}
 
-		log.debug("----------test---------");
+		System.out.println("----------test---------");
 		// TEST
 		for (Entry<String, Integer> e : map.entrySet()) {
 			String week = e.getKey().substring(0, 1);
 			String tag = e.getKey().substring(1);
 
-			log.debug(week + "주 - " + tag + " : " + e.getValue());
+			System.out.println(week + "주 - " + tag + " : " + e.getValue());
 		}
-		log.debug("BookPersImple END - getTagWeeklyCountDistinct");
 		return map;
 	}
 
 	@Override
 	public int getNoticeCnt() {
-		log.debug("BookPers START - getNoticeCnt()");
 		int cnt = 0;
 		
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		cnt = mapper.getNoticeCnt();
-	
-		log.debug("BookPers END - getNoticeCnt()");
 		return cnt;
 	}
 	
 	// 공지사항
 	@Override
 	public ArrayList<Notice> getNotice(Map<String, Object> map) {
-		log.debug("BookPersImple START- getNotice()");
-
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		ArrayList<Notice> list = mapper.getNotice(map);
-
-		log.debug("BookPersImple END - getNotice()");
 		return list;
 	}
 	
@@ -661,24 +545,16 @@ public class BookPersImpl implements BookPers {
 	//공지사항 글쓰기 처리
 	@Override
 	public int noticeWritePro(Notice notice) {
-		log.debug("BookPersImpl START - noticeWritePro()");
-		
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		int cnt = mapper.noticeWritePro(notice);
-		
-		log.debug("BookPersImpl END - noticeWritePro()");
 		return cnt;
 	}
 
 	//공지사항 상세보기
 	@Override
 	public Notice noticeView(String idx) {
-		log.debug("BookPersImpl START - noticeView()");
-		
 		BookPers mapper = sqlSession.getMapper(BookPers.class);
 		Notice notice = mapper.noticeView(idx);
-		
-		log.debug("BookPersImpl END - noticeView()");
 		return notice;
 	}
 }
