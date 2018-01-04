@@ -33,10 +33,22 @@
 	
 	<!-- MyBatis -->
 	<!-- 3. ConnectionPool 접속 -->
-	<beans:bean name="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	<beans:bean name="dataSourceSpied" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<beans:property name="jndiName" value="java:comp/env/jdbc/Oracle11g/bms" />  <!-- context.xml의 컨넥션풀 lookup -->
 	    <beans:property name="resourceRef" value="true" />
-	</beans:bean>	
+	</beans:bean>
+	
+	<!-- SqlLog 추가 시작 -->	
+	<beans:bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <beans:constructor-arg ref="dataSourceSpied" />
+        <beans:property name="logFormatter">
+            <beans:bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <beans:property name="loggingType" value="MULTI_LINE" />
+                <beans:property name="sqlPrefix" value="SQL         :  "/>
+            </beans:bean>
+        </beans:property>
+   	</beans:bean>	
+   	<!-- SqlLog 추가 끝 -->
 	
 	<!-- 2. ConnectionPool 호출, MyBatis 경로 지정 -->
 	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 

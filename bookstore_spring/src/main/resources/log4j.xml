@@ -2,21 +2,64 @@
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
+
+<!-- SqlLog 시작 -->
+ 	<!-- Appenders -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+        </layout>   
+    </appender>
+     
+    <appender name="console-infolog" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p %m%n" />
+        </layout>   
+    </appender>
+     
+    <!-- Application Loggers -->
+    <logger name="first" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="console"/>
+    </logger>
+     
+    <!-- Query Loggers -->
+    <logger name="jdbc.sqlonly" additivity="false">  
+        <level value="INFO"/>  
+        <appender-ref ref="console-infolog"/>  
+    </logger>
+     
+    <logger name="jdbc.resultsettable" additivity="false">  
+        <level value="INFO"/>  
+        <appender-ref ref="console"/>  
+    </logger>  
+ 
+    <!-- Root Logger -->
+    <root>
+        <priority value="off"/>
+        <appender-ref ref="console" />
+    </root>
+<!-- SqlLog 종료-->
+
+
+
+
+<!-- 기존 소스 -->
 	<!-- Appenders -->
-	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+<!-- 	<appender name="console" class="org.apache.log4j.ConsoleAppender">
 		<param name="Target" value="System.out" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
 		</layout>
 	</appender>
-	
+ -->	
 	<!-- Application Loggers -->
-	<logger name="spring.mvc.bookstore">
+<!-- 	<logger name="spring.mvc.bookstore">
 		<level value="info" />
 	</logger>
-	
+ -->	
 	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core">
+<!-- 	<logger name="org.springframework.core">
 		<level value="info" />
 	</logger>
 	
@@ -31,11 +74,11 @@
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
-
+ -->
 	<!-- Root Logger -->
-	<root>
+<!-- 	<root>
 		<priority value="warn" />
 		<appender-ref ref="console" />
 	</root>
-	
+ -->	
 </log4j:configuration>
