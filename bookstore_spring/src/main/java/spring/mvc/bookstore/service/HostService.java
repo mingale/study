@@ -77,4 +77,10 @@ public interface HostService {
 		
 		//공지사항 상세보기
 		public void noticeView(HttpServletRequest req, Model model);
+		
+		//공지사항 글 수정
+		public void noticeUpdate(HttpServletRequest req, Model model);
+		
+		//공지사항 댓글 추가
+		public void noticeCommentPro(HttpServletRequest req, Model model);
 }

@@ -15,11 +15,13 @@ import org.springframework.ui.Model;
 
 import spring.mvc.bookstore.controller.EmailHandler;
 import spring.mvc.bookstore.persistence.BookPers;
+import spring.mvc.bookstore.persistence.HostPers;
 import spring.mvc.bookstore.persistence.MemberPers;
 import spring.mvc.bookstore.vo.Bespeak;
 import spring.mvc.bookstore.vo.Book;
 import spring.mvc.bookstore.vo.Member;
 import spring.mvc.bookstore.vo.Notice;
+import spring.mvc.bookstore.vo.NoticeComment;
 import spring.mvc.bookstore.vo.RecentBook;
 import spring.mvc.bookstore.vo.StringInt;
 
@@ -30,14 +32,16 @@ public class HostServiceImpl implements HostService {
 	MemberPers mDao;
 	@Autowired
 	BookPers bDao;
-	
+	@Autowired
+	HostPers hDao;
+
 	private Logger log = Logger.getLogger(this.getClass());
 
 	// 아이디 중복 확인
 	public void confirmId(HttpServletRequest req, Model model) {
 		String id = req.getParameter("id");
 
-		int cnt = mDao.confirmId(id);
+		int cnt = hDao.confirmId(id);
 		model.addAttribute("cnt", cnt);
 	}
 
@@ -45,7 +49,7 @@ public class HostServiceImpl implements HostService {
 	public void confirmEmail(HttpServletRequest req, Model model) {
 		String email = req.getParameter("email");
 
-		String id = mDao.confirmEmail(email);
+		String id = hDao.confirmEmail(email);
 
 		if (id != null) { // 이미 존재
 			model.addAttribute("cnt", 1);
@@ -65,14 +69,14 @@ public class HostServiceImpl implements HostService {
 		map.put("id", id);
 		map.put("pwd", pwd);
 
-		int cnt = mDao.signIn(map);
-		if (cnt > 0) {
-			// 아이디 세션에 저장
-			req.getSession().setAttribute("memId", id);
+		int cnt = 0;
+		String rating = hDao.signIn(map);
+		if (rating != null) {
+			cnt = 1;
 
-			// 관리자 확인을 위한 회원 리스트
-			Member m = mDao.getMemberInfo(id);
-			model.addAttribute("rating", m.getRating());
+			// 세션에 ID, rating 저장
+			req.getSession().setAttribute("memId", id);
+			req.getSession().setAttribute("rating", rating);
 
 			// 최근 도서
 			ArrayList<RecentBook> recent = null;
@@ -104,11 +108,11 @@ public class HostServiceImpl implements HostService {
 			m.setE_key(key);
 
 			// 회원가입
-			cnt = mDao.signUp(m);
+			cnt = hDao.signUp(m);
 
 			// 회원가입 성공 시 인증 메일 전송
 			if (cnt == 1) {
-				mDao.sendGmail(email, key, 0);
+				hDao.sendGmail(email, key, 0);
 			}
 
 			req.getSession().invalidate();
@@ -123,19 +127,19 @@ public class HostServiceImpl implements HostService {
 		String key = req.getParameter("key");
 		int view = Integer.parseInt(req.getParameter("view"));
 
-		int cnt = mDao.confirmEmailKey(key);
+		int cnt = hDao.confirmEmailKey(key);
 
 		// 인증키 존재하면
 		if (cnt != 0) {
 			// 아이디 찾기일 경우
 			if (view == 1) {
-				String id = mDao.getId(key);
+				String id = hDao.getId(key);
 				model.addAttribute("id", id);
 			}
 			// 비밀번호 찾기 일 경우
 			if (view == 2) {
-				String id = mDao.getId(key);
-				String pwd = mDao.getPwd(key);
+				String id = hDao.getId(key);
+				String pwd = hDao.getPwd(key);
 
 				model.addAttribute("id", id);
 				model.addAttribute("pwd", pwd);
@@ -160,13 +164,13 @@ public class HostServiceImpl implements HostService {
 		// ID 찾기
 		if (idPwd.equals("n")) {
 			// 이메일 존재 여부 확인 후 아이디 가져오기
-			id = mDao.confirmEmail(email);
+			id = hDao.confirmEmail(email);
 			view = 1;
 
 			// PWD 찾기
 		} else {
 			// 아이디 존재 여부 확인
-			cnt = mDao.confirmId(id);
+			cnt = hDao.confirmId(id);
 			if (cnt == 0)
 				id = null;
 			view = 2;
@@ -179,14 +183,14 @@ public class HostServiceImpl implements HostService {
 			String key = ech.randomKey();
 
 			// 인증 이메일 전송
-			cnt = mDao.sendGmail(email, key, view);
+			cnt = hDao.sendGmail(email, key, view);
 
 			// 전송 성공하면 인증키 저장하기
 			Map<String, Object> map = new HashMap<>();
 			map.put("id", id);
 			map.put("key", key);
 			if (cnt != 0)
-				cnt = mDao.memberEmailKeyUpdate(map);
+				cnt = hDao.memberEmailKeyUpdate(map);
 		}
 
 		model.addAttribute("email", email);
@@ -201,8 +205,8 @@ public class HostServiceImpl implements HostService {
 		map.put("end", 2);
 
 		ArrayList<Book> books = bDao.getBookList(map);
-		ArrayList<Bespeak> orders = mDao.getHostOrderDistinctList(map);
-		ArrayList<Notice> notices = bDao.getNotice(map);
+		ArrayList<Bespeak> orders = hDao.getHostOrderDistinctList(map);
+		ArrayList<Notice> notices = hDao.getNotice(map);
 
 		model.addAttribute("books", books);
 		model.addAttribute("orders", orders);
@@ -218,8 +222,11 @@ public class HostServiceImpl implements HostService {
 		map.put("id", id);
 		map.put("pwd", pwd);
 
-		int cnt = mDao.signIn(map);
-		if (cnt > 0) {
+		String rating = hDao.signIn(map);
+		int cnt = 0;
+		if (rating != null) {
+			cnt = 1;
+
 			Member m = mDao.getMemberInfo(id);
 			model.addAttribute("m", m);
 		}
@@ -281,7 +288,7 @@ public class HostServiceImpl implements HostService {
 		}
 		int currentPage = Integer.parseInt(pageNum);
 
-		int cnt = mDao.getHostOrderCnt();
+		int cnt = hDao.getHostOrderCnt();
 
 		// 내역이 존재하면
 		if (cnt > 0) {
@@ -311,7 +318,7 @@ public class HostServiceImpl implements HostService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("start", start);
 			map.put("end", end);
-			ArrayList<Bespeak> orders = mDao.getHostOrderDistinctList(map);
+			ArrayList<Bespeak> orders = hDao.getHostOrderDistinctList(map);
 			model.addAttribute("orders", orders);
 		}
 		model.addAttribute("cnt", cnt);
@@ -334,7 +341,7 @@ public class HostServiceImpl implements HostService {
 					map = new HashMap<>();
 					map.put("state", 1);
 					map.put("num", num);
-					cnt = mDao.orderStateUpdate(map);
+					cnt = hDao.orderStateUpdate(map);
 				}
 			}
 		} else {
@@ -347,7 +354,7 @@ public class HostServiceImpl implements HostService {
 				map = new HashMap<>();
 				map.put("state", 1);
 				map.put("num", order_num);
-				cnt = mDao.orderStateUpdate(map);
+				cnt = hDao.orderStateUpdate(map);
 			}
 		}
 
@@ -363,13 +370,13 @@ public class HostServiceImpl implements HostService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("order", order_num);
 		map.put("ship", ship_num);
-		int cnt = mDao.shippingInsert(map);
+		int cnt = hDao.shippingInsert(map);
 
 		if (cnt != 0) {
 			map = new HashMap<>();
 			map.put("state", 2);
 			map.put("num", order_num);
-			cnt = mDao.orderStateUpdate(map);
+			cnt = hDao.orderStateUpdate(map);
 		}
 
 		model.addAttribute("cnt", cnt);
@@ -379,7 +386,7 @@ public class HostServiceImpl implements HostService {
 	@Override
 	public void getHostRefundView(HttpServletRequest req, Model model) {
 		// 총 게시글수
-		int postCnt = mDao.getRefundCnt();
+		int postCnt = hDao.getRefundCnt();
 		if (postCnt != 0) {
 
 			String pageNum = req.getParameter("pageNum");
@@ -407,7 +414,7 @@ public class HostServiceImpl implements HostService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("start", start);
 			map.put("end", end);
-			ArrayList<Bespeak> refunds = mDao.getHostRefundDistinctList(map);
+			ArrayList<Bespeak> refunds = hDao.getHostRefundDistinctList(map);
 			model.addAttribute("refunds", refunds);
 
 			model.addAttribute("pageNum", pageNum);
@@ -429,7 +436,7 @@ public class HostServiceImpl implements HostService {
 			pageNum = "1";
 		int currentPage = Integer.parseInt(pageNum);
 
-		int cnt = mDao.getMemberCnt();
+		int cnt = hDao.getMemberCnt();
 		if (cnt != 0) {
 			int start = (currentPage - 1) * pageSize + 1;
 			int end = start + pageSize - 1;
@@ -454,7 +461,7 @@ public class HostServiceImpl implements HostService {
 			Map<String, Object> map = new HashMap<>();
 			map.put("start", start);
 			map.put("end", end);
-			ArrayList<Member> members = mDao.getMemberList(map);
+			ArrayList<Member> members = hDao.getMemberList(map);
 			model.addAttribute("members", members);
 		}
 		model.addAttribute("cnt", cnt);
@@ -476,7 +483,7 @@ public class HostServiceImpl implements HostService {
 			map.put("id", id);
 			map.put("memo", memo);
 			map.put("rating", Integer.parseInt(rating));
-			cnt = mDao.setHostMemberUpdate(map);
+			cnt = hDao.setHostMemberUpdate(map);
 		} else {
 			String[] ids = id.split(",");
 			String[] memos = memo.split(",");
@@ -487,7 +494,7 @@ public class HostServiceImpl implements HostService {
 				map.put("id", ids[i]);
 				map.put("memo", memos[i]);
 				map.put("rating", Integer.parseInt(ratings[i]));
-				cnt = mDao.setHostMemberUpdate(map);
+				cnt = hDao.setHostMemberUpdate(map);
 			}
 		}
 
@@ -508,11 +515,11 @@ public class HostServiceImpl implements HostService {
 			order_num = req.getParameter("order_nums");
 			String[] nums = order_num.split(",");
 			for (String num : nums) {
-				cnt = mDao.orderDelete(num);
+				cnt = hDao.orderDelete(num);
 			}
 			// 개별 삭제
 		} else {
-			cnt = mDao.orderDelete(order_num);
+			cnt = hDao.orderDelete(order_num);
 		}
 		model.addAttribute("cnt", cnt);
 	}
@@ -532,7 +539,7 @@ public class HostServiceImpl implements HostService {
 			map = new HashMap<>();
 			map.put("state", 9);
 			map.put("num", order_num);
-			cnt = mDao.orderStateUpdate(map);
+			cnt = hDao.orderStateUpdate(map);
 		}
 
 		model.addAttribute("cnt", cnt);
@@ -546,7 +553,7 @@ public class HostServiceImpl implements HostService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", 7);
 		map.put("num", order_num);
-		int cnt = mDao.orderStateUpdate(map);
+		int cnt = hDao.orderStateUpdate(map);
 
 		model.addAttribute("cnt", cnt);
 	}
@@ -668,36 +675,38 @@ public class HostServiceImpl implements HostService {
 		}
 	}
 
-	//공지사항
+	// 공지사항
 	@Override
 	public void getNotice(HttpServletRequest req, Model model) {
-		int postCnt = bDao.getNoticeCnt();
-		
-		if(postCnt != 0) {
+		int postCnt = hDao.getNoticeCnt();
+
+		if (postCnt != 0) {
 			int pageSize = 15;
 			int pageNav = 10;
-	
+
 			String pageNum = req.getParameter("pageNum");
 			if (pageNum == null)
 				pageNum = "1";
 			int currentPage = Integer.parseInt(pageNum);
-	
+
 			int start = (currentPage - 1) * pageSize + 1;
 			int end = start + pageSize - 1;
 			if (end > postCnt)
 				end = postCnt;
-	
+
 			int navCnt = (postCnt / pageSize) + (postCnt % pageSize > 0 ? 1 : 0);
 			int startPage = (currentPage / pageNav) * pageNav + 1;
-			if(startPage % pageNav == 0) startPage -= pageNav;
+			if (startPage % pageNav == 0)
+				startPage -= pageNav;
 			int endPage = startPage + pageNav - 1;
-			if(endPage > navCnt) endPage = navCnt;
-	
+			if (endPage > navCnt)
+				endPage = navCnt;
+
 			Map<String, Object> map = new HashMap<>();
 			map.put("start", start);
 			map.put("end", end);
-			ArrayList<Notice> list = bDao.getNotice(map);
-			
+			ArrayList<Notice> list = hDao.getNotice(map);
+
 			model.addAttribute("notices", list);
 			model.addAttribute("num", start);
 			model.addAttribute("startPage", startPage);
@@ -708,32 +717,71 @@ public class HostServiceImpl implements HostService {
 		}
 		model.addAttribute("postCnt", postCnt);
 	}
-	
-	//공지사항 글쓰기 처리
+
+	// 공지사항 글쓰기 처리
 	@Override
 	public void noticeWritePro(HttpServletRequest req, Model model) {
 		String id = (String) req.getSession().getAttribute("memId");
 		String title = req.getParameter("title");
 		String content = req.getParameter("content");
-		
+		String idx = req.getParameter("idx");
+
+		int cnt = 0;
+
 		Notice notice = new Notice();
 		notice.setId(id);
 		notice.setTitle(title);
 		notice.setContent(content);
-		
-		int cnt = bDao.noticeWritePro(notice);
-		
+
+		System.out.println(notice);
+		if (idx == null) {
+			cnt = hDao.noticeWritePro(notice);
+			// 글 수정 처
+		} else {
+			notice.setIdx(idx);
+			cnt = hDao.noticeUpdate(notice);
+		}
 		model.addAttribute("cnt", cnt);
 	}
 
-	//공지사항 상세보기
+	// 공지사항 상세보기
 	@Override
 	public void noticeView(HttpServletRequest req, Model model) {
 		String idx = req.getParameter("idx");
-		
-		Notice notice = bDao.noticeView(idx);
-		
+
+		Notice notice = hDao.noticeView(idx);
+
 		model.addAttribute("pageNum", req.getParameter("pageNum"));
 		model.addAttribute("notice", notice);
+	}
+
+	// 공지사항 글 수정
+	@Override
+	public void noticeUpdate(HttpServletRequest req, Model model) {
+		String idx = req.getParameter("idx");
+		if (idx != null) {
+			Notice notice = hDao.noticeView(idx);
+			model.addAttribute("notice", notice);
+		}
+	}
+
+	// 공지사항 댓글 추가
+	@Override
+	public void noticeCommentPro(HttpServletRequest req, Model model) {
+		String comment = req.getParameter("comment");
+		String id = (String) req.getSession().getAttribute("memId");
+		
+		// 댓글 추가
+		NoticeComment nco = new NoticeComment();
+		nco.setNotice_idx(req.getParameter("idx"));
+		nco.setWriter_id(id);
+		nco.setCom_content(comment);
+		nco.setCom_step(0);
+		nco.setRef_com_idx(0);
+		int cnt = hDao.noticeCommentAdd(nco);
+
+		model.addAttribute("writer_id", id);
+		model.addAttribute("comment", comment);
+		model.addAttribute("cnt", cnt);
 	}
 }

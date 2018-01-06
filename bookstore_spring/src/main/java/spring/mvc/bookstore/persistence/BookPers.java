@@ -130,15 +130,4 @@ public interface BookPers {
 	//주간 태그별 판매량-2
 	public Map<String, Integer> getTagWeeklyCountDistinct();
 	
-	//공지사항 게시글 총수
-	public int getNoticeCnt(); 
-	
-	//공지사항
-	public ArrayList<Notice> getNotice(Map<String, Object> map);
-	
-	//공지사항 글쓰기 처리
-	public int noticeWritePro(Notice notice);
-
-	//공지사항 상세보기
-	public Notice noticeView(String idx);
 }

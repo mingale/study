@@ -351,36 +351,6 @@
 		]]>
 	</select>
 	
-	<!-- 공지사항 수-->
-	<select id="getNoticeCnt" resultType="int">
-		SELECT COUNT(*) FROM notice
-	</select>
-	
-	<!-- 공지사항 -->
-	<select id="getNotice" resultType="spring.mvc.bookstore.vo.Notice">
-		<![CDATA[
-		SELECT idx, title, id, add_date
-		FROM (SELECT rownum as num, idx, title, id, add_date  
-		      FROM notice) 
-		WHERE num >= #{start} AND num <= #{end}
-		ORDER BY num DESC
-		]]>
-	</select>
-	
-	<!-- 공지사항 글쓰기 처리 -->
-	<insert id="noticeWritePro" parameterType="spring.mvc.bookstore.vo.Notice">
-		INSERT INTO notice 
-			(idx, title, content, id) 
-		VALUES (notice_sq.nextval, #{title}, #{content}, #{id})
-	</insert>
-	
-	<!-- 공지사항 상세-->
-	<select id="noticeView" resultType="spring.mvc.bookstore.vo.Notice">
-		SELECT * 
-		FROM notice 
-		WHERE idx = #{idx}
-	</select>
-	
 	
 	
 	

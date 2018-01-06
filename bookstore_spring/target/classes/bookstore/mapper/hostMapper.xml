@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="spring.mvc.bookstore.persistence.HostPers">
+
+	<resultMap id="bespeakMap" type="spring.mvc.bookstore.vo.Bespeak">
+		<result property="order_num" column="order_num"/>
+		<result property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="phone" column="phone"/>
+		<result property="address" column="address"/>
+		<result property="no" column="no"/>
+		<result property="order_count" column="order_count"/>
+		<result property="order_price" column="order_price"/>
+		<result property="etc" column="etc"/>
+		<result property="bank" column="bank"/>
+		<result property="account" column="account"/>
+		<result property="order_state" column="order_state"/>
+		<collection property="book" column="no" ofType="spring.mvc.bookstore.vo.Book">
+			<id property="no" column="no" />
+			<result property="title" column="title" />
+			<result property="author" column="author"/>
+			<result property="publisher" column="publisher"/>
+			<result property="pub_date" column="pub_date"/>
+			<result property="price" column="price"/>
+			<result property="count" column="count"/>
+			<result property="image" column="image"/>
+		</collection>
+	</resultMap>
+	
+	<!-- 아이디 중복 확인 -->
+	<select id="confirmId" resultType="int">
+		SELECT COUNT(*) FROM member WHERE id = #{id}
+	</select>
+	
+	<!-- 이메일 인증key 존재 확인-1 -->
+	<select id="confirmEmailKey" resultType="int">
+		SELECT COUNT(*) FROM member WHERE e_key = #{e_key}
+	</select>
+	
+	<!-- 이메일 인증key 존재 확인-2) 해당 계정의 권한 등급 UP -->
+	<update id="emailKeyRatingUp" parameterType="String">
+		UPDATE member 
+		SET 
+			rating = 3 
+		WHERE e_key = #{e_key}
+	</update>
+
+	<!-- 로그인 -->
+	<select id="signIn" resultType="String">
+		SELECT rating 
+		FROM member 
+		WHERE id = #{id} AND pwd = #{pwd}
+	</select>
+
+	<!-- 회원가입 -->
+	<insert id="signUp" parameterType="spring.mvc.bookstore.vo.Member">
+		INSERT INTO member 
+			(id, pwd, name, phone, email, address, e_key) 
+		VALUES 
+			(#{id}, #{pwd}, #{name}, #{phone}, #{email}, #{address}, #{e_key})
+	</insert>
+
+	<!-- 이메일 존재 여부 -->
+	<select id="confirmEmail" resultType="String">
+		SELECT id 
+		FROM member 
+		WHERE email = #{email}
+	</select>
+
+	<!-- 인증키 수정 -->
+	<update id="memberEmailKeyUpdate" parameterType="java.util.Map">
+		UPDATE member 
+		SET 
+			e_key = #{key} 
+		WHERE id = #{id}
+	</update>
+
+	<!-- 인증시 아이디 가져오기 -->
+	<select id="getId" resultType="String">
+		SELECT id 
+		FROM member 
+		WHERE e_key = #{key}
+	</select>
+
+	<!-- 인증시 비밀번호 가져오기 -->
+	<select id="getPwd" resultType="String">
+		SELECT pwd 
+		FROM member 
+		WHERE e_key = #{key}
+	</select>
+
+	<!-- 송장 번호 -->
+	<select id="getShipping" resultType="String">
+		SELECT ship_num FROM shipping WHERE order_num = #{order_num}
+	</select>
+
+	<!-- 관리자 주문 내역-1) 모든 내역 -->
+	<select id="getHostOrderList" resultMap="bespeakMap">
+		SELECT *
+		FROM (SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title
+			  FROM bespeak JOIN book
+			  		ON bespeak.no = book.no 
+			  WHERE order_state NOT IN (7, 8, 9) 
+			  ORDER BY order_num DESC)
+	</select>
+
+	<!-- 관리자 주문 내역-2) 중복 없는 내역 -->
+	<select id="getHostOrderDistinctList" resultType="spring.mvc.bookstore.vo.Bespeak">
+		<![CDATA[
+		SELECT *
+		FROM(SELECT order_num, rownum as num
+			 FROM (SELECT DISTINCT order_num
+			 FROM bespeak
+			 WHERE order_state NOT IN(7, 8, 9) 
+			 ORDER BY order_num DESC))
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 주문 내역 총 개수 -->
+	<select id="getHostOrderCnt" resultType="int">
+		SELECT COUNT(DISTINCT order_num) FROM bespeak WHERE order_state NOT IN(7, 8, 9)
+	</select>
+
+	<!-- 관리자 주문 상태 수정 -->
+	<update id="orderStateUpdate" parameterType="java.util.Map">
+		UPDATE bespeak
+		SET 
+			order_state = #{state} 
+		WHERE order_num = #{num}
+	</update>
+
+	<!--  배송 시작 -->
+	<insert id="shippingInsert" parameterType="java.util.Map">
+		INSERT INTO shipping 
+		VALUES 
+			(#{order}, #{ship})
+	</insert>
+
+	<!-- 관리자 환불 내역 총 개수 -->
+	<select id="getRefundCnt" resultType="int">
+		SELECT COUNT(DISTINCT order_num) 
+		FROM bespeak 
+		WHERE order_state IN(7, 8, 9)
+	</select>
+
+	<!-- 관리자 환불내역-1) 모든 주문 내역 -->	
+	<select id="getHostRefundList" resultMap="bespeakMap">
+		SELECT * 
+		FROM (SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title 
+			  FROM bespeak JOIN book
+			  		ON bespeak.no = book.no
+			  WHERE order_state IN (7, 8, 9) 
+			  ORDER BY order_num DESC)
+	</select>
+
+	<!-- 관리자 환불 내역-2 -->
+	<select id="getHostRefundDistinctList" resultType="spring.mvc.bookstore.vo.Bespeak">
+		<![CDATA[
+		SELECT * 
+		FROM(SELECT order_num, rownum as num
+			 FROM (SELECT DISTINCT order_num
+				   FROM bespeak
+				   WHERE order_state IN(7, 8, 9)
+				   ORDER BY order_num DESC))
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 회원 목록 -->
+	<select id="getMemberList" resultType="spring.mvc.bookstore.vo.Member">
+		<![CDATA[
+		SELECT *
+		FROM (SELECT id, pwd, name, phone, email, address, memo, rating, rownum as num 
+			  FROM member)
+		WHERE num >= #{start} AND num <= #{end}
+		]]>
+	</select>
+
+	<!-- 회원수 -->
+	<select id="getMemberCnt" resultType="int">
+		SELECT COUNT(*) FROM member
+	</select>
+
+	<!-- 관리자 회원 수정 -->
+	<update id="setHostMemberUpdate" parameterType="java.util.Map">
+		UPDATE member 
+		SET
+			memo=#{memo}, rating=#{rating} 
+		WHERE id = #{id}
+	</update>
+
+	<!-- 주문 삭제 -->
+	<delete id="orderDelete" parameterType="String">
+		DELETE FROM bespeak 
+		WHERE order_num = #{order_num}
+	</delete>
+	
+	
+	<resultMap id="noticeMap" type="spring.mvc.bookstore.vo.Notice">
+		<id property="idx" column="idx"/>
+		<result property="title" column="title"/>
+		<result property="content" column="content"/>
+		<result property="id" column="id"/>
+		<result property="add_date" column="add_date"/>
+		<collection property="noticeComment" ofType="spring.mvc.bookstore.vo.NoticeComment">
+			<result property="com_idx" column="com_idx"/>
+			<result property ="notice_idx" column="notice_idx"/>
+			<result property="writer_id" column="writer_id"/>
+			<result property="com_content" column="com_content"/>
+			<result property="ref_con_idx" column="ref_con_idx"/>
+			<result property="com_step" column="com_step"/>
+			<result property="com_add_date" column="com_add_date"/>
+		</collection> 
+	</resultMap>
+	
+	<!-- 공지사항 수-->
+	<select id="getNoticeCnt" resultType="int">
+		SELECT COUNT(*) FROM notice
+	</select>
+	
+	<!-- 공지사항 -->
+	<select id="getNotice" resultType="spring.mvc.bookstore.vo.Notice">
+		<![CDATA[
+		SELECT idx, title, id, add_date
+		FROM (SELECT rownum as num, idx, title, id, add_date  
+		      FROM notice) 
+		WHERE num >= #{start} AND num <= #{end}
+		ORDER BY num DESC
+		]]>
+	</select>
+	
+	<!-- 공지사항 글쓰기 처리 -->
+	<insert id="noticeWritePro" parameterType="spring.mvc.bookstore.vo.Notice">
+		INSERT INTO notice 
+			(idx, title, content, id) 
+		VALUES (notice_sq.nextval, #{title}, #{content}, #{id})
+	</insert>
+	
+	<!-- 공지사항 상세-->
+	<select id="noticeView" resultType="spring.mvc.bookstore.vo.Notice">
+		SELECT * 
+		FROM notice
+		WHERE idx = #{idx}
+	</select>
+	
+	<!-- 공지사항 상세 + 댓글 -->
+	<select id="noticeAndCommentView" resultMap="noticeMap">
+		SELECT idx, title, content, id, add_date, com_idx, notice_idx, writer_id, ref_com_idx, com_step, com_add_date, com_content, rownum as num
+    	FROM notice JOIN notice_comment nc
+			ON notice.idx = nc.notice_idx
+		WHERE idx = '1'
+        ORDER BY com_add_date DESC
+	</select>
+	
+	<!-- 공지사항 글 수정 -->
+	<update id="noticeUpdate" parameterType="spring.mvc.bookstore.vo.Notice">
+		UPDATE notice
+		SET 
+			title = #{title},
+			content = #{content}
+		WHERE idx = #{idx}
+	</update>
+
+	<!-- 공지사항 댓글 추가 -->
+	<insert id="noticeCommentAdd" parameterType="spring.mvc.bookstore.vo.NoticeComment">
+		INSERT INTO notice_comment
+			(com_idx, notice_idx, writer_id, com_content, ref_com_idx, com_step)
+		VALUES
+			(not_com_sq.nextval, #{notice_idx}, #{writer_id}, #{com_content}, #{ref_com_idx}, #{com_step})
+	</insert>
+	
+</mapper>

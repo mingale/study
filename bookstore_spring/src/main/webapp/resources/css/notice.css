@@ -1,0 +1,8 @@
+@charset "UTF-8";
+section .wrap{width:600px;margin:50px auto;}
+.wrap p{margin:10px;}
+
+.input{width:100%;margin:5px;border:1px solid lightgray;resize:none;border-radius:0.5em;padding:10px;}
+.area{height:100%;}
+.li_btn{text-align:center;}
+.btn{width:120px;height:25px;margin:10px 0;background:lightblue;}

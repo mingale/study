@@ -5,8 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -307,6 +305,7 @@ public class FrontController extends HttpServlet {
 		return "jsp/guest/myOrder";
 	} 
 	
+	//주문 상세
 	@RequestMapping("orderDetail")
 	public String orderDetail(HttpServletRequest req, Model model) { 
 		log.debug("orderDetail()");
@@ -356,7 +355,12 @@ public class FrontController extends HttpServlet {
 	public String main(HttpServletRequest req, Model model) {
 		log.debug("main()");
 		
-		hs.mainView(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.mainView(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/main";
 	}
@@ -366,7 +370,12 @@ public class FrontController extends HttpServlet {
 	public String stock(HttpServletRequest req, Model model) {
 		log.debug("stock()");
 		
-		bs.hostStockView(req, model); //도서 정보와 서브 정보의 총개수가 다르면, 가져온 목록에 차이가 생겨서 서브 정보가 올바르게 표시되지 못한다.
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			bs.hostStockView(req, model); //도서 정보와 서브 정보의 총개수가 다르면, 가져온 목록에 차이가 생겨서 서브 정보가 올바르게 표시되지 못한다.
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/stock";
 	}
@@ -376,7 +385,12 @@ public class FrontController extends HttpServlet {
 	public String stockUpdate(HttpServletRequest req, Model model) {
 		log.debug("stockUpdate()");
 		
-		bs.detailView(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			bs.detailView(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/stockUpdate";
 	}
@@ -416,7 +430,12 @@ public class FrontController extends HttpServlet {
 	public String hostOrder(HttpServletRequest req, Model model) {
 		log.debug("hostOrder()");
 		
-		hs.hostOrderView(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.hostOrderView(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/order";			
 	}
@@ -466,7 +485,12 @@ public class FrontController extends HttpServlet {
 	public String refund(HttpServletRequest req, Model model) {
 		log.debug("refund()");
 		
-		hs.getHostRefundView(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.getHostRefundView(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/refund";
 	}
@@ -496,7 +520,12 @@ public class FrontController extends HttpServlet {
 	public String member(HttpServletRequest req, Model model) {
 		log.debug("member()");
 		
-		hs.getMemberView(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.getMemberView(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/member";
 	}
@@ -526,7 +555,12 @@ public class FrontController extends HttpServlet {
 	public String result(HttpServletRequest req, Model model) {
 		log.debug("result()");
 		
-		hs.getResultTotal(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.getResultTotal(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/result";
 	}
@@ -536,7 +570,12 @@ public class FrontController extends HttpServlet {
 	public String notice(HttpServletRequest req, Model model){
 		log.debug("notice()");
 		
-		hs.getNotice(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.getNotice(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
 		
 		return "jsp/host/notice";
 	}
@@ -545,6 +584,10 @@ public class FrontController extends HttpServlet {
 	@RequestMapping("noticeWrite")
 	public String noticeWrite(HttpServletRequest req, Model model) {
 		log.debug("noticeWrite()");
+		
+		//글 수정
+		hs.noticeUpdate(req, model);
+		
 		return "jsp/host/noticeWrite";
 	}
 	
@@ -563,7 +606,23 @@ public class FrontController extends HttpServlet {
 	public String noticeView(HttpServletRequest req, Model model) {
 		log.debug("noticeView()");
 		
-		hs.noticeView(req, model);
+		String rating = (String) req.getSession().getAttribute("rating");
+		if(rating != null && rating.equals("1")) {
+			hs.noticeView(req, model);
+		} else {
+			return "jsp/host/ratingError";
+		}
+		
 		return "jsp/host/noticeView";
+	}
+	
+	//공지사항 댓글 추가
+	@RequestMapping("noticeCommentPro")
+	public String noticeCommentPro(HttpServletRequest req, Model model) {
+		System.out.println("noticeCommentPro");
+		
+		hs.noticeCommentPro(req, model);
+		
+		return "jsp/host/noticeCommentPro";
 	}
 }

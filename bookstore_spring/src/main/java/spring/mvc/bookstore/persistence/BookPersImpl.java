@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -524,38 +523,5 @@ public class BookPersImpl implements BookPers {
 		return map;
 	}
 
-	@Override
-	public int getNoticeCnt() {
-		int cnt = 0;
-		
-		BookPers mapper = sqlSession.getMapper(BookPers.class);
-		cnt = mapper.getNoticeCnt();
-		return cnt;
-	}
-	
-	// 공지사항
-	@Override
-	public ArrayList<Notice> getNotice(Map<String, Object> map) {
-		BookPers mapper = sqlSession.getMapper(BookPers.class);
-		ArrayList<Notice> list = mapper.getNotice(map);
-		return list;
-	}
-	
-
-	//공지사항 글쓰기 처리
-	@Override
-	public int noticeWritePro(Notice notice) {
-		BookPers mapper = sqlSession.getMapper(BookPers.class);
-		int cnt = mapper.noticeWritePro(notice);
-		return cnt;
-	}
-
-	//공지사항 상세보기
-	@Override
-	public Notice noticeView(String idx) {
-		BookPers mapper = sqlSession.getMapper(BookPers.class);
-		Notice notice = mapper.noticeView(idx);
-		return notice;
-	}
 }
 // ROWNUM 이 있는절에는 WHERE절과, ORDER BY 절이 붙으면 안된다.

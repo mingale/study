@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import spring.mvc.bookstore.persistence.BookPers;
+import spring.mvc.bookstore.persistence.HostPers;
 import spring.mvc.bookstore.persistence.MemberPers;
 import spring.mvc.bookstore.vo.Bespeak;
 import spring.mvc.bookstore.vo.Book;
@@ -25,6 +26,8 @@ public class GuestServiceImpl implements GuestService {
 	MemberPers mDao;
 	@Autowired
 	BookPers bDao;
+	@Autowired
+	HostPers hDao;
 	
 	private Logger log = Logger.getLogger(this.getClass());
 
@@ -201,7 +204,7 @@ public class GuestServiceImpl implements GuestService {
 		ArrayList<Bespeak> orders = mDao.getOrderDetail(order_num);
 
 		// 송장번호
-		String shipping = mDao.getShipping(order_num);
+		String shipping = hDao.getShipping(order_num);
 		if (shipping == null)
 			shipping = " - ";
 
@@ -279,7 +282,7 @@ public class GuestServiceImpl implements GuestService {
 		Map<String, Object> map = new HashMap<>();
 		map.put("state", 8);
 		map.put("num", order_num);
-		int cnt = mDao.orderStateUpdate(map);
+		int cnt = hDao.orderStateUpdate(map);
 
 		model.addAttribute("cnt", cnt);
 	}

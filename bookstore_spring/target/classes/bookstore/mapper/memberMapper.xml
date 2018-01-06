@@ -30,74 +30,11 @@
 		</collection>
 	</resultMap>
 	
-	
-	<!-- 아이디 중복 확인 -->
-	<select id="confirmId" resultType="int">
-		SELECT COUNT(*) FROM member WHERE id = #{id}
-	</select>
-	
-	<!-- 이메일 인증key 존재 확인-1 -->
-	<select id="confirmEmailKey" resultType="int">
-		SELECT COUNT(*) FROM member WHERE e_key = #{e_key}
-	</select>
-	
-	<!-- 이메일 인증key 존재 확인-2) 해당 계정의 권한 등급 UP -->
-	<update id="emailKeyRatingUp" parameterType="String">
-		UPDATE member 
-		SET 
-			rating = 3 
-		WHERE e_key = #{e_key}
-	</update>
-	
-	<!-- 로그인 -->
-	<select id="signIn" resultType="int">
-		SELECT COUNT(*) 
-		FROM member 
-		WHERE id = #{id} AND pwd = #{pwd}
-	</select>
-	
-	<!-- 회원가입 -->
-	<insert id="signUp" parameterType="spring.mvc.bookstore.vo.Member">
-		INSERT INTO member 
-			(id, pwd, name, phone, email, address, e_key) 
-		VALUES 
-			(#{id}, #{pwd}, #{name}, #{phone}, #{email}, #{address}, #{e_key})
-	</insert>
-	
 	<!-- 회원 정보 -->
 	<select id="getMemberInfo" resultType="spring.mvc.bookstore.vo.Member">
 		SELECT * 
 		FROM member 
 		WHERE id = #{id}
-	</select>
-	
-	<!-- 이메일 존재 여부 -->
-	<select id="confirmEmail" resultType="String">
-		SELECT id 
-		FROM member 
-		WHERE email = #{email}
-	</select>
-	
-	<!-- 인증키 수정 -->
-	<update id="memberEmailKeyUpdate" parameterType="java.util.Map">
-		UPDATE member 
-		SET 
-			e_key = #{key} 
-		WHERE id = #{id}
-	</update>
-	
-	<!-- 인증시 아이디 가져오기 -->
-	<select id="getId" resultType="String">
-		SELECT id 
-		FROM member 
-		WHERE e_key = #{key}
-	</select>
-	
-	<!-- 인증시 비밀번호 가져오기 -->
-	<select id="getPwd" resultType="String">
-		SELECT pwd 
-		FROM member 
-		WHERE e_key = #{key}
 	</select>
 	
 	<!-- 회원 수정 -->
@@ -225,113 +162,6 @@
 			ON bespeak.no = book.no
 		WHERE order_num = #{order_num}
 	</select>
-	
-	<!-- 송장 번호 -->
-	<select id="getShipping" resultType="String">
-		SELECT ship_num FROM shipping WHERE order_num = #{order_num}
-	</select>
-	
-	<!-- 관리자 주문 내역-2) 중복 없는 내역 -->
-	<select id="getHostOrderDistinctList" resultType="spring.mvc.bookstore.vo.Bespeak">
-		<![CDATA[
-		SELECT *
-		FROM(SELECT order_num, rownum as num
-			 FROM (SELECT DISTINCT order_num
-			 FROM bespeak
-			 WHERE order_state NOT IN(7, 8, 9) 
-			 ORDER BY order_num DESC))
-		WHERE num >= #{start} AND num <= #{end}
-		]]>
-	</select>
-	
-	<!-- 관리자 주문 내역-1) 모든 내역 -->
-	<select id="getHostOrderList" resultMap="bespeakMap">
-		SELECT *
-		FROM (SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title
-			  FROM bespeak JOIN book
-			  		ON bespeak.no = book.no 
-			  WHERE order_state NOT IN (7, 8, 9) 
-			  ORDER BY order_num DESC)
-	</select>
-
-	<!-- 주문 내역 총 개수 -->
-	<select id="getHostOrderCnt" resultType="int">
-		SELECT COUNT(DISTINCT order_num) FROM bespeak WHERE order_state NOT IN(7, 8, 9)
-	</select>
-
-	<!-- 관리자 주문 상태 수정 -->
-	<update id="orderStateUpdate" parameterType="java.util.Map">
-		UPDATE bespeak
-		SET 
-			order_state = #{state} 
-		WHERE order_num = #{num}
-	</update>
-
-	<!--  배송 시작 -->
-	<insert id="shippingInsert" parameterType="java.util.Map">
-		INSERT INTO shipping 
-		VALUES 
-			(#{order}, #{ship})
-	</insert>
-	
-	<!-- 관리자 환불 내역 총 개수 -->
-	<select id="getRefundCnt" resultType="int">
-		SELECT COUNT(DISTINCT order_num) 
-		FROM bespeak 
-		WHERE order_state IN(7, 8, 9)
-	</select>
-
-	<!-- 관리자 환불내역-1) 모든 주문 내역 -->	
-	<select id="getHostRefundList" resultMap="bespeakMap">
-		SELECT * 
-		FROM (SELECT order_num, id, name, phone, address, book.no, order_count, order_price, etc, account, order_state, title 
-			  FROM bespeak JOIN book
-			  		ON bespeak.no = book.no
-			  WHERE order_state IN (7, 8, 9) 
-			  ORDER BY order_num DESC)
-	</select>
-	
-	<!-- 관리자 환불 내역-2 -->
-	<select id="getHostRefundDistinctList" resultType="spring.mvc.bookstore.vo.Bespeak">
-		<![CDATA[
-		SELECT * 
-		FROM(SELECT order_num, rownum as num
-			 FROM (SELECT DISTINCT order_num
-				   FROM bespeak
-				   WHERE order_state IN(7, 8, 9)
-				   ORDER BY order_num DESC))
-		WHERE num >= #{start} AND num <= #{end}
-		]]>
-	</select>
-
-	<!-- 회원 목록 -->
-	<select id="getMemberList" resultType="spring.mvc.bookstore.vo.Member">
-		<![CDATA[
-		SELECT *
-		FROM (SELECT id, pwd, name, phone, email, address, memo, rating, rownum as num 
-			  FROM member)
-		WHERE num >= #{start} AND num <= #{end}
-		]]>
-	</select>
-	
-	<!-- 회원수 -->
-	<select id="getMemberCnt" resultType="int">
-		SELECT COUNT(*) FROM member
-	</select>
-	
-	<!-- 관리자 회원 수정 -->
-	<update id="setHostMemberUpdate" parameterType="java.util.Map">
-		UPDATE member 
-		SET
-			memo=#{memo}, rating=#{rating} 
-		WHERE id = #{id}
-	</update>
-
-	<!-- 주문 삭제 -->
-	<delete id="orderDelete" parameterType="String">
-		DELETE FROM bespeak 
-		WHERE order_num = #{order_num}
-	</delete>
 	
 	<!-- 회원 환불 내역-1) 해당 회원의 중복 없는 주문 목록 -->
 	<select id="getRefundDistinctList" resultType="String">

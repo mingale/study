@@ -9,27 +9,37 @@
 	
 	<title>관리자 - 공지 사항</title>
 	
-	<style type="text/css">
-		section{margin:50px auto;text-align:center;}
-		
-		.input{width:500px;padding:5px;margin:5px;}
-		.area{height:500px;}
-		.btn{width:120px;height:25px;margin:10px 0;background:lightblue;}
-	</style>
+	<link type="text/css" rel="stylesheet" href="${projectRes}css/notice.css">
 </head>
 <body>
 <%@ include file="header.jsp" %>
 
 <section>
-<form action="noticeWritePro" method="post">
-	<ul>
-		<li>제목 <input class="input" type="text" maxlength="50" name="title"></li>
-		<li>
-			내용 <textarea class="input area" name="content"></textarea>
-		</li>
-		<li><button class="btn">글쓰기</button></li>
-	</ul>
-</form>
+	<div class="wrap">
+		<c:if test="${notice == null}">
+			<form action="noticeWritePro" method="post">
+				<ul>
+					<li><p>제목</p></li> 
+					<li><input class="input" type="text" name="title" maxlength="50"></li>
+					<li><p>내용</p></li>
+					<li><textarea class="input area" name="content"></textarea></li>
+					<li class="li_btn"><button class="btn">글쓰기</button></li>
+				</ul>
+			</form>
+		</c:if>
+		<c:if test="${notice != null}">
+			<form action="noticeWritePro" method="post">
+				<input type="hidden" name="idx" value="${notice.idx}">
+				<ul>
+					<li><p>제목</p></li> 
+					<li><input class="input" type="text" name="title" value="${notice.title}" maxlength="50"></li>
+					<li><p>내용</p></li>
+					<li><textarea class="input area" name="content">${notice.content}</textarea></li>
+					<li class="li_btn"><button class="btn">수정</button></li>
+				</ul>
+			</form>
+		</c:if>
+	</div>
 </section>
 
 <%@ include file="footer.jsp" %>

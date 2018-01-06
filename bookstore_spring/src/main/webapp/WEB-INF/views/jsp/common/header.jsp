@@ -75,7 +75,7 @@
 					console.log('에러 발생');
 				}
 			} else {
-				console.log('상태 : ' + httpRequest.readyState);
+				console.log('에러 상태 : ' + httpRequest.readyState);
 			}
 		}
 
@@ -121,6 +121,9 @@
 	<!-- 로그인 -->
 	<c:if test="${sessionScope.memId != null}">
 		<nav class="gnb">
+			<c:if test="${sessionScope.rating == 1}">
+				<a href="main">관리페이지</a>
+			</c:if>
 			<a href="myPagePwd">마이페이지</a>
 			<a href="cart">장바구니</a>
 			<a href="help">고객센터</a>

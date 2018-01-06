@@ -12,7 +12,7 @@
 	</c:if>
 	
 	<c:if test="${cnt == 1}">
-		<c:if test="${rating == 1}">
+		<c:if test="${sessionScope.rating == 1}">
 			<c:redirect url="main"/>
 		</c:if>
 		<c:if test="${rating == 4}">

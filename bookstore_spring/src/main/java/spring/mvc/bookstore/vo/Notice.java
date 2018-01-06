@@ -1,6 +1,7 @@
 package spring.mvc.bookstore.vo;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Notice {
 	private String idx;
@@ -8,6 +9,7 @@ public class Notice {
 	private String content;
 	private String id;
 	private Date add_date;
+	private ArrayList<NoticeComment> noticeComment;
 
 	public String getIdx() {
 		return idx;
@@ -48,4 +50,14 @@ public class Notice {
 	public Date getAdd_date() {
 		return add_date;
 	}
+
+	public ArrayList<NoticeComment> getNoticeComment() {
+		return noticeComment;
+	}
+
+	public void setNoticeComment(ArrayList<NoticeComment> noticeComment) {
+		this.noticeComment = noticeComment;
+	}
+	
+	
 }

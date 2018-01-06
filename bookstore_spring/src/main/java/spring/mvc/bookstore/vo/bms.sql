@@ -104,6 +104,21 @@ CREATE TABLE notice (
 	
 );
 
+CREATE SEQUENCE not_com_sq
+    START WITH 1
+    INCREMENT BY 1
+    MAXVALUE 9999;
+    
+CREATE TABLE notice_comment (
+    com_idx         VARCHAR2(5)     PRIMARY KEY,
+    notice_idx      VARCHAR2(5)     REFERENCES notice(idx),
+    writer_id       VARCHAR2(15)    REFERENCES member(id),
+    com_content     VARCHAR2(255)   NOT NULL,
+    ref_com_idx     NUMBER(5)     DEFAULT 0,
+    com_step        NUMBER(5)     DEFAULT 0,
+    com_add_date    DATE        DEFAULT sysdate
+);
+
 INSERT INTO tag_main VALUES (tag_main_sq.nextval);
 INSERT INTO tag_main VALUES (tag_main_sq.nextval);
 INSERT INTO tag_main VALUES (tag_main_sq.nextval);
