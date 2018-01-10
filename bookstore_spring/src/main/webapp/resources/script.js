@@ -172,9 +172,6 @@ function addressSearch() {
 
 //회원가입 입력창 확인
 function signUpCheck() {
-	console.log(document.signUpForm.emailChk.value);
-	console.log(document.signUpForm.address.value);
-	
 	if(!document.signUpForm.id.value) {
 		alert(id_msg);
 		document.signUpForm.id.focus();
@@ -215,22 +212,37 @@ function signUpCheck() {
 			alert(email_reg_msg);
 			document.signUpForm.email.focus();
 			return false;
-		} else {
-			window.location='confirmEmail?email=' + document.signUpForm.email.value + '?echk=1';
+		} else if (emailCheck == 0) {
+			alert(email_chk_no_msg);
+			return false;
 		}
-		
-
-	/*} else if(document.signUpForm.emailChk.value = 'N') {
-		alert('사용할 수 없는 이메일입니다.');
-		document.signUpForm.email.focus();
-		return false;*/
-	} 
+	}
 }
 
 //아이디 중복 확인
 function confirmId() {
-	if(document.signUpForm.id.value) {
-		window.location="confirmId?id=" + document.signUpForm.id.value;
+	var id = document.signUpForm.id.value;
+	if(id.length != 0) {
+		sendRequest(confirmId_callback, 'confirmId', 'get', 'id=' + id);
+	}
+}
+
+function confirmId_callback() {
+	if(httpRequest.readyState == 4) {
+		if(httpRequest.status == 200) { 
+			var date = httpRequest.responseText;
+		
+			if(date == 0) {
+				alert("사용할 수 있는 아이디입니다.");
+			} else {
+				alert("이미 사용 중이거나 탈퇴한 아이디입니다.");
+			}
+			console.log('완료');
+		} else {
+			console.log('에러 발생');
+		}
+	} else {
+		console.log('에러 상태 : ' + httpRequest.readySate);
 	}
 }
 
@@ -244,6 +256,7 @@ function confirmPh() {
 	}
 }
 
+var emailCheck = 0;
 //이메일 중복 확인
 function confirmEmail() {
 	var email = document.signUpForm.email.value;
@@ -252,8 +265,28 @@ function confirmEmail() {
 		if(!emailRegex.test(email)) {
 			alert(email_reg_msg);
 		} else {
-			window.location="confirmEmail?email=" + email;
+			sendRequest(confirmEmail_callback, 'confirmEmail', 'get', 'email=' + email);
 		}
+	}
+}
+
+function confirmEmail_callback() {
+	if(httpRequest.readyState == 4) {
+		if(httpRequest.status == 200) { 
+			var date = httpRequest.responseText;
+		
+			if(date == 0) {
+				alert("사용할 수 있는 이메일입니다.");
+				emailCheck = 1;
+			} else {
+				alert(email_chk_no_msg);
+			}
+			console.log('완료');
+		} else {
+			console.log('에러 발생');
+		}
+	} else {
+		console.log('에러 상태 : ' + httpRequest.readySate);
 	}
 }
 
