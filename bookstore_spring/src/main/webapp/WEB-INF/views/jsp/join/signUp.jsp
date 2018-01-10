@@ -21,6 +21,7 @@
 	</style>
 	
 	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js" ></script>
+	<script src="${projectRes}ajax.js"></script>
 </head>
 <body onload="signUpFocus();">
 <section class="wrap">
@@ -43,7 +44,7 @@
 			<input class="searchBtn" type="button" value="주소 찾기" onclick="addressSearch();">
 		</div>
 	
-		<input class="inputButton" type="submit" value="회원가입">
+		<button class="inputButton" onclick="signUpEvent();">회원가입</button>
 	</form>
 </section>
 </body>
